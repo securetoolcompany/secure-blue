@@ -1,4 +1,5 @@
-import React from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
   Droplets, ShieldCheck, Wind, Activity, ArrowRight, Terminal, 
   Database, Network, Cpu, Globe, BarChart3, Crosshair, Zap, Lock, LineChart
@@ -15,7 +16,7 @@ export default function SecureBlueCommandCenter() {
         
         <div className="relative z-10 grid lg:grid-cols-2 gap-12 items-center">
           <div className="text-left space-y-8">
-            <div className="inline-flex items-center rounded-md border border-zinc-800 bg-zinc-900/50 px-3 py-1 text-xs font-mono text-zinc-400 uppercase tracking-widest">
+            <div className="inline-flex items-center rounded-none border border-zinc-800 bg-zinc-900/50 px-3 py-1 text-xs font-mono text-zinc-400 uppercase tracking-widest">
               <Terminal className="mr-2 h-3.5 w-3.5 text-cyan-400" />
               Secure Blue OS v1.0
             </div>
@@ -30,31 +31,32 @@ export default function SecureBlueCommandCenter() {
             
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <Link href="#dashboard">
-                <button className="h-14 px-8 flex items-center justify-center text-lg w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white rounded-none border border-blue-500 shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-all hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] font-bold">
+                <Button size="lg" className="h-14 px-8 text-lg w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white rounded-none border border-blue-500 shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-all hover:shadow-[0_0_30px_rgba(37,99,235,0.5)]">
                   Initialize Terminal
                   <ArrowRight className="ml-2 h-5 w-5" />
-                </button>
+                </Button>
               </Link>
               <Link href="#solutions">
-                <button className="h-14 px-8 flex items-center justify-center text-lg w-full sm:w-auto border border-zinc-700 bg-zinc-900/50 text-zinc-300 hover:bg-zinc-800 hover:text-white rounded-none font-mono uppercase tracking-widest transition-colors">
+                <Button size="lg" variant="outline" className="h-14 px-8 text-lg w-full sm:w-auto border-zinc-700 bg-zinc-900/50 text-zinc-300 hover:bg-zinc-800 hover:text-white rounded-none font-mono tracking-widest uppercase">
                   Browse Nodes
-                </button>
+                </Button>
               </Link>
             </div>
           </div>
 
           {/* Hero Dashboard Preview */}
-          <div className="relative rounded-xl border border-zinc-800 bg-zinc-900/80 p-2 shadow-2xl backdrop-blur-sm">
+          <div className="relative rounded-none border border-zinc-800 bg-zinc-900/80 p-2 shadow-2xl backdrop-blur-sm">
             <div className="flex items-center gap-2 px-3 pb-2 mb-2 border-b border-zinc-800">
               <div className="h-3 w-3 rounded-full bg-red-500/20 border border-red-500/50" />
               <div className="h-3 w-3 rounded-full bg-yellow-500/20 border border-yellow-500/50" />
               <div className="h-3 w-3 rounded-full bg-green-500/20 border border-green-500/50" />
               <span className="ml-2 text-xs font-mono text-zinc-500">sb-telemetry-view</span>
             </div>
-            <div className="relative aspect-video w-full overflow-hidden rounded-md bg-zinc-950 flex items-center justify-center border border-zinc-800/50">
-               {/* Placeholder for actual dashboard screenshot */}
-               <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-zinc-900 to-black opacity-50"></div>
-               <Activity className="h-16 w-16 text-cyan-500/20 animate-pulse" />
+            <div className="relative aspect-video w-full overflow-hidden bg-zinc-950 flex items-center justify-center border border-zinc-800/50">
+               {/* Terminal/Grid Background simulation */}
+               <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+               <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-zinc-900/0 to-black opacity-80"></div>
+               <Activity className="h-16 w-16 text-cyan-500/40 animate-pulse relative z-10" />
             </div>
           </div>
         </div>
@@ -68,19 +70,19 @@ export default function SecureBlueCommandCenter() {
               <h2 className="text-3xl font-bold tracking-tight mb-2">Core Infrastructure</h2>
               <p className="text-zinc-500 font-mono text-sm">System modules available in your command center.</p>
             </div>
-            <div className="text-xs font-mono text-emerald-500 bg-emerald-500/10 px-3 py-1 rounded border border-emerald-500/20">
+            <div className="text-xs font-mono text-emerald-500 bg-emerald-500/10 px-3 py-1 border border-emerald-500/20">
               STATUS: LORAWAN GATEWAYS ONLINE
             </div>
           </div>
 
           <div className="grid lg:grid-cols-3 gap-6">
             {/* LeakStop */}
-            <div className="bg-zinc-900/40 border border-zinc-800 hover:border-blue-500/50 transition-colors rounded-none flex flex-col p-6 group">
-              <div className="pb-4">
-                <ShieldCheck className="h-8 w-8 text-blue-400 mb-4 group-hover:scale-110 transition-transform" />
-                <h3 className="text-xl font-mono uppercase tracking-wider font-bold">01. LeakStop</h3>
-              </div>
-              <div className="flex-1 flex flex-col justify-between">
+            <Card className="bg-zinc-900/40 border-zinc-800 hover:border-blue-500/50 transition-colors rounded-none flex flex-col">
+              <CardHeader className="pb-4">
+                <ShieldCheck className="h-8 w-8 text-blue-400 mb-4" />
+                <CardTitle className="text-xl font-mono uppercase tracking-wider text-white">01. LeakStop</CardTitle>
+              </CardHeader>
+              <CardContent className="flex-1 flex flex-col justify-between">
                 <p className="text-zinc-400 text-sm leading-relaxed mb-6">
                   Autonomous holistic sensors with LoRaWAN integration. Deploy instant shut-off capabilities across entire facilities to prevent catastrophic water loss and infrastructure damage.
                 </p>
@@ -88,16 +90,16 @@ export default function SecureBlueCommandCenter() {
                   <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-blue-500" /> Valve Actuation</span>
                   <span className="flex items-center gap-2"><Database className="h-3 w-3 text-blue-500" /> Flow Analytics</span>
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
 
             {/* A2W / Sourcing */}
-            <div className="bg-zinc-900/40 border border-zinc-800 hover:border-cyan-500/50 transition-colors rounded-none flex flex-col p-6 group">
-              <div className="pb-4">
-                <Wind className="h-8 w-8 text-cyan-400 mb-4 group-hover:scale-110 transition-transform" />
-                <h3 className="text-xl font-mono uppercase tracking-wider font-bold">02. Sourcing</h3>
-              </div>
-              <div className="flex-1 flex flex-col justify-between">
+            <Card className="bg-zinc-900/40 border-zinc-800 hover:border-cyan-500/50 transition-colors rounded-none flex flex-col">
+              <CardHeader className="pb-4">
+                <Wind className="h-8 w-8 text-cyan-400 mb-4" />
+                <CardTitle className="text-xl font-mono uppercase tracking-wider text-white">02. Sourcing</CardTitle>
+              </CardHeader>
+              <CardContent className="flex-1 flex flex-col justify-between">
                 <p className="text-zinc-400 text-sm leading-relaxed mb-6">
                   Extract high-purity water directly from the atmosphere. Our A2W machines operate independently of local grid constraints, providing reliable water generation for remote or strained facilities.
                 </p>
@@ -105,16 +107,16 @@ export default function SecureBlueCommandCenter() {
                   <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-cyan-500" /> Humidity Parsing</span>
                   <span className="flex items-center gap-2"><Database className="h-3 w-3 text-cyan-500" /> Generation Metrics</span>
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
 
             {/* Conservation / Irrigation */}
-            <div className="bg-zinc-900/40 border border-zinc-800 hover:border-emerald-500/50 transition-colors rounded-none flex flex-col p-6 group">
-              <div className="pb-4">
-                <Droplets className="h-8 w-8 text-emerald-400 mb-4 group-hover:scale-110 transition-transform" />
-                <h3 className="text-xl font-mono uppercase tracking-wider font-bold">03. Conservation</h3>
-              </div>
-              <div className="flex-1 flex flex-col justify-between">
+            <Card className="bg-zinc-900/40 border-zinc-800 hover:border-emerald-500/50 transition-colors rounded-none flex flex-col">
+              <CardHeader className="pb-4">
+                <Droplets className="h-8 w-8 text-emerald-400 mb-4" />
+                <CardTitle className="text-xl font-mono uppercase tracking-wider text-white">03. Conservation</CardTitle>
+              </CardHeader>
+              <CardContent className="flex-1 flex flex-col justify-between">
                 <p className="text-zinc-400 text-sm leading-relaxed mb-6">
                   Intelligent distribution. Combine smart irrigation arrays with graywater distillation to drastically reduce consumption for golf courses, large-scale farms, and resort grounds.
                 </p>
@@ -122,8 +124,8 @@ export default function SecureBlueCommandCenter() {
                   <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-emerald-500" /> Soil Saturation</span>
                   <span className="flex items-center gap-2"><Database className="h-3 w-3 text-emerald-500" /> Distillation Yield</span>
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
@@ -148,7 +150,7 @@ export default function SecureBlueCommandCenter() {
               <p className="text-sm text-zinc-400 leading-relaxed mb-6 h-20">
                 Low-cost, low-power data transfer across vast areas. Monitor sensors across entire golf courses or hospital wings without laying miles of cable.
               </p>
-              <div className="border border-zinc-800 bg-zinc-950 p-4 rounded-sm font-mono text-xs space-y-3 shadow-inner">
+              <div className="border border-zinc-800 bg-zinc-950 p-4 font-mono text-xs space-y-3 shadow-inner">
                 <div className="text-zinc-600 mb-2">LIVE_FEED &gt; NETWORK_STATUS</div>
                 <div className="flex justify-between">
                   <span className="text-zinc-400">SIGNAL_STRENGTH</span>
@@ -174,7 +176,7 @@ export default function SecureBlueCommandCenter() {
               <p className="text-sm text-zinc-400 leading-relaxed mb-6 h-20">
                 Optimize your Air-to-Water generation. Live tracking of ambient humidity, temperature, and dew points to maximize machine yield and efficiency.
               </p>
-              <div className="border border-zinc-800 bg-zinc-950 p-4 rounded-sm font-mono text-xs space-y-3 shadow-inner">
+              <div className="border border-zinc-800 bg-zinc-950 p-4 font-mono text-xs space-y-3 shadow-inner">
                 <div className="text-zinc-600 mb-2">LIVE_FEED &gt; A2W_METRICS</div>
                 <div className="flex justify-between">
                   <span className="text-zinc-400">RELATIVE_HUMIDITY</span>
@@ -200,7 +202,7 @@ export default function SecureBlueCommandCenter() {
               <p className="text-sm text-zinc-400 leading-relaxed mb-6 h-20">
                 Track your ROI in real-time. The terminal aggregates water saved via LeakStop and generated via A2W against local municipal utility rates.
               </p>
-              <div className="border border-zinc-800 bg-zinc-950 p-4 rounded-sm font-mono text-xs space-y-3 shadow-inner">
+              <div className="border border-zinc-800 bg-zinc-950 p-4 font-mono text-xs space-y-3 shadow-inner">
                 <div className="text-zinc-600 mb-2">LIVE_FEED &gt; COST_SAVINGS</div>
                 <div className="flex justify-between">
                   <span className="text-zinc-400">VOLUME_SAVED_MTD</span>
@@ -222,13 +224,13 @@ export default function SecureBlueCommandCenter() {
       </section>
 
       {/* DASHBOARD DEEP DIVE (Visual Proof / Terminal Replacement) */}
-      <section className="px-8 py-24 bg-zinc-950">
+      <section id="dashboard" className="px-8 py-24 bg-zinc-950">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
           
           {/* Left Side: Mock Terminal & Network Diagram */}
           <div className="space-y-6">
             {/* Terminal Window Mockup */}
-            <div className="rounded-md border border-zinc-800 bg-zinc-950 overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.8)]">
+            <div className="border border-zinc-800 bg-zinc-950 overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.8)]">
               <div className="bg-zinc-900 px-4 py-2 border-b border-zinc-800 flex items-center gap-2">
                 <div className="h-3 w-3 rounded-full bg-red-500/20 border border-red-500/50" />
                 <div className="h-3 w-3 rounded-full bg-yellow-500/20 border border-yellow-500/50" />
@@ -252,12 +254,12 @@ export default function SecureBlueCommandCenter() {
 
             {/* Architecture Node Mockup */}
             <div className="grid grid-cols-2 gap-4">
-              <div className="border border-zinc-800 bg-zinc-900/30 p-4 rounded-md flex flex-col items-center justify-center text-center gap-2 shadow-inner">
+              <div className="border border-zinc-800 bg-zinc-900/30 p-4 flex flex-col items-center justify-center text-center gap-2 shadow-inner">
                 <Cpu className="h-6 w-6 text-blue-400 mb-1" />
                 <span className="font-mono text-xs text-zinc-300">Edge Processing</span>
                 <span className="text-[10px] text-zinc-500">Zero-Latency Action</span>
               </div>
-              <div className="border border-zinc-800 bg-zinc-900/30 p-4 rounded-md flex flex-col items-center justify-center text-center gap-2 shadow-inner">
+              <div className="border border-zinc-800 bg-zinc-900/30 p-4 flex flex-col items-center justify-center text-center gap-2 shadow-inner">
                 <Network className="h-6 w-6 text-cyan-400 mb-1" />
                 <span className="font-mono text-xs text-zinc-300">LoRa Mesh Network</span>
                 <span className="text-[10px] text-zinc-500">10km+ Range</span>
@@ -271,7 +273,7 @@ export default function SecureBlueCommandCenter() {
             
             <div className="space-y-8">
               <div className="flex gap-4">
-                <div className="flex-shrink-0 h-10 w-10 rounded bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
+                <div className="flex-shrink-0 h-10 w-10 bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
                   <ShieldCheck className="h-5 w-5 text-blue-400" />
                 </div>
                 <div>
@@ -283,7 +285,7 @@ export default function SecureBlueCommandCenter() {
               </div>
 
               <div className="flex gap-4">
-                <div className="flex-shrink-0 h-10 w-10 rounded bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
+                <div className="flex-shrink-0 h-10 w-10 bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
                   <Zap className="h-5 w-5 text-cyan-400" />
                 </div>
                 <div>
@@ -295,7 +297,7 @@ export default function SecureBlueCommandCenter() {
               </div>
 
               <div className="flex gap-4">
-                <div className="flex-shrink-0 h-10 w-10 rounded bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                <div className="flex-shrink-0 h-10 w-10 bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
                   <Droplets className="h-5 w-5 text-emerald-400" />
                 </div>
                 <div>
@@ -309,9 +311,9 @@ export default function SecureBlueCommandCenter() {
 
             <div className="mt-10">
                <Link href="#contact">
-                <button className="flex items-center rounded-none border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-white font-mono text-sm px-6 py-3 transition-colors">
+                <Button className="rounded-none border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-white font-mono text-sm px-6 h-12">
                   Request System Audit <Terminal className="ml-2 h-4 w-4" />
-                </button>
+                </Button>
               </Link>
             </div>
           </div>
@@ -326,7 +328,7 @@ export default function SecureBlueCommandCenter() {
             <p className="text-zinc-400">Why legacy water management is costing your facility time, money, and resources.</p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-px bg-zinc-800 border border-zinc-800 rounded-lg overflow-hidden">
+          <div className="grid md:grid-cols-2 gap-px bg-zinc-800 border border-zinc-800 overflow-hidden">
             
             {/* The Old Way */}
             <div className="bg-zinc-950 p-10">
@@ -406,19 +408,18 @@ export default function SecureBlueCommandCenter() {
       </section>
 
       {/* FINAL CTA SECTION */}
-      <section className="py-20 border-t border-zinc-800 bg-zinc-950 text-center">
+      <section id="contact" className="py-20 border-t border-zinc-800 bg-zinc-950 text-center">
         <h2 className="text-3xl font-bold mb-6">Upgrade Your Infrastructure.</h2>
         <p className="text-zinc-400 mb-10 max-w-xl mx-auto">
           Join leading resorts, hospitals, and agricultural hubs operating on Secure Blue's IoT infrastructure.
         </p>
         <Link href="#contact">
-          <button className="h-14 px-10 flex mx-auto items-center justify-center text-lg bg-white text-black hover:bg-zinc-200 rounded-none font-bold tracking-wide transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+          <Button size="lg" className="h-14 px-10 text-lg bg-white text-black hover:bg-zinc-200 rounded-none font-bold tracking-wide transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)]">
             <Lock className="mr-2 h-5 w-5" /> Access the Terminal
-          </button>
+          </Button>
         </Link>
       </section>
 
     </div>
   );
 }
-```</Card></Button>
