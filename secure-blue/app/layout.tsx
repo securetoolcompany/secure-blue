@@ -3,7 +3,10 @@ import { Inter, Geist_Mono, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const jetbrainsMono = JetBrains_Mono({subsets:['latin'],variable:'--font-mono'});
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono'
+});
 
 const inter = Inter({ subsets: ["latin"] });
 const geistMono = Geist_Mono({
@@ -22,8 +25,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("bg-[#131722]", "font-mono", jetbrainsMono.variable)}>
-      <body className={`${inter.className} ${geistMono.variable} antialiased text-zinc-400`}>
+    <html lang="en" className={cn("dark", jetbrainsMono.variable, geistMono.variable)}>
+      <body className={cn(inter.className, "antialiased bg-[#131722] text-zinc-400 min-h-screen")}>
         {children}
       </body>
     </html>
