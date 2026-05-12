@@ -289,7 +289,7 @@ export default function SecureBlueCommandCenter() {
                 <div>
                   <h4 className="text-lg font-semibold text-zinc-200 mb-1">Consulting & System Design</h4>
                   <p className="text-sm text-zinc-400 leading-relaxed">
-                    We don't just sell hardware. Our engineers design bespoke, holistic layouts for golf courses, schools, and government facilities to ensure maximum efficiency.
+                    We don&apos;t just sell hardware. Our engineers design bespoke, holistic layouts for golf courses, schools, and government facilities to ensure maximum efficiency.
                   </p>
                 </div>
               </div>
@@ -409,7 +409,7 @@ export default function SecureBlueCommandCenter() {
       <section className="py-20 border-t border-zinc-800 bg-zinc-950 text-center">
         <h2 className="text-3xl font-bold mb-6">Upgrade Your Infrastructure.</h2>
         <p className="text-zinc-400 mb-10 max-w-xl mx-auto">
-          Join leading resorts, hospitals, and agricultural hubs operating on Secure Blue's IoT infrastructure.
+          Join leading resorts, hospitals, and agricultural hubs operating on Secure Blue&apos;s IoT infrastructure.
         </p>
         <Link href="#contact">
           <button className="h-14 px-10 flex mx-auto items-center justify-center text-lg bg-white text-black hover:bg-zinc-200 rounded-none font-bold tracking-wide transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)]">
@@ -421,4 +421,3 @@ export default function SecureBlueCommandCenter() {
     </div>
   );
 }
-```</Card></Button>
