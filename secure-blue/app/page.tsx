@@ -26,7 +26,7 @@ export default function SecureBlueCommandCenter() {
             </h1>
             
             <p className="text-xl text-zinc-400 leading-relaxed max-w-xl font-light">
-              Understand exactly what your facility is doing. We pipe live sensor data and environmental variables into a single command center to help you stop leaks, automate irrigation, and source water from thin air.
+              Understand exactly what your infrastructure is doing. We pipe live sensor data and environmental variables into a single command center to help you stop leaks, automate delivery systems, and source water from thin air.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
@@ -44,19 +44,86 @@ export default function SecureBlueCommandCenter() {
             </div>
           </div>
 
-          {/* Hero Dashboard Preview */}
-          <div className="relative rounded-none border border-zinc-800 bg-zinc-900/80 p-2 shadow-2xl backdrop-blur-sm">
+          {/* Hero Dashboard Preview (Data-Rich Visualization) */}
+          <div className="relative rounded-none border border-zinc-800 bg-zinc-950 p-2 shadow-2xl backdrop-blur-sm">
             <div className="flex items-center gap-2 px-3 pb-2 mb-2 border-b border-zinc-800">
               <div className="h-3 w-3 rounded-full bg-red-500/20 border border-red-500/50" />
               <div className="h-3 w-3 rounded-full bg-yellow-500/20 border border-yellow-500/50" />
               <div className="h-3 w-3 rounded-full bg-green-500/20 border border-green-500/50" />
               <span className="ml-2 text-xs font-mono text-zinc-500">sb-telemetry-view</span>
             </div>
-            <div className="relative aspect-video w-full overflow-hidden bg-zinc-950 flex items-center justify-center border border-zinc-800/50">
-               {/* Terminal/Grid Background simulation */}
-               <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-               <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-zinc-900/0 to-black opacity-80"></div>
-               <Activity className="h-16 w-16 text-cyan-500/40 animate-pulse relative z-10" />
+            
+            <div className="relative aspect-video w-full overflow-hidden bg-zinc-950 flex flex-col border border-zinc-800/50 text-xs font-mono">
+               {/* Background Grid */}
+               <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:12px_12px] pointer-events-none"></div>
+               <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-zinc-900/0 via-zinc-950/50 to-zinc-950 opacity-100 pointer-events-none"></div>
+               
+               {/* Dashboard Content */}
+               <div className="relative z-10 flex flex-col h-full p-4 gap-4">
+                  {/* Top Bar */}
+                  <div className="flex justify-between items-center border-b border-zinc-800 pb-2">
+                    <div className="flex items-center gap-2">
+                       <Activity className="h-4 w-4 text-cyan-500" />
+                       <span className="text-zinc-300 font-bold tracking-widest uppercase">Global Telemetry</span>
+                    </div>
+                    <div className="flex gap-4">
+                      <span className="text-emerald-400">SYS.ONLINE</span>
+                      <span className="text-zinc-500">NODES: 1,402</span>
+                    </div>
+                  </div>
+
+                  {/* Main Content Grid */}
+                  <div className="grid grid-cols-3 gap-4 flex-1">
+                     {/* Left Column: Alerts & Nodes */}
+                     <div className="col-span-1 flex flex-col gap-4">
+                        <div className="bg-zinc-900/60 border border-zinc-800 p-3 rounded-sm flex-1">
+                           <div className="text-zinc-500 mb-2 border-b border-zinc-800 pb-1">LIVE_ALERTS</div>
+                           <div className="space-y-2 text-[10px]">
+                              <div className="flex justify-between text-zinc-300"><span className="text-blue-400">[OK]</span> VLV_A12</div>
+                              <div className="flex justify-between text-zinc-300"><span className="text-blue-400">[OK]</span> VLV_A13</div>
+                              <div className="flex justify-between text-red-400 animate-pulse"><span>[WARN]</span> FLOW_DROP_B04</div>
+                              <div className="flex justify-between text-zinc-300"><span className="text-blue-400">[OK]</span> A2W_UNIT_7</div>
+                           </div>
+                        </div>
+                        <div className="bg-zinc-900/60 border border-zinc-800 p-3 rounded-sm">
+                           <div className="text-zinc-500 mb-1">A2W_YIELD</div>
+                           <div className="text-2xl text-cyan-400 font-bold">482<span className="text-xs text-zinc-500 ml-1 font-normal">L/HR</span></div>
+                        </div>
+                     </div>
+
+                     {/* Right Column (Span 2): Charts & Maps */}
+                     <div className="col-span-2 flex flex-col gap-4">
+                        <div className="bg-zinc-900/60 border border-zinc-800 p-3 rounded-sm flex-1 flex flex-col">
+                           <div className="flex justify-between items-center mb-4">
+                             <span className="text-zinc-500">CONSUMPTION_RATE (24H)</span>
+                             <LineChart className="h-3 w-3 text-zinc-500" />
+                           </div>
+                           {/* Simulated Bar Chart */}
+                           <div className="flex-1 flex items-end gap-[2px] px-2">
+                             {[40, 60, 45, 80, 50, 65, 30, 40, 70, 85, 60, 40, 30, 20, 50, 60].map((h, i) => (
+                               <div key={i} className="flex-1 bg-blue-500/20 hover:bg-blue-400 transition-colors border-t border-blue-500/50" style={{ height: `${h}%` }}></div>
+                             ))}
+                           </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4 h-16">
+                           <div className="bg-zinc-900/60 border border-zinc-800 p-2 px-3 rounded-sm flex justify-between items-center">
+                              <div>
+                                 <div className="text-[9px] text-zinc-500 mb-0.5">SOIL_SATURATION</div>
+                                 <div className="text-emerald-400 font-bold">OPTIMAL (42%)</div>
+                              </div>
+                              <Droplets className="h-4 w-4 text-emerald-500/50" />
+                           </div>
+                           <div className="bg-zinc-900/60 border border-zinc-800 p-2 px-3 rounded-sm flex justify-between items-center">
+                              <div>
+                                 <div className="text-[9px] text-zinc-500 mb-0.5">LORAWAN_UPLINK</div>
+                                 <div className="text-zinc-300 font-bold">STABLE</div>
+                              </div>
+                              <Network className="h-4 w-4 text-cyan-500/50" />
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
             </div>
           </div>
         </div>
@@ -84,7 +151,7 @@ export default function SecureBlueCommandCenter() {
               </CardHeader>
               <CardContent className="flex-1 flex flex-col justify-between">
                 <p className="text-zinc-400 text-sm leading-relaxed mb-6">
-                  Autonomous holistic sensors with LoRaWAN integration. Deploy instant shut-off capabilities across entire facilities to prevent catastrophic water loss and infrastructure damage.
+                  Autonomous holistic sensors with LoRaWAN integration. Deploy instant shut-off capabilities across your entire infrastructure to prevent catastrophic water loss and property damage.
                 </p>
                 <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500">
                   <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-blue-500" /> Valve Actuation</span>
@@ -101,7 +168,7 @@ export default function SecureBlueCommandCenter() {
               </CardHeader>
               <CardContent className="flex-1 flex flex-col justify-between">
                 <p className="text-zinc-400 text-sm leading-relaxed mb-6">
-                  Extract high-purity water directly from the atmosphere. Our A2W machines operate independently of local grid constraints, providing reliable water generation for remote or strained facilities.
+                  Extract high-purity water directly from the atmosphere. Our A2W machines operate independently of local grid constraints, providing reliable water generation for remote or strained infrastructure.
                 </p>
                 <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500">
                   <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-cyan-500" /> Humidity Parsing</span>
@@ -118,7 +185,7 @@ export default function SecureBlueCommandCenter() {
               </CardHeader>
               <CardContent className="flex-1 flex flex-col justify-between">
                 <p className="text-zinc-400 text-sm leading-relaxed mb-6">
-                  Intelligent distribution. Combine smart irrigation arrays with graywater distillation to drastically reduce consumption for golf courses, large-scale farms, and resort grounds.
+                  Intelligent distribution. Combine sensory arrays with graywater distillation to automate delivery systems and drastically reduce consumption for golf courses, farms, and massive estates.
                 </p>
                 <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500">
                   <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-emerald-500" /> Soil Saturation</span>
@@ -136,7 +203,7 @@ export default function SecureBlueCommandCenter() {
           <div className="mb-16 text-center max-w-3xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">Data-Driven Resource Management</h2>
             <p className="text-zinc-400 text-lg leading-relaxed">
-              Stop guessing. Secure Blue OS pipes real-time facility telemetry, atmospheric data, and consumption analytics directly into your dashboard, enabling institutional-grade oversight.
+              Stop guessing. Secure Blue OS pipes real-time telemetry, atmospheric data, and consumption analytics directly into your dashboard, enabling institutional-grade oversight across your infrastructure.
             </p>
           </div>
 
@@ -148,7 +215,7 @@ export default function SecureBlueCommandCenter() {
                 <h3 className="text-xl font-semibold">LoRaWAN Telemetry</h3>
               </div>
               <p className="text-sm text-zinc-400 leading-relaxed mb-6 h-20">
-                Low-cost, low-power data transfer across vast areas. Monitor sensors across entire golf courses or hospital wings without laying miles of cable.
+                Low-cost, low-power data transfer across vast areas. Monitor sensors across entire golf courses or agricultural zones without laying miles of cable.
               </p>
               <div className="border border-zinc-800 bg-zinc-950 p-4 font-mono text-xs space-y-3 shadow-inner">
                 <div className="text-zinc-600 mb-2">LIVE_FEED &gt; NETWORK_STATUS</div>
@@ -277,7 +344,7 @@ export default function SecureBlueCommandCenter() {
                   <ShieldCheck className="h-5 w-5 text-blue-400" />
                 </div>
                 <div>
-                  <h4 className="text-lg font-semibold text-zinc-200 mb-1">Total Facility Overwatch</h4>
+                  <h4 className="text-lg font-semibold text-zinc-200 mb-1">Total Infrastructure Overwatch</h4>
                   <p className="text-sm text-zinc-400 leading-relaxed">
                     View every valve, sensor, and A2W machine across your property in one centralized interface. Control infrastructure remotely with immediate execution.
                   </p>
@@ -291,7 +358,7 @@ export default function SecureBlueCommandCenter() {
                 <div>
                   <h4 className="text-lg font-semibold text-zinc-200 mb-1">Consulting & System Design</h4>
                   <p className="text-sm text-zinc-400 leading-relaxed">
-                    We don&apos;t just sell hardware. Our engineers design bespoke, holistic layouts for golf courses, schools, and government facilities to ensure maximum efficiency.
+                    We don&apos;t just sell hardware. Our engineers design bespoke, holistic layouts for golf courses, massive farms, and government zones to ensure maximum efficiency.
                   </p>
                 </div>
               </div>
@@ -303,7 +370,7 @@ export default function SecureBlueCommandCenter() {
                 <div>
                   <h4 className="text-lg font-semibold text-zinc-200 mb-1">Automated Conservation</h4>
                   <p className="text-sm text-zinc-400 leading-relaxed">
-                    Our smart systems communicate with each other. If soil sensors detect rain, irrigation is halted. Graywater is automatically routed for secondary distillation.
+                    Our smart systems communicate with each other. If soil sensors detect rain, automated delivery systems are halted. Graywater is automatically routed for secondary distillation.
                   </p>
                 </div>
               </div>
@@ -325,7 +392,7 @@ export default function SecureBlueCommandCenter() {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold tracking-tight mb-4">The SECURE Blue Advantage</h2>
-            <p className="text-zinc-400">Why legacy water management is costing your facility time, money, and resources.</p>
+            <p className="text-zinc-400">Why legacy water management is costing your infrastructure time, money, and resources.</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-px bg-zinc-800 border border-zinc-800 overflow-hidden">
@@ -360,7 +427,7 @@ export default function SecureBlueCommandCenter() {
                   </div>
                   <div>
                     <h4 className="text-sm font-bold text-zinc-300">Blind Operations</h4>
-                    <p className="text-xs text-zinc-500 mt-1">Irrigation runs on timers, not data. Watering happens regardless of soil saturation.</p>
+                    <p className="text-xs text-zinc-500 mt-1">Delivery systems run on timers, not data. Watering happens regardless of soil saturation.</p>
                   </div>
                 </li>
               </ul>
@@ -411,7 +478,7 @@ export default function SecureBlueCommandCenter() {
       <section id="contact" className="py-20 border-t border-zinc-800 bg-zinc-950 text-center">
         <h2 className="text-3xl font-bold mb-6">Upgrade Your Infrastructure.</h2>
         <p className="text-zinc-400 mb-10 max-w-xl mx-auto">
-          Join leading resorts, hospitals, and agricultural hubs operating on Secure Blue&apos;s IoT infrastructure.
+          Join leading resorts, massive farms, and agricultural hubs operating on Secure Blue&apos;s IoT infrastructure.
         </p>
         <Link href="#contact">
           <Button size="lg" className="h-14 px-10 text-lg bg-white text-black hover:bg-zinc-200 rounded-none font-bold tracking-wide transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)]">
