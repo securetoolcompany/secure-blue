@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
   Droplets, ShieldCheck, Wind, Activity, ArrowRight, Terminal, 
   Database, Network, Cpu, Globe, BarChart3, Crosshair, Zap, Lock, LineChart,
-  Filter, ArrowLeftRight, Radio
+  Filter, ArrowLeftRight, Radio, Gauge, Battery, Power, Wrench
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -130,150 +130,238 @@ export default function SecureBlueCommandCenter() {
         </div>
       </section>
 
+      {/* MISSION STATEMENT SECTION */}
+      <section className="px-8 py-24 bg-zinc-900/30 border-b border-zinc-800">
+        <div className="max-w-7xl mx-auto">
+          <div className="max-w-3xl mb-16">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-cyan-400 mb-4 flex items-center gap-2">
+              <Globe className="h-3 w-3" /> GLOBAL_MISSION_STATEMENT
+            </p>
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-6 leading-[1.1]">
+              We design infrastructure to solve challenges to the world&apos;s <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">greatest resource.</span>
+            </h2>
+            <p className="text-xl text-zinc-400 leading-relaxed font-light">
+              SECURE Blue is an end-to-end water management ecosystem. Every hardware node and software protocol deployed on our network is engineered to execute one of three critical directives.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {/* Prevent */}
+            <div className="border border-zinc-800 bg-zinc-950 p-8 rounded-none relative overflow-hidden group hover:border-blue-500/50 transition-colors">
+              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                <ShieldCheck className="h-32 w-32 text-blue-500" />
+              </div>
+              <ShieldCheck className="h-8 w-8 text-blue-400 mb-6 relative z-10" />
+              <h3 className="text-xl font-mono uppercase tracking-wider font-bold mb-3 relative z-10">01. Prevent Waste</h3>
+              <p className="text-sm text-zinc-400 leading-relaxed relative z-10">
+                Stop catastrophic loss before it happens. We utilize autonomous sensors to detect anomalies and instantly actuate shut-off valves, securing your facility from internal failure.
+              </p>
+            </div>
+
+            {/* Conserve */}
+            <div className="border border-zinc-800 bg-zinc-950 p-8 rounded-none relative overflow-hidden group hover:border-emerald-500/50 transition-colors">
+              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                <Droplets className="h-32 w-32 text-emerald-500" />
+              </div>
+              <Droplets className="h-8 w-8 text-emerald-400 mb-6 relative z-10" />
+              <h3 className="text-xl font-mono uppercase tracking-wider font-bold mb-3 relative z-10">02. Conserve Resource</h3>
+              <p className="text-sm text-zinc-400 leading-relaxed relative z-10">
+                Deploy water only when mathematically necessary. We aggregate soil telemetry and atmospheric data to automate delivery systems and establish closed-loop graywater recycling.
+              </p>
+            </div>
+
+            {/* Generate */}
+            <div className="border border-zinc-800 bg-zinc-950 p-8 rounded-none relative overflow-hidden group hover:border-cyan-500/50 transition-colors">
+              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                <Wind className="h-32 w-32 text-cyan-500" />
+              </div>
+              <Wind className="h-8 w-8 text-cyan-400 mb-6 relative z-10" />
+              <h3 className="text-xl font-mono uppercase tracking-wider font-bold mb-3 relative z-10">03. Generate Yield</h3>
+              <p className="text-sm text-zinc-400 leading-relaxed relative z-10">
+                Sever your reliance on strained municipal grids. We extract high-purity water directly from atmospheric humidity to create independent, localized sourcing for your infrastructure.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CORE INFRASTRUCTURE (Product Grid) */}
       <section id="solutions" className="px-8 py-24 bg-zinc-950">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-zinc-800 pb-6 gap-6">
             <div>
-              <h2 className="text-3xl font-bold tracking-tight mb-2">Core Infrastructure</h2>
-              <p className="text-zinc-500 font-mono text-sm">Proprietary hardware and integration modules for your network.</p>
+              <h2 className="text-3xl font-bold tracking-tight mb-2">Hardware & Integration</h2>
+              <p className="text-zinc-500 font-mono text-sm">Proprietary nodes and mechanical modules for your network.</p>
             </div>
             <div className="text-xs font-mono text-emerald-500 bg-emerald-500/10 px-3 py-1 border border-emerald-500/20">
-              STATUS: HARDWARE ONLINE
+              STATUS: SYSTEMS ONLINE
             </div>
           </div>
 
           <div className="grid lg:grid-cols-3 gap-6">
+            
             {/* 1. SECURE LeakStop */}
-            <Card className="bg-zinc-900/40 border-zinc-800 hover:border-blue-500/50 transition-colors rounded-none flex flex-col">
-              <CardHeader className="pb-4">
-                <ShieldCheck className="h-8 w-8 text-blue-400 mb-4" />
-                <CardTitle className="text-xl font-mono uppercase tracking-wider text-white">01. SECURE LeakStop</CardTitle>
-              </CardHeader>
-              <CardContent className="flex-1 flex flex-col justify-between">
-                <p className="text-zinc-400 text-sm leading-relaxed mb-6">
-                  Autonomous holistic valves with LoRaWAN integration. Deploy instant shut-off capabilities across your entire infrastructure to prevent catastrophic water loss and property damage.
-                </p>
-                <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500">
-                  <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-blue-500" /> Valve Actuation</span>
-                  <span className="flex items-center gap-2"><Database className="h-3 w-3 text-blue-500" /> Flow Analytics</span>
-                </div>
-              </CardContent>
-            </Card>
+            <Link href="/infrastructure/leakstop" className="block h-full outline-none">
+              <Card className="h-full bg-zinc-900/40 border-zinc-800 hover:border-blue-500/50 transition-colors rounded-none flex flex-col group cursor-pointer relative overflow-hidden">
+                <CardHeader className="pb-4">
+                  <ShieldCheck className="h-8 w-8 text-blue-400 mb-4 group-hover:scale-110 transition-transform" />
+                  <CardTitle className="text-xl font-mono uppercase tracking-wider text-white">01. SECURE LeakStop</CardTitle>
+                </CardHeader>
+                <CardContent className="flex-1 flex flex-col justify-between">
+                  <p className="text-zinc-400 text-sm leading-relaxed mb-6">
+                    Autonomous holistic valves with LoRaWAN integration. Deploy instant shut-off capabilities across your entire infrastructure to prevent catastrophic water loss.
+                  </p>
+                  <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500 mb-4">
+                    <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-blue-500" /> Valve Actuation</span>
+                    <span className="flex items-center gap-2"><Database className="h-3 w-3 text-blue-500" /> Flow Analytics</span>
+                  </div>
+                  <div className="mt-auto text-blue-400 font-mono text-[10px] tracking-widest font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                    VIEW_HARDWARE ↗
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
 
             {/* 2. SECURE A2W Machines */}
-            <Card className="bg-zinc-900/40 border-zinc-800 hover:border-cyan-500/50 transition-colors rounded-none flex flex-col">
-              <CardHeader className="pb-4">
-                <Wind className="h-8 w-8 text-cyan-400 mb-4" />
-                <CardTitle className="text-xl font-mono uppercase tracking-wider text-white">02. SECURE A2W</CardTitle>
-              </CardHeader>
-              <CardContent className="flex-1 flex flex-col justify-between">
-                <p className="text-zinc-400 text-sm leading-relaxed mb-6">
-                  Extract high-purity water directly from the atmosphere. Industrial-scale generation units that operate independently of local grid constraints for reliable, decentralized sourcing.
-                </p>
-                <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500">
-                  <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-cyan-500" /> Humidity Parsing</span>
-                  <span className="flex items-center gap-2"><Database className="h-3 w-3 text-cyan-500" /> Generation Metrics</span>
-                </div>
-              </CardContent>
-            </Card>
+            <Link href="/infrastructure/a2w-machines" className="block h-full outline-none">
+              <Card className="h-full bg-zinc-900/40 border-zinc-800 hover:border-cyan-500/50 transition-colors rounded-none flex flex-col group cursor-pointer relative overflow-hidden">
+                <CardHeader className="pb-4">
+                  <Wind className="h-8 w-8 text-cyan-400 mb-4 group-hover:scale-110 transition-transform" />
+                  <CardTitle className="text-xl font-mono uppercase tracking-wider text-white">02. SECURE A2W</CardTitle>
+                </CardHeader>
+                <CardContent className="flex-1 flex flex-col justify-between">
+                  <p className="text-zinc-400 text-sm leading-relaxed mb-6">
+                    Extract high-purity water directly from the atmosphere. Industrial-scale generation units that operate independently of local grid constraints.
+                  </p>
+                  <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500 mb-4">
+                    <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-cyan-500" /> Humidity Parsing</span>
+                    <span className="flex items-center gap-2"><Database className="h-3 w-3 text-cyan-500" /> Generation Metrics</span>
+                  </div>
+                  <div className="mt-auto text-cyan-400 font-mono text-[10px] tracking-widest font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                    VIEW_HARDWARE ↗
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
 
             {/* 3. A2W Graywater Attachment */}
-            <Card className="bg-zinc-900/40 border-zinc-800 hover:border-purple-500/50 transition-colors rounded-none flex flex-col">
-              <CardHeader className="pb-4">
-                <Filter className="h-8 w-8 text-purple-400 mb-4" />
-                <CardTitle className="text-xl font-mono uppercase tracking-wider text-white">03. A2W Graywater</CardTitle>
-              </CardHeader>
-              <CardContent className="flex-1 flex flex-col justify-between">
-                <p className="text-zinc-400 text-sm leading-relaxed mb-6">
-                  Maximize resource efficiency by routing facility wastewater directly into your A2W system. Enables secondary purification for non-potable reuse and closed-loop conservation.
-                </p>
-                <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500">
-                  <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-purple-500" /> Secondary Yield</span>
-                  <span className="flex items-center gap-2"><Database className="h-3 w-3 text-purple-500" /> Loop Integration</span>
-                </div>
-              </CardContent>
-            </Card>
+            <Link href="/infrastructure/a2w-graywater" className="block h-full outline-none">
+              <Card className="h-full bg-zinc-900/40 border-zinc-800 hover:border-purple-500/50 transition-colors rounded-none flex flex-col group cursor-pointer relative overflow-hidden">
+                <CardHeader className="pb-4">
+                  <Filter className="h-8 w-8 text-purple-400 mb-4 group-hover:scale-110 transition-transform" />
+                  <CardTitle className="text-xl font-mono uppercase tracking-wider text-white">03. A2W Graywater</CardTitle>
+                </CardHeader>
+                <CardContent className="flex-1 flex flex-col justify-between">
+                  <p className="text-zinc-400 text-sm leading-relaxed mb-6">
+                    Maximize resource efficiency by routing facility wastewater directly into your A2W system. Enables secondary purification for closed-loop conservation.
+                  </p>
+                  <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500 mb-4">
+                    <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-purple-500" /> Secondary Yield</span>
+                    <span className="flex items-center gap-2"><Database className="h-3 w-3 text-purple-500" /> Loop Integration</span>
+                  </div>
+                  <div className="mt-auto text-purple-400 font-mono text-[10px] tracking-widest font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                    VIEW_HARDWARE ↗
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
 
             {/* 4. SECURE Smart Irrigation System */}
-            <Card className="bg-zinc-900/40 border-zinc-800 hover:border-emerald-500/50 transition-colors rounded-none flex flex-col">
-              <CardHeader className="pb-4">
-                <Droplets className="h-8 w-8 text-emerald-400 mb-4" />
-                <CardTitle className="text-xl font-mono uppercase tracking-wider text-white">04. Smart Irrigation</CardTitle>
-              </CardHeader>
-              <CardContent className="flex-1 flex flex-col justify-between">
-                <p className="text-zinc-400 text-sm leading-relaxed mb-6">
-                  Intelligent distribution arrays that aggregate soil saturation and atmospheric telemetry to ensure water is deployed exactly when and where it is needed, automating delivery systems.
-                </p>
-                <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500">
-                  <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-emerald-500" /> Soil Saturation</span>
-                  <span className="flex items-center gap-2"><Database className="h-3 w-3 text-emerald-500" /> Automated Delivery</span>
-                </div>
-              </CardContent>
-            </Card>
+            <Link href="/infrastructure/smart-irrigation" className="block h-full outline-none">
+              <Card className="h-full bg-zinc-900/40 border-zinc-800 hover:border-emerald-500/50 transition-colors rounded-none flex flex-col group cursor-pointer relative overflow-hidden">
+                <CardHeader className="pb-4">
+                  <Droplets className="h-8 w-8 text-emerald-400 mb-4 group-hover:scale-110 transition-transform" />
+                  <CardTitle className="text-xl font-mono uppercase tracking-wider text-white">04. Smart Irrigation</CardTitle>
+                </CardHeader>
+                <CardContent className="flex-1 flex flex-col justify-between">
+                  <p className="text-zinc-400 text-sm leading-relaxed mb-6">
+                    Intelligent arrays that aggregate soil saturation and telemetry to ensure water is deployed exactly when needed, automating delivery systems.
+                  </p>
+                  <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500 mb-4">
+                    <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-emerald-500" /> Soil Saturation</span>
+                    <span className="flex items-center gap-2"><Database className="h-3 w-3 text-emerald-500" /> Automated Delivery</span>
+                  </div>
+                  <div className="mt-auto text-emerald-400 font-mono text-[10px] tracking-widest font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                    VIEW_HARDWARE ↗
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
 
             {/* 5. Irrigation Graywater Conversion */}
-            <Card className="bg-zinc-900/40 border-zinc-800 hover:border-emerald-400/50 transition-colors rounded-none flex flex-col">
-              <CardHeader className="pb-4">
-                <ArrowLeftRight className="h-8 w-8 text-emerald-300 mb-4" />
-                <CardTitle className="text-xl font-mono uppercase tracking-wider text-white">05. Irrig. Graywater</CardTitle>
-              </CardHeader>
-              <CardContent className="flex-1 flex flex-col justify-between">
-                <p className="text-zinc-400 text-sm leading-relaxed mb-6">
-                  Seamlessly divert and filter facility graywater to supply your smart irrigation networks, drastically reducing municipal dependency for large-scale landscaping.
-                </p>
-                <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500">
-                  <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-emerald-300" /> Wastewater Routing</span>
-                  <span className="flex items-center gap-2"><Database className="h-3 w-3 text-emerald-300" /> Yield Offset</span>
-                </div>
-              </CardContent>
-            </Card>
+            <Link href="/infrastructure/irrigation-graywater" className="block h-full outline-none">
+              <Card className="h-full bg-zinc-900/40 border-zinc-800 hover:border-emerald-400/50 transition-colors rounded-none flex flex-col group cursor-pointer relative overflow-hidden">
+                <CardHeader className="pb-4">
+                  <ArrowLeftRight className="h-8 w-8 text-emerald-300 mb-4 group-hover:scale-110 transition-transform" />
+                  <CardTitle className="text-xl font-mono uppercase tracking-wider text-white">05. Irrig. Graywater</CardTitle>
+                </CardHeader>
+                <CardContent className="flex-1 flex flex-col justify-between">
+                  <p className="text-zinc-400 text-sm leading-relaxed mb-6">
+                    Seamlessly divert and filter facility graywater to supply your smart irrigation networks, drastically reducing municipal dependency for landscaping.
+                  </p>
+                  <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500 mb-4">
+                    <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-emerald-300" /> Wastewater Routing</span>
+                    <span className="flex items-center gap-2"><Database className="h-3 w-3 text-emerald-300" /> Yield Offset</span>
+                  </div>
+                  <div className="mt-auto text-emerald-300 font-mono text-[10px] tracking-widest font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                    VIEW_HARDWARE ↗
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
 
             {/* 6. Environmental Sensors */}
-            <Card className="bg-zinc-900/40 border-zinc-800 hover:border-amber-500/50 transition-colors rounded-none flex flex-col">
-              <CardHeader className="pb-4">
-                <Radio className="h-8 w-8 text-amber-400 mb-4" />
-                <CardTitle className="text-xl font-mono uppercase tracking-wider text-white">06. Environ. Sensors</CardTitle>
-              </CardHeader>
-              <CardContent className="flex-1 flex flex-col justify-between">
-                <p className="text-zinc-400 text-sm leading-relaxed mb-6">
-                  Highly resilient LoRaWAN sensor arrays deployed across vast topographical areas to monitor soil moisture, ambient humidity, temperature, and anomalous flow rates.
-                </p>
-                <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500">
-                  <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-amber-500" /> Uplink Status</span>
-                  <span className="flex items-center gap-2"><Database className="h-3 w-3 text-amber-500" /> Topo-Mapping</span>
-                </div>
-              </CardContent>
-            </Card>
+            <Link href="/infrastructure/environmental-sensors" className="block h-full outline-none">
+              <Card className="h-full bg-zinc-900/40 border-zinc-800 hover:border-amber-500/50 transition-colors rounded-none flex flex-col group cursor-pointer relative overflow-hidden">
+                <CardHeader className="pb-4">
+                  <Radio className="h-8 w-8 text-amber-400 mb-4 group-hover:scale-110 transition-transform" />
+                  <CardTitle className="text-xl font-mono uppercase tracking-wider text-white">06. Environ. Sensors</CardTitle>
+                </CardHeader>
+                <CardContent className="flex-1 flex flex-col justify-between">
+                  <p className="text-zinc-400 text-sm leading-relaxed mb-6">
+                    Highly resilient LoRaWAN sensor arrays deployed across vast topographical areas to monitor moisture, humidity, temperature, and anomalous flow.
+                  </p>
+                  <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500 mb-4">
+                    <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-amber-500" /> Uplink Status</span>
+                    <span className="flex items-center gap-2"><Database className="h-3 w-3 text-amber-500" /> Topo-Mapping</span>
+                  </div>
+                  <div className="mt-auto text-amber-400 font-mono text-[10px] tracking-widest font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                    VIEW_HARDWARE ↗
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+
           </div>
         </div>
       </section>
 
-      {/* DATA FEEDS SECTION */}
+      {/* DATA FEEDS SECTION (Massive 3x3 Grid) */}
       <section className="px-8 py-24 bg-zinc-900/30 border-y border-zinc-800">
         <div className="max-w-7xl mx-auto">
           <div className="mb-16 text-center max-w-3xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">Data-Driven Resource Management</h2>
             <p className="text-zinc-400 text-lg leading-relaxed">
-              Stop guessing. Secure Blue OS pipes real-time telemetry, atmospheric data, and consumption analytics directly into your dashboard, enabling institutional-grade oversight across your infrastructure.
+              Stop guessing. Secure Blue OS pipes massive arrays of real-time telemetry directly into your dashboard, enabling institutional-grade oversight across your entire infrastructure footprint.
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8">
-            {/* Telemetry Data Feed */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            {/* 1. Telemetry Data Feed */}
             <div className="space-y-4">
-              <div className="flex items-center gap-3 mb-6">
+              <div className="flex items-center gap-3 mb-4">
                 <Globe className="h-6 w-6 text-blue-400" />
-                <h3 className="text-xl font-semibold">LoRaWAN Telemetry</h3>
+                <h3 className="text-xl font-semibold">LoRaWAN Network</h3>
               </div>
-              <p className="text-sm text-zinc-400 leading-relaxed mb-6 h-20">
-                Low-cost, low-power data transfer across vast areas. Monitor sensors across entire golf courses or agricultural zones without laying miles of cable.
+              <p className="text-sm text-zinc-400 leading-relaxed mb-4">
+                Monitor low-cost, long-range packet transfer health across the entire array.
               </p>
               <div className="border border-zinc-800 bg-zinc-950 p-4 font-mono text-xs space-y-3 shadow-inner">
                 <div className="text-zinc-600 mb-2">LIVE_FEED &gt; NETWORK_STATUS</div>
                 <div className="flex justify-between">
                   <span className="text-zinc-400">SIGNAL_STRENGTH</span>
-                  <span className="text-emerald-400">-84 dBm (Strong)</span>
+                  <span className="text-emerald-400">-84 dBm</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-zinc-400">ACTIVE_NODES</span>
@@ -286,14 +374,14 @@ export default function SecureBlueCommandCenter() {
               </div>
             </div>
 
-            {/* Environmental Data Feed */}
+            {/* 2. Atmospheric Index Feed */}
             <div className="space-y-4">
-              <div className="flex items-center gap-3 mb-6">
+              <div className="flex items-center gap-3 mb-4">
                 <BarChart3 className="h-6 w-6 text-cyan-400" />
                 <h3 className="text-xl font-semibold">Atmospheric Index</h3>
               </div>
-              <p className="text-sm text-zinc-400 leading-relaxed mb-6 h-20">
-                Optimize your Air-to-Water generation. Live tracking of ambient humidity, temperature, and dew points to maximize machine yield and efficiency.
+              <p className="text-sm text-zinc-400 leading-relaxed mb-4">
+                Track ambient humidity and dew points to maximize A2W generation yield.
               </p>
               <div className="border border-zinc-800 bg-zinc-950 p-4 font-mono text-xs space-y-3 shadow-inner">
                 <div className="text-zinc-600 mb-2">LIVE_FEED &gt; A2W_METRICS</div>
@@ -312,19 +400,19 @@ export default function SecureBlueCommandCenter() {
               </div>
             </div>
 
-            {/* Financial Data Feed */}
+            {/* 3. Financial Data Feed */}
             <div className="space-y-4">
-              <div className="flex items-center gap-3 mb-6">
+              <div className="flex items-center gap-3 mb-4">
                 <Crosshair className="h-6 w-6 text-emerald-400" />
                 <h3 className="text-xl font-semibold">Utility Analytics</h3>
               </div>
-              <p className="text-sm text-zinc-400 leading-relaxed mb-6 h-20">
-                Track your ROI in real-time. The terminal aggregates water saved via LeakStop and generated via A2W against local municipal utility rates.
+              <p className="text-sm text-zinc-400 leading-relaxed mb-4">
+                Aggregate water saved and generated against local municipal utility rates.
               </p>
               <div className="border border-zinc-800 bg-zinc-950 p-4 font-mono text-xs space-y-3 shadow-inner">
                 <div className="text-zinc-600 mb-2">LIVE_FEED &gt; COST_SAVINGS</div>
                 <div className="flex justify-between">
-                  <span className="text-zinc-400">VOLUME_SAVED_MTD</span>
+                  <span className="text-zinc-400">VOL_SAVED_MTD</span>
                   <span className="text-emerald-400">12,400 GAL</span>
                 </div>
                 <div className="flex justify-between">
@@ -334,6 +422,162 @@ export default function SecureBlueCommandCenter() {
                 <div className="flex justify-between">
                   <span className="text-zinc-400">PROJECTED_ROI</span>
                   <span className="text-emerald-400">14 Months</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 4. Global Flow Rates */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 mb-4">
+                <Gauge className="h-6 w-6 text-blue-500" />
+                <h3 className="text-xl font-semibold">System Flow Rates</h3>
+              </div>
+              <p className="text-sm text-zinc-400 leading-relaxed mb-4">
+                Monitor live GPM (Gallons Per Minute) across all active primary lines.
+              </p>
+              <div className="border border-zinc-800 bg-zinc-950 p-4 font-mono text-xs space-y-3 shadow-inner">
+                <div className="text-zinc-600 mb-2">LIVE_FEED &gt; LINE_PRESSURE</div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-400">MAIN_INTAKE</span>
+                  <span className="text-zinc-300">42.8 GPM</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-400">ZONE_B_DIST</span>
+                  <span className="text-zinc-300">18.4 GPM</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-400">PRESSURE_VAR</span>
+                  <span className="text-emerald-400">STABLE (±2%)</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 5. Node Power Matrix */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 mb-4">
+                <Battery className="h-6 w-6 text-amber-400" />
+                <h3 className="text-xl font-semibold">Node Power Status</h3>
+              </div>
+              <p className="text-sm text-zinc-400 leading-relaxed mb-4">
+                Track battery degradation and solar-charging states for remote hardware.
+              </p>
+              <div className="border border-zinc-800 bg-zinc-950 p-4 font-mono text-xs space-y-3 shadow-inner">
+                <div className="text-zinc-600 mb-2">LIVE_FEED &gt; POWER_MATRIX</div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-400">AVG_BATTERY_LVL</span>
+                  <span className="text-emerald-400">94%</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-400">SOLAR_UPTAKE</span>
+                  <span className="text-amber-400">+1.2W / Node</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-400">LOW_PWR_WARNINGS</span>
+                  <span className="text-blue-400">0</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 6. Soil Topography */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 mb-4">
+                <Droplets className="h-6 w-6 text-emerald-500" />
+                <h3 className="text-xl font-semibold">Soil Saturation</h3>
+              </div>
+              <p className="text-sm text-zinc-400 leading-relaxed mb-4">
+                Real-time moisture mapping to prevent over-watering in automated zones.
+              </p>
+              <div className="border border-zinc-800 bg-zinc-950 p-4 font-mono text-xs space-y-3 shadow-inner">
+                <div className="text-zinc-600 mb-2">LIVE_FEED &gt; TOPO_MOISTURE</div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-400">SECTOR_1 (GREEN)</span>
+                  <span className="text-emerald-400">44% (OPT)</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-400">SECTOR_2 (FAIRWAY)</span>
+                  <span className="text-amber-400">22% (DRY)</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-400">EVAPORATION_EST</span>
+                  <span className="text-zinc-300">0.8 in/day</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 7. Actuator & Valve Status */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 mb-4">
+                <Power className="h-6 w-6 text-red-400" />
+                <h3 className="text-xl font-semibold">Actuator States</h3>
+              </div>
+              <p className="text-sm text-zinc-400 leading-relaxed mb-4">
+                Verify the mechanical open/closed state of every LeakStop valve.
+              </p>
+              <div className="border border-zinc-800 bg-zinc-950 p-4 font-mono text-xs space-y-3 shadow-inner">
+                <div className="text-zinc-600 mb-2">LIVE_FEED &gt; VALVE_CONTROL</div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-400">TOTAL_ACTUATORS</span>
+                  <span className="text-zinc-300">86</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-400">STATE_OPEN</span>
+                  <span className="text-blue-400">84</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-400">STATE_SECURED</span>
+                  <span className="text-red-400">2 (MITIGATED)</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 8. Graywater Routing */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 mb-4">
+                <Filter className="h-6 w-6 text-purple-400" />
+                <h3 className="text-xl font-semibold">Graywater Yield</h3>
+              </div>
+              <p className="text-sm text-zinc-400 leading-relaxed mb-4">
+                Track wastewater recovery rates and secondary filtration efficiency.
+              </p>
+              <div className="border border-zinc-800 bg-zinc-950 p-4 font-mono text-xs space-y-3 shadow-inner">
+                <div className="text-zinc-600 mb-2">LIVE_FEED &gt; RECOVERY_LOOP</div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-400">INTAKE_VOLUME</span>
+                  <span className="text-zinc-300">1,250 GAL</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-400">PURIFIED_YIELD</span>
+                  <span className="text-purple-400">1,180 GAL</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-400">EFFICIENCY_RT</span>
+                  <span className="text-emerald-400">94.4%</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 9. Predictive Maintenance */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 mb-4">
+                <Wrench className="h-6 w-6 text-zinc-400" />
+                <h3 className="text-xl font-semibold">System Health</h3>
+              </div>
+              <p className="text-sm text-zinc-400 leading-relaxed mb-4">
+                Algorithmic hardware degradation tracking to predict required service.
+              </p>
+              <div className="border border-zinc-800 bg-zinc-950 p-4 font-mono text-xs space-y-3 shadow-inner">
+                <div className="text-zinc-600 mb-2">LIVE_FEED &gt; DIAGNOSTICS</div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-400">VLV_12_FRICTION</span>
+                  <span className="text-amber-400">ELEVATED</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-400">A2W_FILTER_LIFE</span>
+                  <span className="text-zinc-300">412 HRS</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-400">NEXT_SVC_REQ</span>
+                  <span className="text-emerald-400">22 DAYS</span>
                 </div>
               </div>
             </div>
