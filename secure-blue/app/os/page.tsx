@@ -168,19 +168,26 @@ export default function SecureBlueOSPage() {
               You shouldn&apos;t have to rip and replace your existing tech stack. SECURE Blue OS is built API-first. Every data point, alert, and actuation protocol available in our UI is exposed via a secure REST API and WebSocket architecture.
             </p>
             
-            <ul className="space-y-4 mt-8">
+            <ul className="space-y-6 mt-8">
+              <li className="flex items-start gap-3">
+                <Database className="h-5 w-5 text-cyan-400 mt-0.5 flex-shrink-0" />
+                <div>
+                  <h4 className="text-white font-bold text-sm">Hardware-Agnostic Ingestion (BYOD)</h4>
+                  <p className="text-xs text-zinc-500 mt-1 leading-relaxed">Already deployed third-party sensors? Don&apos;t rip and replace. Our engineering team can build custom data parsers to ingest your legacy hardware telemetry directly into a unified SECURE Blue dashboard.</p>
+                </div>
+              </li>
               <li className="flex items-start gap-3">
                 <GitBranch className="h-5 w-5 text-cyan-400 mt-0.5 flex-shrink-0" />
                 <div>
                   <h4 className="text-white font-bold text-sm">SCADA Compatibility</h4>
-                  <p className="text-xs text-zinc-500 mt-1">Route MQTT threat payloads directly into your existing industrial SCADA or BMS networks.</p>
+                  <p className="text-xs text-zinc-500 mt-1 leading-relaxed">Route MQTT threat payloads directly into your existing industrial SCADA or BMS networks.</p>
                 </div>
               </li>
               <li className="flex items-start gap-3">
                 <Code className="h-5 w-5 text-cyan-400 mt-0.5 flex-shrink-0" />
                 <div>
                   <h4 className="text-white font-bold text-sm">Webhook Listeners</h4>
-                  <p className="text-xs text-zinc-500 mt-1">Push real-time flow anomalies and threat detections instantly to Slack, Teams, or PagerDuty.</p>
+                  <p className="text-xs text-zinc-500 mt-1 leading-relaxed">Push real-time flow anomalies and threat detections instantly to Slack, Teams, or PagerDuty.</p>
                 </div>
               </li>
             </ul>
