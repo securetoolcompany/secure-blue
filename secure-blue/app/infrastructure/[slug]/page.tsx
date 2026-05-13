@@ -5,10 +5,10 @@ import {
   Terminal, ArrowRight, Zap, Database, Activity, Mail
 } from 'lucide-react';
 import Link from 'next/link';
+import ContactForm from '@/components/ContactForm'; // <-- Importing your new Client Component
 
 // ----------------------------------------------------------------------
-// THE DATABASE: This object acts as your temporary backend.
-// Later, this will be replaced by a fetch() call to your admin database.
+// THE DATABASE
 // ----------------------------------------------------------------------
 const productDatabase = {
   'leakstop': {
@@ -97,7 +97,7 @@ const productDatabase = {
   }
 };
 
-// Next.js static export requirement: Pre-builds these 6 specific URLs
+// Next.js static export requirement
 export function generateStaticParams() {
   return Object.keys(productDatabase).map((slug) => ({
     slug: slug,
@@ -111,7 +111,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const resolvedParams = await params;
   const product = productDatabase[resolvedParams.slug as keyof typeof productDatabase];
 
-  // Fallback if URL doesn't match a product
   if (!product) {
     return <div className="min-h-screen bg-zinc-950 text-white flex items-center justify-center font-mono">NODE_NOT_FOUND</div>;
   }
@@ -136,7 +135,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       <section className="relative px-8 pt-20 pb-16 max-w-7xl mx-auto w-full border-b border-zinc-800/50">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           
-          {/* Left: Product Info */}
           <div className="text-left space-y-6">
             <div className="inline-flex items-center rounded-none border border-zinc-800 bg-zinc-900/50 px-3 py-1 text-xs font-mono text-zinc-400 uppercase tracking-widest">
               <Terminal className={`mr-2 h-3.5 w-3.5 ${product.accentColor}`} />
@@ -168,12 +166,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             </div>
           </div>
 
-          {/* Right: Product Image/Schematic Placeholder */}
           <div className={`relative aspect-square w-full max-w-md mx-auto border ${product.borderGlow} bg-zinc-900/30 flex items-center justify-center overflow-hidden shadow-2xl`}>
-             {/* Background Tech Grid */}
              <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:12px_12px] pointer-events-none"></div>
              
-             {/* Dynamic Icon / Future Image location */}
              <div className="relative z-10 flex flex-col items-center gap-6">
                 <Icon className={`h-32 w-32 ${product.accentColor} opacity-80`} />
                 <span className="font-mono text-xs tracking-widest text-zinc-500 bg-zinc-950 px-3 py-1 border border-zinc-800">
@@ -181,7 +176,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 </span>
              </div>
 
-             {/* Corner brackets for aesthetic */}
              <div className={`absolute top-4 left-4 w-4 h-4 border-t-2 border-l-2 ${product.borderGlow}`}></div>
              <div className={`absolute top-4 right-4 w-4 h-4 border-t-2 border-r-2 ${product.borderGlow}`}></div>
              <div className={`absolute bottom-4 left-4 w-4 h-4 border-b-2 border-l-2 ${product.borderGlow}`}></div>
@@ -190,7 +184,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         </div>
       </section>
 
-      {/* CORE CAPABILITIES (Features Grid) */}
+      {/* CORE CAPABILITIES */}
       <section className="px-8 py-24 bg-zinc-900/30 border-b border-zinc-800">
         <div className="max-w-7xl mx-auto">
           <div className="mb-12">
@@ -226,67 +220,12 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             </p>
           </div>
 
-          <div className="border border-zinc-800 bg-zinc-900/50 p-8 shadow-2xl relative overflow-hidden">
-            {/* Terminal Header */}
+          <div className="border border-zinc-800 bg-zinc-900/50 p-8 shadow-2xl relative overflow-hidden min-h-[400px]">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-zinc-500 to-transparent opacity-20"></div>
             
-            <form action="https://formspree.io/f/mwvyzybq" method="POST" className="space-y-6">
-              
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">CLIENT_NAME</label>
-                  <input 
-                    type="text" 
-                    name="name" 
-                    required 
-                    className="w-full bg-zinc-950 border border-zinc-800 text-white p-3 text-sm focus:outline-none focus:border-zinc-500 transition-colors"
-                    placeholder="Enter your full name"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">SECURE_COMMS (EMAIL)</label>
-                  <input 
-                    type="email" 
-                    name="email" 
-                    required 
-                    className="w-full bg-zinc-950 border border-zinc-800 text-white p-3 text-sm focus:outline-none focus:border-zinc-500 transition-colors"
-                    placeholder="name@company.com"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">INFRASTRUCTURE_TYPE</label>
-                <select 
-                  name="facility_type" 
-                  className="w-full bg-zinc-950 border border-zinc-800 text-white p-3 text-sm focus:outline-none focus:border-zinc-500 transition-colors appearance-none"
-                >
-                  <option value="golf_course">Golf Course / Resort</option>
-                  <option value="agriculture">Large-Scale Agriculture</option>
-                  <option value="government">Government / Municipal Facility</option>
-                  <option value="commercial">Commercial Real Estate</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-
-              <div className="space-y-2">
-                <label className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">DEPLOYMENT_PARAMETERS (MESSAGE)</label>
-                <textarea 
-                  name="message" 
-                  rows={4} 
-                  required 
-                  className="w-full bg-zinc-950 border border-zinc-800 text-white p-3 text-sm focus:outline-none focus:border-zinc-500 transition-colors resize-none"
-                  placeholder={`Describe your specific needs regarding ${product.name}...`}
-                ></textarea>
-              </div>
-
-              {/* Hidden field to let the email know which product they are inquiring about */}
-              <input type="hidden" name="interested_product" value={product.name} />
-
-              <Button type="submit" size="lg" className="w-full h-14 text-lg bg-zinc-100 hover:bg-white text-zinc-950 rounded-none font-bold transition-all mt-4">
-                TRANSMIT_REQUEST
-              </Button>
-            </form>
+            {/* The interactive form is injected right here */}
+            <ContactForm productName={product.name} />
+            
           </div>
         </div>
       </section>
