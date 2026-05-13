@@ -230,11 +230,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             {/* Terminal Header */}
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-zinc-500 to-transparent opacity-20"></div>
             
-            {/* Form Action Note: 
-              Replace the 'action' URL below with your actual form handler endpoint 
-              (e.g., https://formspree.io/f/YOUR_ID) when you are ready to go live.
-            */}
-            <form action="https://formspree.io/f/placeholder_endpoint" method="POST" className="space-y-6">
+            <form action="https://formspree.io/f/mwvyzybq" method="POST" className="space-y-6">
               
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
