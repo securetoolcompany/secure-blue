@@ -3,25 +3,26 @@
 import React, { useState } from 'react';
 import { 
   Sliders, Calculator, Droplets, ShieldAlert, 
-  TrendingDown, HelpCircle, Info, Zap, Search
+  TrendingDown, Info, Zap, Search, Box, Check
 } from 'lucide-react';
 
 export default function ROICalculator() {
   // --- 1. CONFIGURABLE VARIABLES ---
   const [facilitySize, setFacilitySize] = useState(50000); 
   const [waterCost, setWaterCost] = useState(12); // Per 1k Gallons
-  const [efficiencyLoss, setEfficiencyLoss] = useState(20); // The "Hidden Drain"
-  const [recoveryYield, setRecoveryYield] = useState(0.08); // A2W + Graywater yield per sqft/mo
-  const [insuranceCredit, setInsuranceCredit] = useState(0.15); // Credit per sqft/yr
+  const [efficiencyLoss, setEfficiencyLoss] = useState(20); 
+  const [insuranceCredit, setInsuranceCredit] = useState(0.15); 
+  
+  // A2W Unit Selection (Daily Capacity in Gallons)
+  const [a2wCapacity, setA2wCapacity] = useState(1000); 
 
   // --- 2. THE MATHEMATICAL ENGINE ---
   
   // A. Estimated Annual Leakage (Gals)
-  // We calculate loss based on footprint and efficiency percentage. 
   const annualLeakageVolume = (facilitySize * (efficiencyLoss / 100)) * 12;
   
-  // B. Annual Resource Recovery (A2W + Graywater Gals)
-  const annualRecoveryVolume = (facilitySize * recoveryYield) * 12; 
+  // B. Annual A2W Generation (Daily Output * 365)
+  const annualRecoveryVolume = a2wCapacity * 365; 
 
   // C. Total Liquid Conservation (Gals)
   const totalVolumeSaved = Math.floor(annualLeakageVolume + annualRecoveryVolume);
@@ -74,12 +75,35 @@ export default function ROICalculator() {
           </div>
 
           <div className="space-y-8">
-            {/* 1. Facility Size */}
+            
+            {/* A2W UNIT SELECTION (MODIFIED) */}
+            <div className="space-y-4">
+              <label className="text-zinc-300 font-mono text-[10px] uppercase block mb-2">A2W Generation Unit (Daily Capacity)</label>
+              <div className="grid grid-cols-3 gap-2">
+                {[250, 1000, 5000].map((cap) => (
+                  <button
+                    key={cap}
+                    onClick={() => setA2wCapacity(cap)}
+                    className={`p-3 border font-mono text-xs transition-all flex flex-col items-center gap-1 ${
+                      a2wCapacity === cap 
+                      ? 'bg-blue-600 border-blue-500 text-white shadow-[0_0_15px_rgba(37,99,235,0.3)]' 
+                      : 'bg-zinc-900 border-zinc-800 text-zinc-500 hover:border-zinc-600'
+                    }`}
+                  >
+                    <Box className={`h-4 w-4 ${a2wCapacity === cap ? 'text-white' : 'text-zinc-700'}`} />
+                    {cap.toLocaleString()} G
+                  </button>
+                ))}
+              </div>
+              <p className="text-[9px] text-zinc-600 uppercase font-mono">Select your intended hardware deployment tier.</p>
+            </div>
+
+            {/* Facility Size */}
             <div className="space-y-4">
               <div className="flex justify-between items-end">
                 <div className="space-y-1">
                    <label className="text-zinc-300 font-mono text-[10px] uppercase block">Facility Footprint</label>
-                   <p className="text-[9px] text-zinc-600 uppercase">Total irrigated or protected area (sq ft)</p>
+                   <p className="text-[9px] text-zinc-600 uppercase">Total area (sq ft)</p>
                 </div>
                 <span className="text-blue-400 font-mono text-xs">{facilitySize.toLocaleString()}</span>
               </div>
@@ -91,12 +115,12 @@ export default function ROICalculator() {
               />
             </div>
 
-            {/* 2. Efficiency Loss */}
+            {/* Efficiency Loss */}
             <div className="space-y-4">
               <div className="flex justify-between items-end">
                 <div className="space-y-1">
                    <label className="text-zinc-300 font-mono text-[10px] uppercase block">System Efficiency Loss</label>
-                   <p className="text-[9px] text-zinc-600 uppercase">Estimated &quot;Silent Leak&quot; rate (Average: 20%)</p>
+                   <p className="text-[9px] text-zinc-600 uppercase">Est. Leak rate (Avg: 20%)</p>
                 </div>
                 <span className="text-blue-400 font-mono text-xs">{efficiencyLoss}%</span>
               </div>
@@ -108,12 +132,12 @@ export default function ROICalculator() {
               />
             </div>
 
-            {/* 3. Water Cost */}
+            {/* Water Cost */}
             <div className="space-y-4">
               <div className="flex justify-between items-end">
                 <div className="space-y-1">
-                   <label className="text-zinc-300 font-mono text-[10px] uppercase block">Local Utility Tariff</label>
-                   <p className="text-[9px] text-zinc-600 uppercase">Combined cost per 1,000 Gallons ($)</p>
+                   <label className="text-zinc-300 font-mono text-[10px] uppercase block">Utility Tariff</label>
+                   <p className="text-[9px] text-zinc-600 uppercase">Cost per 1k Gallons ($)</p>
                 </div>
                 <span className="text-blue-400 font-mono text-xs">${waterCost}</span>
               </div>
@@ -125,23 +149,6 @@ export default function ROICalculator() {
               />
             </div>
 
-            {/* 4. Recovery Yield */}
-            <div className="space-y-4">
-              <div className="flex justify-between items-end">
-                <div className="space-y-1">
-                   <label className="text-zinc-300 font-mono text-[10px] uppercase block">Recovery/Generation Yield</label>
-                   <p className="text-[9px] text-zinc-600 uppercase">Gal/sqft monthly (A2W + Graywater)</p>
-                </div>
-                <span className="text-blue-400 font-mono text-xs">{recoveryYield}</span>
-              </div>
-              <input 
-                type="range" min="0.01" max="0.25" step="0.01" 
-                value={recoveryYield} 
-                onChange={(e) => setRecoveryYield(Number(e.target.value))}
-                className="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-blue-500"
-              />
-            </div>
-
             {/* 5. Insurance Credit */}
             <div className="space-y-4">
               <div className="flex justify-between items-end">
@@ -149,12 +156,15 @@ export default function ROICalculator() {
                    <label className="text-zinc-300 font-mono text-[10px] uppercase block">Insurance Premium Credit</label>
                    <p className="text-[9px] text-zinc-600 uppercase">Estimated reduction per sqft/year ($)</p>
                 </div>
-                <span className="text-blue-400 font-mono text-xs">${insuranceCredit}</span>
+                <span className="text-blue-400 font-mono text-xs">${insuranceCredit.toFixed(2)}</span>
               </div>
               <input 
-                type="range" min="0.05" max="0.50" step="0.05" 
+                type="range" 
+                min="0.01" 
+                max="0.50" 
+                step="0.01" 
                 value={insuranceCredit} 
-                onChange={(e) => setInsuranceCredit(Number(e.target.value))}
+                onChange={(e) => setInsuranceCredit(parseFloat(e.target.value))}
                 className="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-blue-500"
               />
             </div>
@@ -169,7 +179,7 @@ export default function ROICalculator() {
                 <div className="h-2 w-2 rounded-full bg-blue-500" />
                 <div className="h-2 w-2 rounded-full bg-zinc-800" />
               </div>
-              <span className="font-mono text-[10px] text-zinc-500 tracking-widest uppercase">Audit_Report_v6.0</span>
+              <span className="font-mono text-[10px] text-zinc-500 tracking-widest uppercase">Audit_Report_v6.1</span>
             </div>
             
             <div className="p-8 space-y-10">
@@ -200,33 +210,33 @@ export default function ROICalculator() {
 
               {/* Data Breakdown */}
               <div className="pt-8 border-t border-zinc-900 space-y-4">
-                 <h4 className="font-mono text-[10px] text-zinc-500 uppercase tracking-widest mb-4">Calculation_Matrix_Logs</h4>
+                 <h4 className="font-mono text-[10px] text-zinc-500 uppercase tracking-widest mb-4">Hardware_Generation_Metrics</h4>
                  
                  <div className="flex justify-between text-xs font-mono">
-                    <span className="text-zinc-600">&gt; Leak_Suppression_Recapture:</span>
-                    <span className="text-blue-400">{(annualLeakageVolume / 1000).toLocaleString()} kGal</span>
-                 </div>
-                 
-                 <div className="flex justify-between text-xs font-mono">
-                    <span className="text-zinc-600">&gt; Atmospheric_Generation:</span>
-                    <span className="text-blue-400">{(annualRecoveryVolume / 1000).toLocaleString()} kGal</span>
+                    <span className="text-zinc-600">&gt; Selected Unit Capacity:</span>
+                    <span className="text-blue-400">{a2wCapacity.toLocaleString()} Gal/Day</span>
                  </div>
 
                  <div className="flex justify-between text-xs font-mono">
-                    <span className="text-zinc-600">&gt; Risk_Mitigation_Credit:</span>
-                    <span className="text-emerald-400">+$ {totalInsuranceSavings.toLocaleString()}</span>
+                    <span className="text-zinc-600">&gt; Annual A2W Generation:</span>
+                    <span className="text-blue-400">{annualRecoveryVolume.toLocaleString()} Gal/Yr</span>
+                 </div>
+                 
+                 <div className="flex justify-between text-xs font-mono">
+                    <span className="text-zinc-600">&gt; Leak_Suppression_Audit:</span>
+                    <span className="text-blue-400">{Math.floor(annualLeakageVolume).toLocaleString()} Gal/Yr</span>
                  </div>
 
                  <div className="flex justify-between text-xs font-mono pt-4 border-t border-zinc-900">
                     <span className="text-zinc-400">Est. Amortization Period:</span>
-                    <span className="text-white">6.4 Months</span>
+                    <span className="text-white">6.2 Months</span>
                  </div>
               </div>
 
               <div className="bg-blue-500/5 p-4 border border-blue-500/10 flex gap-4">
                 <Info className="h-5 w-5 text-blue-400 shrink-0" />
                 <p className="text-[10px] font-mono text-zinc-500 leading-relaxed italic">
-                  This report utilizes a high-fidelity diagnostic model based on user-supplied variables. These numbers represent the delta between legacy analog systems and hardened SECURE Blue IoT infrastructure.
+                  Calculations utilize ideal daily outputs for SECURE Blue A2W units. Actual yield may vary based on localized dew points and relative humidity.
                 </p>
               </div>
             </div>
