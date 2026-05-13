@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import ContactForm from '@/components/ContactForm';
+import ROICalculator from '@/components/ROICalculator';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
   Droplets, ShieldCheck, Wind, Activity, ArrowRight, Terminal, 
@@ -465,6 +466,20 @@ export default function SecureBlueCommandCenter() {
               </Card>
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* ROI SECTION */}
+      <section className="px-8 py-24 bg-zinc-950 border-b border-zinc-800">
+        <div className="max-w-7xl mx-auto">
+          <div className="max-w-2xl mb-16">
+            <h2 className="text-3xl font-bold tracking-tight mb-4">Calculate Your Recovery.</h2>
+            <p className="text-zinc-400">
+              Legacy infrastructure is a silent drain on capital. Use the diagnostic tool below to estimate the annual financial recovery potential of a SECURE Blue deployment.
+            </p>
+          </div>
+          
+          <ROICalculator />
         </div>
       </section>
 
