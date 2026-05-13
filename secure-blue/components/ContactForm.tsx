@@ -60,9 +60,10 @@ export default function ContactForm({ productName }: { productName: string }) {
         </div>
       )}
 
+      {/* Row 1: Name & Company */}
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <label className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">CLIENT_NAME</label>
+          <label className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">CLIENT_NAME *</label>
           <input 
             type="text" 
             name="name" 
@@ -73,7 +74,22 @@ export default function ContactForm({ productName }: { productName: string }) {
           />
         </div>
         <div className="space-y-2">
-          <label className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">SECURE_COMMS (EMAIL)</label>
+          <label className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">COMPANY_NAME *</label>
+          <input 
+            type="text" 
+            name="company" 
+            required 
+            disabled={status === 'loading'}
+            className="w-full bg-zinc-950 border border-zinc-800 text-white p-3 text-sm focus:outline-none focus:border-zinc-500 transition-colors disabled:opacity-50"
+            placeholder="Enter organization name"
+          />
+        </div>
+      </div>
+
+      {/* Row 2: Email & Phone */}
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <label className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">SECURE_COMMS (EMAIL) *</label>
           <input 
             type="email" 
             name="email" 
@@ -83,25 +99,57 @@ export default function ContactForm({ productName }: { productName: string }) {
             placeholder="name@company.com"
           />
         </div>
+        <div className="space-y-2">
+          <label className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">DIRECT_LINE (PHONE) *</label>
+          <input 
+            type="tel" 
+            name="phone" 
+            required 
+            disabled={status === 'loading'}
+            className="w-full bg-zinc-950 border border-zinc-800 text-white p-3 text-sm focus:outline-none focus:border-zinc-500 transition-colors disabled:opacity-50"
+            placeholder="(555) 555-5555"
+          />
+        </div>
       </div>
 
-      <div className="space-y-2">
-        <label className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">INFRASTRUCTURE_TYPE</label>
-        <select 
-          name="facility_type" 
-          disabled={status === 'loading'}
-          className="w-full bg-zinc-950 border border-zinc-800 text-white p-3 text-sm focus:outline-none focus:border-zinc-500 transition-colors appearance-none disabled:opacity-50"
-        >
-          <option value="golf_course">Golf Course / Resort</option>
-          <option value="agriculture">Large-Scale Agriculture</option>
-          <option value="government">Government / Municipal Facility</option>
-          <option value="commercial">Commercial Real Estate</option>
-          <option value="other">Other</option>
-        </select>
+      {/* Row 3: Website & Industry */}
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <label className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">ORGANIZATION_URL (WEBSITE) *</label>
+          <input 
+            type="url" 
+            name="website" 
+            required 
+            disabled={status === 'loading'}
+            className="w-full bg-zinc-950 border border-zinc-800 text-white p-3 text-sm focus:outline-none focus:border-zinc-500 transition-colors disabled:opacity-50"
+            placeholder="https://www.company.com"
+          />
+        </div>
+        <div className="space-y-2">
+          <label className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">INFRASTRUCTURE_TYPE *</label>
+          <select 
+            name="facility_type" 
+            required
+            defaultValue="" 
+            disabled={status === 'loading'}
+            className="w-full bg-zinc-950 border border-zinc-800 text-white p-3 text-sm focus:outline-none focus:border-zinc-500 transition-colors appearance-none disabled:opacity-50"
+          >
+            <option value="" disabled>Select Sector</option>
+            <option value="golf_course">Golf Course / Resort</option>
+            <option value="agriculture">Large-Scale Agriculture</option>
+            <option value="cre">Commercial Real Estate</option>
+            <option value="government">Government / Municipal Facility</option>
+            <option value="hoa">HOA / Mountain Community</option>
+            <option value="data_center">Data Center / Warehouse</option>
+            <option value="regional_contracting">Regional Contracting (AZ Only)</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
       </div>
 
+      {/* Message */}
       <div className="space-y-2">
-        <label className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">DEPLOYMENT_PARAMETERS (MESSAGE)</label>
+        <label className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">DEPLOYMENT_PARAMETERS (MESSAGE) *</label>
         <textarea 
           name="message" 
           rows={4} 

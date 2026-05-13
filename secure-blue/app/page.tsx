@@ -1,9 +1,11 @@
 import { Button } from '@/components/ui/button';
+import ContactForm from '@/components/ContactForm';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
   Droplets, ShieldCheck, Wind, Activity, ArrowRight, Terminal, 
   Database, Network, Cpu, Globe, BarChart3, Crosshair, Zap, Lock, LineChart,
-  Filter, ArrowLeftRight, Radio, Gauge, Battery, Power, Wrench, Flag, Tractor, Building2, Landmark, Mountain, MapPin, Flame
+  Filter, ArrowLeftRight, Radio, Gauge, Battery, Power, Wrench, Flag, Tractor,
+  Building2, Landmark, Mountain, MapPin, Flame, Mail
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -31,9 +33,9 @@ export default function SecureBlueCommandCenter() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Link href="#dashboard">
+              <Link href="#contact">
                 <Button size="lg" className="h-14 px-8 text-lg w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white rounded-none border border-blue-500 shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-all hover:shadow-[0_0_30px_rgba(37,99,235,0.5)]">
-                  Initialize Terminal
+                  Request System Audit
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
@@ -324,7 +326,7 @@ export default function SecureBlueCommandCenter() {
                     <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-blue-500" /> Valve Actuation</span>
                     <span className="flex items-center gap-2"><Database className="h-3 w-3 text-blue-500" /> Flow Analytics</span>
                   </div>
-                  <div className="mt-auto flex items-center text-blue-400 font-mono text-[10px] tracking-widest font-bold opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all group-hover:translate-x-1">
+                  <div className="mt-auto flex items-center text-blue-400 font-mono text-[10px] tracking-widest font-bold opacity-100 transition-all group-hover:translate-x-1">
                     VIEW_HARDWARE <ArrowRight className="ml-1 h-3 w-3" />
                   </div>
                 </CardContent>
@@ -346,7 +348,7 @@ export default function SecureBlueCommandCenter() {
                     <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-cyan-500" /> Humidity Parsing</span>
                     <span className="flex items-center gap-2"><Database className="h-3 w-3 text-cyan-500" /> Generation Metrics</span>
                   </div>
-                  <div className="mt-auto flex items-center text-cyan-400 font-mono text-[10px] tracking-widest font-bold opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all group-hover:translate-x-1">
+                  <div className="mt-auto flex items-center text-cyan-400 font-mono text-[10px] tracking-widest font-bold opacity-100 transition-all group-hover:translate-x-1">
                     VIEW_HARDWARE <ArrowRight className="ml-1 h-3 w-3" />
                   </div>
                 </CardContent>
@@ -368,7 +370,7 @@ export default function SecureBlueCommandCenter() {
                     <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-purple-500" /> Secondary Yield</span>
                     <span className="flex items-center gap-2"><Database className="h-3 w-3 text-purple-500" /> Loop Integration</span>
                   </div>
-                  <div className="mt-auto flex items-center text-purple-400 font-mono text-[10px] tracking-widest font-bold opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all group-hover:translate-x-1">
+                  <div className="mt-auto flex items-center text-purple-400 font-mono text-[10px] tracking-widest font-bold opacity-100 transition-all group-hover:translate-x-1">
                     VIEW_HARDWARE <ArrowRight className="ml-1 h-3 w-3" />
                   </div>
                 </CardContent>
@@ -390,7 +392,7 @@ export default function SecureBlueCommandCenter() {
                     <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-emerald-500" /> Soil Saturation</span>
                     <span className="flex items-center gap-2"><Database className="h-3 w-3 text-emerald-500" /> Automated Delivery</span>
                   </div>
-                  <div className="mt-auto flex items-center text-emerald-400 font-mono text-[10px] tracking-widest font-bold opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all group-hover:translate-x-1">
+                  <div className="mt-auto flex items-center text-emerald-400 font-mono text-[10px] tracking-widest font-bold opacity-100 transition-all group-hover:translate-x-1">
                     VIEW_HARDWARE <ArrowRight className="ml-1 h-3 w-3" />
                   </div>
                 </CardContent>
@@ -412,7 +414,7 @@ export default function SecureBlueCommandCenter() {
                     <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-emerald-300" /> Wastewater Routing</span>
                     <span className="flex items-center gap-2"><Database className="h-3 w-3 text-emerald-300" /> Yield Offset</span>
                   </div>
-                  <div className="mt-auto flex items-center text-emerald-300 font-mono text-[10px] tracking-widest font-bold opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all group-hover:translate-x-1">
+                  <div className="mt-auto flex items-center text-emerald-300 font-mono text-[10px] tracking-widest font-bold opacity-100 transition-all group-hover:translate-x-1">
                     VIEW_HARDWARE <ArrowRight className="ml-1 h-3 w-3" />
                   </div>
                 </CardContent>
@@ -434,7 +436,7 @@ export default function SecureBlueCommandCenter() {
                     <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-amber-500" /> Uplink Status</span>
                     <span className="flex items-center gap-2"><Database className="h-3 w-3 text-amber-500" /> Topo-Mapping</span>
                   </div>
-                  <div className="mt-auto flex items-center text-amber-400 font-mono text-[10px] tracking-widest font-bold opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all group-hover:translate-x-1">
+                  <div className="mt-auto flex items-center text-amber-400 font-mono text-[10px] tracking-widest font-bold opacity-100 transition-all group-hover:translate-x-1">
                     VIEW_HARDWARE <ArrowRight className="ml-1 h-3 w-3" />
                   </div>
                 </CardContent>
@@ -456,7 +458,7 @@ export default function SecureBlueCommandCenter() {
                     <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-orange-500" /> MCU Edge Analytics</span>
                     <span className="flex items-center gap-2"><Database className="h-3 w-3 text-orange-500" /> MQTT Threat Routing</span>
                   </div>
-                  <div className="mt-auto flex items-center text-orange-400 font-mono text-[10px] tracking-widest font-bold opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all group-hover:translate-x-1">
+                  <div className="mt-auto flex items-center text-orange-400 font-mono text-[10px] tracking-widest font-bold opacity-100 transition-all group-hover:translate-x-1">
                     VIEW_HARDWARE <ArrowRight className="ml-1 h-3 w-3" />
                   </div>
                 </CardContent>
@@ -930,17 +932,26 @@ export default function SecureBlueCommandCenter() {
         </div>
       </section>
 
-      {/* FINAL CTA SECTION */}
-      <section id="contact" className="py-20 border-t border-zinc-800 bg-zinc-950 text-center">
-        <h2 className="text-3xl font-bold mb-6">Upgrade Your Infrastructure.</h2>
-        <p className="text-zinc-400 mb-10 max-w-xl mx-auto">
-          Join leading resorts, massive farms, and agricultural hubs operating on Secure Blue&apos;s IoT infrastructure.
-        </p>
-        <Link href="#contact">
-          <Button size="lg" className="h-14 px-10 text-lg bg-white text-black hover:bg-zinc-200 rounded-none font-bold tracking-wide transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)]">
-            <Lock className="mr-2 h-5 w-5" /> Access the Terminal
-          </Button>
-        </Link>
+      {/* CONTACT / QUOTE FORM TERMINAL */}
+      <section id="contact" className="px-8 py-24 bg-zinc-950">
+        <div className="max-w-3xl mx-auto">
+          
+          <div className="mb-10 text-center">
+            <Mail className="h-8 w-8 text-zinc-400 mx-auto mb-4" />
+            <h2 className="text-3xl font-bold tracking-tight mb-2">Initiate System Audit</h2>
+            <p className="text-zinc-400 text-sm">
+              Submit your facility parameters below to request a custom deployment quote. A SECURE Blue engineer will contact you directly from <span className="text-white font-mono">office@securetool.company</span>.
+            </p>
+          </div>
+
+          <div className="border border-zinc-800 bg-zinc-900/50 p-8 shadow-2xl relative overflow-hidden min-h-[400px]">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-20"></div>
+            
+            {/* The interactive form is injected right here with a custom label */}
+            <ContactForm productName="GENERAL INQUIRY: HOMEPAGE" />
+            
+          </div>
+        </div>
       </section>
 
     </div>
