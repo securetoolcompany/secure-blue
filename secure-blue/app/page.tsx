@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
   Droplets, ShieldCheck, Wind, Activity, ArrowRight, Terminal, 
   Database, Network, Cpu, Globe, BarChart3, Crosshair, Zap, Lock, LineChart,
-  Filter, ArrowLeftRight, Radio, Gauge, Battery, Power, Wrench, Flag, Tractor, Building2, Landmark, Mountain, MapPin
+  Filter, ArrowLeftRight, Radio, Gauge, Battery, Power, Wrench, Flag, Tractor, Building2, Landmark, Mountain, MapPin, Flame
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -441,6 +441,27 @@ export default function SecureBlueCommandCenter() {
               </Card>
             </Link>
 
+            {/* 7. SECURE EmberSense (Early Fire Detection) */}
+            <Link href="/infrastructure/early-fire-detection" className="block h-full outline-none">
+              <Card className="h-full bg-zinc-900/40 border-zinc-800 hover:border-orange-500/50 active:scale-[0.98] active:bg-zinc-900/80 transition-all rounded-none flex flex-col group cursor-pointer relative overflow-hidden">
+                <CardHeader className="pb-4">
+                  <Flame className="h-8 w-8 text-orange-400 mb-4 group-hover:scale-110 transition-transform" />
+                  <CardTitle className="text-xl font-mono uppercase tracking-wider text-white">07. Early Fire Detection</CardTitle>
+                </CardHeader>
+                <CardContent className="flex-1 flex flex-col justify-between">
+                  <p className="text-zinc-400 text-sm leading-relaxed mb-6">
+                    Edge AI early fire detection. Identifies VOC off-gassing and smoldering particulate matter hours before an open flame ignites, saving property and millions of gallons of suppression water.
+                  </p>
+                  <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500 mb-6">
+                    <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-orange-500" /> MCU Edge Analytics</span>
+                    <span className="flex items-center gap-2"><Database className="h-3 w-3 text-orange-500" /> MQTT Threat Routing</span>
+                  </div>
+                  <div className="mt-auto flex items-center text-orange-400 font-mono text-[10px] tracking-widest font-bold opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all group-hover:translate-x-1">
+                    VIEW_HARDWARE <ArrowRight className="ml-1 h-3 w-3" />
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
           </div>
         </div>
       </section>

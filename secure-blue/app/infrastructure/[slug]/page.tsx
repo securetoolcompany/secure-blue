@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { 
   ShieldCheck, Wind, Droplets, Filter, ArrowLeftRight, Radio, 
-  Terminal, ArrowRight, Zap, Database, Activity, Mail
+  Terminal, ArrowRight, Zap, Database, Activity, Mail, Flame
 } from 'lucide-react';
 import Link from 'next/link';
 import ContactForm from '@/components/ContactForm'; // <-- Importing your new Client Component
@@ -12,7 +12,7 @@ import ContactForm from '@/components/ContactForm'; // <-- Importing your new Cl
 // ----------------------------------------------------------------------
 const productDatabase = {
   'leakstop': {
-    name: 'SECURE LeakStop',
+    name: 'SECURE LeakStop System',
     systemLabel: 'PREVENT // WASTE_MITIGATION',
     accentColor: 'text-blue-400',
     borderGlow: 'border-blue-500/50',
@@ -26,7 +26,7 @@ const productDatabase = {
     ]
   },
   'a2w-machines': {
-    name: 'SECURE A2W',
+    name: 'Air-2-Water Generator',
     systemLabel: 'GENERATE // INDEPENDENT_SOURCING',
     accentColor: 'text-cyan-400',
     borderGlow: 'border-cyan-500/50',
@@ -94,6 +94,20 @@ const productDatabase = {
       { title: 'Decade Battery Life', desc: 'Ultra-low power consumption protocols.' },
       { title: 'Ruggedized Housing', desc: 'Built to withstand extreme agricultural conditions.' }
     ]
+  },
+  'early-fire-detection': {
+    name: 'Early Fire Detection',
+    systemLabel: 'PREVENT // FIRE_MITIGATION',
+    accentColor: 'text-orange-400',
+    borderGlow: 'border-orange-500/50',
+    icon: Flame, // Ensure you imported Flame from lucide-react
+    tagline: 'Algorithmic early-fire detection. The ultimate water conservation.',
+    description: 'A massive blaze doesn\'t just destroy infrastructure; it requires millions of gallons of municipal water to suppress. EmberSense is an enterprise-grade IoT fire mitigation node. Rather than waiting for smoke to hit a traditional ceiling alarm, our nodes detect the specific Volatile Organic Compounds (VOCs) and off-gassing associated with smoldering materials—identifying threats hours before an open flame ignites.',
+    features: [
+      { title: 'Agnostic Environment Scaling', desc: 'Deploy via Solar + LoRaWAN for off-grid mountain forest perimeters, or utilize wired PoE / NB-IoT for indoor data centers and commercial warehouses.' },
+      { title: 'Edge AI Data Stack', desc: 'Raw sensor data is classified locally on the MCU via TinyML. Only verified threat payloads are published to the MQTT/TSDB stack, preserving bandwidth and eliminating false positives.' },
+      { title: 'System-Wide Actuation', desc: 'Upon verified detection, the OS autonomously secures HVAC dampers to prevent oxygen flow and routes emergency water pressure to localized suppression zones.' }
+    ]
   }
 };
 
@@ -142,7 +156,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             </div>
             
             <h1 className="text-5xl md:text-6xl font-bold tracking-tighter leading-[1.1]">
-              {product.name}.
+              {product.name}
             </h1>
             
             <p className="text-xl text-zinc-300 font-medium">
