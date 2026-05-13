@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
   Droplets, ShieldCheck, Wind, Activity, ArrowRight, Terminal, 
   Database, Network, Cpu, Globe, BarChart3, Crosshair, Zap, Lock, LineChart,
-  Filter, ArrowLeftRight, Radio, Gauge, Battery, Power, Wrench, Flag, Tractor, Building2, Landmark, Mountain
+  Filter, ArrowLeftRight, Radio, Gauge, Battery, Power, Wrench, Flag, Tractor, Building2, Landmark, Mountain, MapPin
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -875,6 +875,36 @@ export default function SecureBlueCommandCenter() {
               </ul>
             </div>
 
+          </div>
+        </div>
+      </section>
+
+      {/* REGIONAL OPERATIONS TEASER (Arizona Only) */}
+      <section className="px-8 py-16 bg-zinc-950 border-t border-zinc-800">
+        <div className="max-w-7xl mx-auto">
+          <div className="border border-amber-500/30 bg-gradient-to-r from-amber-500/5 to-transparent p-8 md:p-12 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
+            
+            <div className="max-w-2xl relative z-10">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-mono mb-4">
+                <MapPin className="h-3.5 w-3.5" />
+                SOUTHERN ARIZONA REGION
+              </div>
+              <h3 className="text-2xl md:text-3xl font-bold tracking-tight mb-3">
+                Need physical contracting or property maintenance?
+              </h3>
+              <p className="text-zinc-400 leading-relaxed text-sm md:text-base">
+                In addition to our global IoT networks, SECURE Blue operates an elite local physical infrastructure division. From installing regulation pickleball courts to repairing community security gates and providing comprehensive structural maintenance, our regional crews execute flawlessly.
+              </p>
+            </div>
+
+            <div className="relative z-10 shrink-0 w-full md:w-auto">
+              <Link href="/regional">
+                <Button size="lg" className="w-full md:w-auto h-14 px-8 bg-amber-600 hover:bg-amber-700 text-white rounded-none border border-amber-500 shadow-[0_0_20px_rgba(245,158,11,0.2)] transition-all font-bold tracking-wide">
+                  View Regional Services <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
