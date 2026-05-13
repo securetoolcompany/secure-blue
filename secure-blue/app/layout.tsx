@@ -1,33 +1,34 @@
 import type { Metadata } from "next";
-import { Inter, Geist_Mono, JetBrains_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import { cn } from "@/lib/utils";
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  variable: '--font-mono'
-});
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
-const geistMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-geist-mono",
-});
 
 export const metadata: Metadata = {
-  title: "SECURE BLUE | Command Center",
-  description: "Advanced Water Technology & Resource Management",
+  title: "SECURE BLUE | Next-Generation IoT Infrastucture",
+  description: "Autonomous IoT infrastructure and resource sovereignty protocols.",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en" className={cn("dark", jetbrainsMono.variable, geistMono.variable)}>
-      <body className={cn(inter.className, "antialiased bg-[#131722] text-zinc-400 min-h-screen")}>
-        {children}
+    <html lang="en" className="dark scroll-smooth">
+      <body className={`${inter.className} bg-zinc-950 text-white selection:bg-blue-500/30`}>
+        {/* The global navigation bar */}
+        <Navbar />
+        
+        {/* pt-16 provides space for the fixed navbar */}
+        <main className="min-h-screen pt-16">
+          {children}
+        </main>
+
+        {/* The global footer */}
+        <Footer />
       </body>
     </html>
   );
