@@ -202,7 +202,7 @@ export default function SecureBlueCommandCenter() {
             
             {/* 1. SECURE LeakStop */}
             <Link href="/infrastructure/leakstop" className="block h-full outline-none">
-              <Card className="h-full bg-zinc-900/40 border-zinc-800 hover:border-blue-500/50 transition-colors rounded-none flex flex-col group cursor-pointer relative overflow-hidden">
+              <Card className="h-full bg-zinc-900/40 border-zinc-800 hover:border-blue-500/50 active:scale-[0.98] active:bg-zinc-900/80 transition-all rounded-none flex flex-col group cursor-pointer relative overflow-hidden">
                 <CardHeader className="pb-4">
                   <ShieldCheck className="h-8 w-8 text-blue-400 mb-4 group-hover:scale-110 transition-transform" />
                   <CardTitle className="text-xl font-mono uppercase tracking-wider text-white">01. SECURE LeakStop</CardTitle>
@@ -211,12 +211,12 @@ export default function SecureBlueCommandCenter() {
                   <p className="text-zinc-400 text-sm leading-relaxed mb-6">
                     Autonomous holistic valves with LoRaWAN integration. Deploy instant shut-off capabilities across your entire infrastructure to prevent catastrophic water loss.
                   </p>
-                  <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500 mb-4">
+                  <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500 mb-6">
                     <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-blue-500" /> Valve Actuation</span>
                     <span className="flex items-center gap-2"><Database className="h-3 w-3 text-blue-500" /> Flow Analytics</span>
                   </div>
-                  <div className="mt-auto text-blue-400 font-mono text-[10px] tracking-widest font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                    VIEW_HARDWARE ↗
+                  <div className="mt-auto flex items-center text-blue-400 font-mono text-[10px] tracking-widest font-bold opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all group-hover:translate-x-1">
+                    VIEW_HARDWARE <ArrowRight className="ml-1 h-3 w-3" />
                   </div>
                 </CardContent>
               </Card>
@@ -224,7 +224,7 @@ export default function SecureBlueCommandCenter() {
 
             {/* 2. SECURE A2W Machines */}
             <Link href="/infrastructure/a2w-machines" className="block h-full outline-none">
-              <Card className="h-full bg-zinc-900/40 border-zinc-800 hover:border-cyan-500/50 transition-colors rounded-none flex flex-col group cursor-pointer relative overflow-hidden">
+              <Card className="h-full bg-zinc-900/40 border-zinc-800 hover:border-cyan-500/50 active:scale-[0.98] active:bg-zinc-900/80 transition-all rounded-none flex flex-col group cursor-pointer relative overflow-hidden">
                 <CardHeader className="pb-4">
                   <Wind className="h-8 w-8 text-cyan-400 mb-4 group-hover:scale-110 transition-transform" />
                   <CardTitle className="text-xl font-mono uppercase tracking-wider text-white">02. SECURE A2W</CardTitle>
@@ -233,12 +233,12 @@ export default function SecureBlueCommandCenter() {
                   <p className="text-zinc-400 text-sm leading-relaxed mb-6">
                     Extract high-purity water directly from the atmosphere. Industrial-scale generation units that operate independently of local grid constraints.
                   </p>
-                  <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500 mb-4">
+                  <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500 mb-6">
                     <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-cyan-500" /> Humidity Parsing</span>
                     <span className="flex items-center gap-2"><Database className="h-3 w-3 text-cyan-500" /> Generation Metrics</span>
                   </div>
-                  <div className="mt-auto text-cyan-400 font-mono text-[10px] tracking-widest font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                    VIEW_HARDWARE ↗
+                  <div className="mt-auto flex items-center text-cyan-400 font-mono text-[10px] tracking-widest font-bold opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all group-hover:translate-x-1">
+                    VIEW_HARDWARE <ArrowRight className="ml-1 h-3 w-3" />
                   </div>
                 </CardContent>
               </Card>
@@ -246,7 +246,7 @@ export default function SecureBlueCommandCenter() {
 
             {/* 3. A2W Graywater Attachment */}
             <Link href="/infrastructure/a2w-graywater" className="block h-full outline-none">
-              <Card className="h-full bg-zinc-900/40 border-zinc-800 hover:border-purple-500/50 transition-colors rounded-none flex flex-col group cursor-pointer relative overflow-hidden">
+              <Card className="h-full bg-zinc-900/40 border-zinc-800 hover:border-purple-500/50 active:scale-[0.98] active:bg-zinc-900/80 transition-all rounded-none flex flex-col group cursor-pointer relative overflow-hidden">
                 <CardHeader className="pb-4">
                   <Filter className="h-8 w-8 text-purple-400 mb-4 group-hover:scale-110 transition-transform" />
                   <CardTitle className="text-xl font-mono uppercase tracking-wider text-white">03. A2W Graywater</CardTitle>
@@ -255,12 +255,12 @@ export default function SecureBlueCommandCenter() {
                   <p className="text-zinc-400 text-sm leading-relaxed mb-6">
                     Maximize resource efficiency by routing facility wastewater directly into your A2W system. Enables secondary purification for closed-loop conservation.
                   </p>
-                  <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500 mb-4">
+                  <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500 mb-6">
                     <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-purple-500" /> Secondary Yield</span>
                     <span className="flex items-center gap-2"><Database className="h-3 w-3 text-purple-500" /> Loop Integration</span>
                   </div>
-                  <div className="mt-auto text-purple-400 font-mono text-[10px] tracking-widest font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                    VIEW_HARDWARE ↗
+                  <div className="mt-auto flex items-center text-purple-400 font-mono text-[10px] tracking-widest font-bold opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all group-hover:translate-x-1">
+                    VIEW_HARDWARE <ArrowRight className="ml-1 h-3 w-3" />
                   </div>
                 </CardContent>
               </Card>
@@ -268,7 +268,7 @@ export default function SecureBlueCommandCenter() {
 
             {/* 4. SECURE Smart Irrigation System */}
             <Link href="/infrastructure/smart-irrigation" className="block h-full outline-none">
-              <Card className="h-full bg-zinc-900/40 border-zinc-800 hover:border-emerald-500/50 transition-colors rounded-none flex flex-col group cursor-pointer relative overflow-hidden">
+              <Card className="h-full bg-zinc-900/40 border-zinc-800 hover:border-emerald-500/50 active:scale-[0.98] active:bg-zinc-900/80 transition-all rounded-none flex flex-col group cursor-pointer relative overflow-hidden">
                 <CardHeader className="pb-4">
                   <Droplets className="h-8 w-8 text-emerald-400 mb-4 group-hover:scale-110 transition-transform" />
                   <CardTitle className="text-xl font-mono uppercase tracking-wider text-white">04. Smart Irrigation</CardTitle>
@@ -277,12 +277,12 @@ export default function SecureBlueCommandCenter() {
                   <p className="text-zinc-400 text-sm leading-relaxed mb-6">
                     Intelligent arrays that aggregate soil saturation and telemetry to ensure water is deployed exactly when needed, automating delivery systems.
                   </p>
-                  <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500 mb-4">
+                  <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500 mb-6">
                     <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-emerald-500" /> Soil Saturation</span>
                     <span className="flex items-center gap-2"><Database className="h-3 w-3 text-emerald-500" /> Automated Delivery</span>
                   </div>
-                  <div className="mt-auto text-emerald-400 font-mono text-[10px] tracking-widest font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                    VIEW_HARDWARE ↗
+                  <div className="mt-auto flex items-center text-emerald-400 font-mono text-[10px] tracking-widest font-bold opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all group-hover:translate-x-1">
+                    VIEW_HARDWARE <ArrowRight className="ml-1 h-3 w-3" />
                   </div>
                 </CardContent>
               </Card>
@@ -290,7 +290,7 @@ export default function SecureBlueCommandCenter() {
 
             {/* 5. Irrigation Graywater Conversion */}
             <Link href="/infrastructure/irrigation-graywater" className="block h-full outline-none">
-              <Card className="h-full bg-zinc-900/40 border-zinc-800 hover:border-emerald-400/50 transition-colors rounded-none flex flex-col group cursor-pointer relative overflow-hidden">
+              <Card className="h-full bg-zinc-900/40 border-zinc-800 hover:border-emerald-400/50 active:scale-[0.98] active:bg-zinc-900/80 transition-all rounded-none flex flex-col group cursor-pointer relative overflow-hidden">
                 <CardHeader className="pb-4">
                   <ArrowLeftRight className="h-8 w-8 text-emerald-300 mb-4 group-hover:scale-110 transition-transform" />
                   <CardTitle className="text-xl font-mono uppercase tracking-wider text-white">05. Irrig. Graywater</CardTitle>
@@ -299,12 +299,12 @@ export default function SecureBlueCommandCenter() {
                   <p className="text-zinc-400 text-sm leading-relaxed mb-6">
                     Seamlessly divert and filter facility graywater to supply your smart irrigation networks, drastically reducing municipal dependency for landscaping.
                   </p>
-                  <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500 mb-4">
+                  <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500 mb-6">
                     <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-emerald-300" /> Wastewater Routing</span>
                     <span className="flex items-center gap-2"><Database className="h-3 w-3 text-emerald-300" /> Yield Offset</span>
                   </div>
-                  <div className="mt-auto text-emerald-300 font-mono text-[10px] tracking-widest font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                    VIEW_HARDWARE ↗
+                  <div className="mt-auto flex items-center text-emerald-300 font-mono text-[10px] tracking-widest font-bold opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all group-hover:translate-x-1">
+                    VIEW_HARDWARE <ArrowRight className="ml-1 h-3 w-3" />
                   </div>
                 </CardContent>
               </Card>
@@ -312,7 +312,7 @@ export default function SecureBlueCommandCenter() {
 
             {/* 6. Environmental Sensors */}
             <Link href="/infrastructure/environmental-sensors" className="block h-full outline-none">
-              <Card className="h-full bg-zinc-900/40 border-zinc-800 hover:border-amber-500/50 transition-colors rounded-none flex flex-col group cursor-pointer relative overflow-hidden">
+              <Card className="h-full bg-zinc-900/40 border-zinc-800 hover:border-amber-500/50 active:scale-[0.98] active:bg-zinc-900/80 transition-all rounded-none flex flex-col group cursor-pointer relative overflow-hidden">
                 <CardHeader className="pb-4">
                   <Radio className="h-8 w-8 text-amber-400 mb-4 group-hover:scale-110 transition-transform" />
                   <CardTitle className="text-xl font-mono uppercase tracking-wider text-white">06. Environ. Sensors</CardTitle>
@@ -321,12 +321,12 @@ export default function SecureBlueCommandCenter() {
                   <p className="text-zinc-400 text-sm leading-relaxed mb-6">
                     Highly resilient LoRaWAN sensor arrays deployed across vast topographical areas to monitor moisture, humidity, temperature, and anomalous flow.
                   </p>
-                  <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500 mb-4">
+                  <div className="pt-4 border-t border-zinc-800/50 flex flex-col gap-2 font-mono text-xs text-zinc-500 mb-6">
                     <span className="flex items-center gap-2"><Activity className="h-3 w-3 text-amber-500" /> Uplink Status</span>
                     <span className="flex items-center gap-2"><Database className="h-3 w-3 text-amber-500" /> Topo-Mapping</span>
                   </div>
-                  <div className="mt-auto text-amber-400 font-mono text-[10px] tracking-widest font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                    VIEW_HARDWARE ↗
+                  <div className="mt-auto flex items-center text-amber-400 font-mono text-[10px] tracking-widest font-bold opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all group-hover:translate-x-1">
+                    VIEW_HARDWARE <ArrowRight className="ml-1 h-3 w-3" />
                   </div>
                 </CardContent>
               </Card>
