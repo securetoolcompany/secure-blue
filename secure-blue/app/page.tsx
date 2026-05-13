@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
   Droplets, ShieldCheck, Wind, Activity, ArrowRight, Terminal, 
   Database, Network, Cpu, Globe, BarChart3, Crosshair, Zap, Lock, LineChart,
-  Filter, ArrowLeftRight, Radio, Gauge, Battery, Power, Wrench
+  Filter, ArrowLeftRight, Radio, Gauge, Battery, Power, Wrench, Flag, Tractor, Building2, Landmark, Mountain
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -181,6 +181,115 @@ export default function SecureBlueCommandCenter() {
                 Sever your reliance on strained municipal grids. We extract high-purity water directly from atmospheric humidity to create independent, localized sourcing for your infrastructure.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* DEPLOYMENT SECTORS (Homepage Teaser) */}
+      <section className="px-8 py-24 bg-zinc-950 border-b border-zinc-800">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-12 pb-6 gap-6">
+            <div className="max-w-2xl">
+              <h2 className="text-3xl font-bold tracking-tight mb-4">Live Deployment Sectors</h2>
+              <p className="text-zinc-400 text-lg leading-relaxed">
+                SECURE Blue isn&apos;t theoretical software. It is a physical IoT layer currently automating and protecting massive infrastructure hubs across four core sectors.
+              </p>
+            </div>
+            {/* Here is where that Cover Page comes in handy! */}
+            <Link href="/industries">
+              <Button variant="outline" className="h-10 border-zinc-700 bg-zinc-900/50 text-zinc-300 hover:bg-zinc-800 hover:text-white rounded-none font-mono text-xs uppercase tracking-widest">
+                View All Sectors <ArrowRight className="ml-2 h-3 w-3" />
+              </Button>
+            </Link>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            
+            {/* Sector: Golf & Resorts */}
+            <Link href="/industries/golf-resorts" className="block group outline-none">
+              <div className="border border-zinc-800 bg-zinc-900/30 p-6 h-full flex flex-col hover:border-emerald-500/50 hover:bg-zinc-900/60 active:scale-[0.98] transition-all relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                  <Flag className="w-24 h-24 text-emerald-500" />
+                </div>
+                <Flag className="h-8 w-8 text-emerald-400 mb-6 group-hover:scale-110 transition-transform relative z-10" />
+                <h3 className="text-xl font-bold mb-3 relative z-10">Golf & Resorts</h3>
+                <p className="text-sm text-zinc-400 leading-relaxed mb-6 flex-1 relative z-10">
+                  Automate vast irrigation arrays via soil telemetry. Protect multi-wing hospitality structures from internal flooding.
+                </p>
+                <div className="text-emerald-400 font-mono text-[10px] tracking-widest font-bold flex items-center group-hover:translate-x-1 transition-transform">
+                  ENTER_SECTOR <ArrowRight className="ml-1 h-3 w-3" />
+                </div>
+              </div>
+            </Link>
+
+            {/* Sector: Agriculture */}
+            <Link href="/industries/agriculture" className="block group outline-none">
+              <div className="border border-zinc-800 bg-zinc-900/30 p-6 h-full flex flex-col hover:border-amber-500/50 hover:bg-zinc-900/60 active:scale-[0.98] transition-all relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                  <Tractor className="w-24 h-24 text-amber-500" />
+                </div>
+                <Tractor className="h-8 w-8 text-amber-400 mb-6 group-hover:scale-110 transition-transform relative z-10" />
+                <h3 className="text-xl font-bold mb-3 relative z-10">Agriculture</h3>
+                <p className="text-sm text-zinc-400 leading-relaxed mb-6 flex-1 relative z-10">
+                  Deploy deep-root moisture sensors across crop lines. Utilize off-grid A2W to insulate yields from drought.
+                </p>
+                <div className="text-amber-400 font-mono text-[10px] tracking-widest font-bold flex items-center group-hover:translate-x-1 transition-transform">
+                  ENTER_SECTOR <ArrowRight className="ml-1 h-3 w-3" />
+                </div>
+              </div>
+            </Link>
+
+            {/* Sector: HOAs & Communities */}
+            <Link href="/industries/hoas-communities" className="block group outline-none">
+              <div className="border border-zinc-800 bg-zinc-900/30 p-6 h-full flex flex-col hover:border-violet-500/50 hover:bg-zinc-900/60 active:scale-[0.98] transition-all relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                  <Mountain className="w-24 h-24 text-violet-500" />
+                </div>
+                <Mountain className="h-8 w-8 text-violet-400 mb-6 group-hover:scale-110 transition-transform relative z-10" />
+                <h3 className="text-xl font-bold mb-3 relative z-10">HOAs & Mountain Estates</h3>
+                <p className="text-sm text-zinc-400 leading-relaxed mb-6 flex-1 relative z-10">
+                  Deploy resident-hosted gateway networks to protect shared off-grid utilities and establish early wildfire detection.
+                </p>
+                <div className="text-violet-400 font-mono text-[10px] tracking-widest font-bold flex items-center group-hover:translate-x-1 transition-transform">
+                  ENTER_SECTOR <ArrowRight className="ml-1 h-3 w-3" />
+                </div>
+              </div>
+            </Link>
+
+            {/* Sector: CRE */}
+            <Link href="/industries/commercial-real-estate" className="block group outline-none">
+              <div className="border border-zinc-800 bg-zinc-900/30 p-6 h-full flex flex-col hover:border-blue-500/50 hover:bg-zinc-900/60 active:scale-[0.98] transition-all relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                  <Building2 className="w-24 h-24 text-blue-500" />
+                </div>
+                <Building2 className="h-8 w-8 text-blue-400 mb-6 group-hover:scale-110 transition-transform relative z-10" />
+                <h3 className="text-xl font-bold mb-3 relative z-10">Commercial RE</h3>
+                <p className="text-sm text-zinc-400 leading-relaxed mb-6 flex-1 relative z-10">
+                  Provide instant, algorithmic shut-off protocols for high-rises to secure tenant assets and slash insurance premiums.
+                </p>
+                <div className="text-blue-400 font-mono text-[10px] tracking-widest font-bold flex items-center group-hover:translate-x-1 transition-transform">
+                  ENTER_SECTOR <ArrowRight className="ml-1 h-3 w-3" />
+                </div>
+              </div>
+            </Link>
+
+            {/* Sector: Municipalities */}
+            <Link href="/industries/municipalities" className="block group outline-none">
+              <div className="border border-zinc-800 bg-zinc-900/30 p-6 h-full flex flex-col hover:border-cyan-500/50 hover:bg-zinc-900/60 active:scale-[0.98] transition-all relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                  <Landmark className="w-24 h-24 text-cyan-500" />
+                </div>
+                <Landmark className="h-8 w-8 text-cyan-400 mb-6 group-hover:scale-110 transition-transform relative z-10" />
+                <h3 className="text-xl font-bold mb-3 relative z-10">Municipalities</h3>
+                <p className="text-sm text-zinc-400 leading-relaxed mb-6 flex-1 relative z-10">
+                  Modernize civic infrastructure. Automate public park maintenance and deploy A2W units to relieve grid pressure.
+                </p>
+                <div className="text-cyan-400 font-mono text-[10px] tracking-widest font-bold flex items-center group-hover:translate-x-1 transition-transform">
+                  ENTER_SECTOR <ArrowRight className="ml-1 h-3 w-3" />
+                </div>
+              </div>
+            </Link>
+
           </div>
         </div>
       </section>
