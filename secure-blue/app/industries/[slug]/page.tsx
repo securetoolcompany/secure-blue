@@ -12,12 +12,13 @@ import ContactForm from '@/components/ContactForm'; // Utilizing your existing f
 // THE DYNAMIC SECTOR DATABASE
 // ----------------------------------------------------------------------
 const industryDatabase = {
-  'golf-resorts': {
+  // CHANGED: 'golf-resorts' -> 'hospitality'
+  'hospitality': {
     name: 'Golf & Resorts',
     systemLabel: 'HOSPITALITY_DEPLOYMENT_MODULE',
     accentColor: 'text-emerald-400',
     borderGlow: 'border-emerald-500/50',
-    icon: Flag,
+    icon: Flag, // Ensure you have imported Flag from lucide-react
     tagline: 'Automate pristine landscaping. Prevent catastrophic property damage.',
     heroDescription: 'Hospitality runs on microscopic margins. Over-watering a 300-acre fairway wastes hundreds of thousands of dollars, while a single undetected pipe burst in a hotel wing can ruin an entire season. SECURE Blue eliminates both risks.',
     paradigmTitle: 'The End of Blind Irrigation.',
@@ -49,12 +50,14 @@ const industryDatabase = {
       { key: 'LOG', val: '> Suppressing timer schedule. 14,000 GAL conserved.' }
     ]
   },
+  
+  // UNCHANGED: 'agriculture' is already correct
   'agriculture': {
     name: 'Large-Scale Agriculture',
     systemLabel: 'AGRI_DEPLOYMENT_MODULE',
     accentColor: 'text-amber-400',
     borderGlow: 'border-amber-500/50',
-    icon: Tractor,
+    icon: Tractor, // Ensure Tractor is imported
     tagline: 'Data-driven crop yields. Off-grid water independence.',
     heroDescription: 'The agricultural sector is at the mercy of unpredictable weather and tightening municipal water restrictions. SECURE Blue transforms farming from a guessing game into a precision science, utilizing IoT telemetry and independent atmospheric water generation.',
     paradigmTitle: 'Severing Grid Dependency.',
@@ -86,7 +89,9 @@ const industryDatabase = {
       { key: 'LOG', val: '> Actuating Sector 4 drip lines. Distributing A2W reserves.' }
     ]
   },
-  'commercial-real-estate': {
+
+  // CHANGED: 'commercial-real-estate' -> 'real-estate'
+  'real-estate': {
     name: 'Commercial Real Estate',
     systemLabel: 'CRE_DEPLOYMENT_MODULE',
     accentColor: 'text-blue-400',
@@ -123,12 +128,14 @@ const industryDatabase = {
       { key: 'LOG', val: '> Actuating emergency shut-off. Securing tower.' }
     ]
   },
-  'municipalities': {
+
+  // CHANGED: 'municipalities' -> 'municipality'
+  'municipality': {
     name: 'Municipalities',
     systemLabel: 'CIVIC_DEPLOYMENT_MODULE',
     accentColor: 'text-cyan-400',
     borderGlow: 'border-cyan-500/50',
-    icon: Landmark,
+    icon: Landmark, // Ensure Landmark is imported
     tagline: 'Modernize aging civic infrastructure and public works.',
     heroDescription: 'City grids are failing under the weight of population growth and decades of deferred maintenance. SECURE Blue equips local governments with the IoT architecture needed to track civic water loss, automate public park maintenance, and deploy emergency A2W relief.',
     paradigmTitle: 'Data-Driven Public Works.',
@@ -160,12 +167,14 @@ const industryDatabase = {
       { key: 'LOG', val: '> Delaying public park irrigation cycle by 48hrs.' }
     ]
   },
-  'hoas-communities': {
+
+  // CHANGED: 'hoas-communities' -> 'hoa'
+  'hoa': {
     name: 'HOAs & Remote Communities',
     systemLabel: 'RESIDENTIAL_DEPLOYMENT_MODULE',
     accentColor: 'text-violet-400',
     borderGlow: 'border-violet-500/50',
-    icon: Mountain,
+    icon: Mountain, // Ensure Mountain is imported
     tagline: 'Decentralized infrastructure and threat detection for off-grid estates.',
     heroDescription: 'Mountain communities and remote residential foothills face severe vulnerabilities. Rising HOA fees are heavily driven by inefficient legacy maintenance, undetected shared-pipe leaks, and reliance on distant municipal utility pumping. SECURE Blue puts infrastructure control back into the hands of the community.',
     paradigmTitle: 'Resident-Hosted Safety Networks.',
@@ -184,7 +193,7 @@ const industryDatabase = {
         id: 'TRACK_02: THREAT_CANOPY',
         title: 'Environmental Threat Networks',
         desc: 'Leverage the community\'s physical footprint. Homeowners host localized gateways that connect to environmental sensors across the foothills, providing ultra-early detection for wildfires and flow anomalies.',
-        icon: Flame,
+        icon: Flame, // Ensure Flame is imported
         goals: ['Establish an early-warning wildfire detection perimeter.', 'Create a resilient communications mesh without Wi-Fi.', 'Provide total visibility to the HOA board.'],
         deliverables: ['Resident-hosted LoRaWAN gateway hardware.', 'Topographical fire and moisture sensor arrays.', 'Community-wide emergency SMS alerting.']
       }

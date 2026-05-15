@@ -3,11 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { 
-  Terminal, Menu, X, ChevronDown, 
-  Cpu, Building2, ShieldCheck, Activity, 
-  Settings, Zap, Globe 
-} from 'lucide-react';
+import { Terminal, Menu, X, ChevronDown, CornerDownRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function Navbar() {
@@ -21,12 +17,52 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Helper function to close the menu
   const closeMenu = () => setIsOpen(false);
 
+  // Updated Nav Configuration with Sub-Groups for the Mega-Menu
   const navLinks = [
     { name: 'INFRASTRUCTURE', href: '/#solutions' },
-    { name: 'INDUSTRIES', href: '/industries' },
+    { 
+      name: 'INDUSTRIES', 
+      href: '#',
+      subGroups: [
+        {
+          title: 'HOA & RESIDENTIAL',
+          items: [
+            { name: 'Sector Overview', href: '/industries/hoa' },
+            { name: 'Executive Deck', href: '/presentations/hoa' }
+          ]
+        },
+        {
+          title: 'HOSPITALITY',
+          items: [
+            { name: 'Sector Overview', href: '/industries/hospitality' },
+            { name: 'Executive Deck', href: '/presentations/hospitality' }
+          ]
+        },
+        {
+          title: 'AGRICULTURE',
+          items: [
+            { name: 'Sector Overview', href: '/industries/agriculture' },
+            { name: 'Executive Deck', href: '/presentations/agriculture' }
+          ]
+        },
+        {
+          title: 'COMMERCIAL R.E.',
+          items: [
+            { name: 'Sector Overview', href: '/industries/real-estate' },
+            { name: 'Executive Deck', href: '/presentations/real-estate' }
+          ]
+        },
+        {
+          title: 'MUNICIPALITY',
+          items: [
+            { name: 'Sector Overview', href: '/industries/municipality' },
+            { name: 'Executive Deck', href: '/presentations/municipality' }
+          ]
+        }
+      ]
+    },
     { name: 'THE_OS', href: '/os' },
     { name: 'METHODOLOGY', href: '/methodology' },
     { name: 'MANAGED_SERVICES', href: '/managed-services' },
@@ -34,7 +70,7 @@ export default function Navbar() {
 
   return (
     <nav className={`fixed top-0 w-full z-[100] transition-all duration-300 ${
-      scrolled ? 'bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800 py-2' : 'bg-transparent py-4'
+      scrolled ? 'bg-zinc-950/90 backdrop-blur-md border-b border-zinc-800 py-2' : 'bg-transparent py-4'
     }`}>
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
         
@@ -45,22 +81,59 @@ export default function Navbar() {
           </div>
           <div className="flex flex-col">
             <span className="font-bold tracking-tighter text-xl leading-none uppercase text-white">SECURE BLUE</span>
-            <span className="text-[8px] font-mono text-zinc-500 tracking-[0.2em] uppercase leading-none mt-1">Next-Generation Infrastructure</span>
+            <span className="text-[8px] font-mono text-zinc-500 tracking-[0.2em] uppercase leading-none mt-1">Industrial_Intelligence</span>
           </div>
         </Link>
 
         {/* DESKTOP NAV */}
         <div className="hidden lg:flex items-center gap-1">
           {navLinks.map((link) => (
-            <Link 
-              key={link.name} 
-              href={link.href}
-              className={`px-4 py-2 font-mono text-[10px] tracking-widest transition-all flex items-center gap-2 hover:text-white ${
-                pathname === link.href ? 'text-blue-400' : 'text-zinc-400'
-              }`}
-            >
-              {link.name}
-            </Link>
+            <div key={link.name} className="relative group">
+              {link.subGroups ? (
+                // Dropdown Trigger
+                <div className="px-4 py-2 font-mono text-[10px] tracking-widest flex items-center gap-1 text-zinc-400 hover:text-white cursor-pointer transition-colors">
+                  {link.name}
+                  <ChevronDown className="h-3 w-3 group-hover:rotate-180 transition-transform duration-200" />
+                  
+                  {/* Desktop Mega-Menu */}
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[480px] bg-zinc-950 border border-zinc-800 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 flex flex-col z-50 p-6 rounded-sm">
+                    <div className="grid grid-cols-2 gap-x-8 gap-y-6">
+                      {link.subGroups.map((group) => (
+                        <div key={group.title} className="flex flex-col">
+                           <span className="text-[10px] font-mono font-bold text-zinc-300 tracking-widest mb-3 border-b border-zinc-900 pb-2">
+                             {group.title}
+                           </span>
+                           <div className="flex flex-col gap-2">
+                             {group.items.map((item) => (
+                               <Link 
+                                 key={item.name} 
+                                 href={item.href}
+                                 className={`flex items-center gap-2 text-xs font-mono tracking-wider transition-colors ${
+                                   pathname === item.href ? 'text-blue-400' : 'text-zinc-500 hover:text-white'
+                                 }`}
+                               >
+                                 <CornerDownRight className="h-3 w-3 text-zinc-700" />
+                                 {item.name}
+                               </Link>
+                             ))}
+                           </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                // Standard Link
+                <Link 
+                  href={link.href}
+                  className={`px-4 py-2 font-mono text-[10px] tracking-widest transition-colors flex items-center gap-2 hover:text-white ${
+                    pathname === link.href ? 'text-blue-400' : 'text-zinc-400'
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              )}
+            </div>
           ))}
           
           <div className="h-4 w-[1px] bg-zinc-800 mx-4" />
@@ -83,22 +156,55 @@ export default function Navbar() {
 
       {/* MOBILE OVERLAY */}
       {isOpen && (
-        <div className="lg:hidden fixed inset-0 top-[60px] bg-zinc-950 z-50 animate-in fade-in slide-in-from-top-4 duration-300">
-          <div className="flex flex-col p-8 gap-6">
+        <div className="lg:hidden fixed inset-0 top-[60px] bg-zinc-950 z-50 animate-in fade-in slide-in-from-top-4 duration-300 overflow-y-auto">
+          <div className="flex flex-col p-8 gap-6 pb-24">
             {navLinks.map((link) => (
-              <Link 
-                key={link.name} 
-                href={link.href}
-                onClick={closeMenu} // CLOSE ON CLICK
-                className="text-xl font-bold tracking-tighter flex items-center justify-between group"
-              >
-                <span className="text-zinc-400 group-hover:text-blue-400 transition-colors uppercase font-mono text-sm tracking-widest">{link.name}</span>
-                <ChevronDown className="h-4 w-4 text-zinc-800 -rotate-90" />
-              </Link>
+              <div key={link.name} className="flex flex-col gap-4">
+                {link.subGroups ? (
+                  // Mobile Mega-Menu Group
+                  <>
+                    <div className="text-white font-mono text-sm tracking-widest border-b border-zinc-900 pb-2 flex items-center justify-between">
+                      {link.name}
+                      <ChevronDown className="h-4 w-4 text-zinc-600" />
+                    </div>
+                    <div className="flex flex-col gap-6 pl-4 border-l border-zinc-900">
+                      {link.subGroups.map((group) => (
+                        <div key={group.title} className="flex flex-col gap-3">
+                          <span className="text-[10px] font-mono text-zinc-400 tracking-widest">{group.title}</span>
+                          {group.items.map((item) => (
+                            <Link 
+                              key={item.name} 
+                              href={item.href}
+                              onClick={closeMenu}
+                              className={`flex items-center gap-2 uppercase font-mono text-xs tracking-widest transition-colors ${
+                                pathname === item.href ? 'text-blue-400' : 'text-zinc-500 hover:text-white'
+                              }`}
+                            >
+                              <CornerDownRight className="h-3 w-3 text-zinc-800" />
+                              {item.name}
+                            </Link>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  // Mobile Standard Link
+                  <Link 
+                    href={link.href}
+                    onClick={closeMenu}
+                    className={`uppercase font-mono text-sm tracking-widest transition-colors ${
+                      pathname === link.href ? 'text-blue-400' : 'text-zinc-400 hover:text-white'
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                )}
+              </div>
             ))}
             <div className="pt-6 border-t border-zinc-900 mt-4">
                <Link href="/#contact" onClick={closeMenu}>
-                  <Button className="w-full h-14 bg-blue-600 rounded-none font-bold uppercase tracking-widest text-white border border-blue-500">
+                  <Button className="w-full h-14 bg-blue-600 hover:bg-blue-500 rounded-none font-bold uppercase tracking-widest text-white transition-colors">
                     Request Audit
                   </Button>
                </Link>
