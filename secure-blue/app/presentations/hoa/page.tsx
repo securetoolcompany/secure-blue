@@ -9,9 +9,11 @@ import {
 export default function HOAPresentation() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // --- CALCULATOR STATE ---
-  const [propertyValue, setPropertyValue] = useState(1200000);
+  // --- REFINED CALCULATOR STATE ---
+  const [annualInsurance, setAnnualInsurance] = useState(4500);
+  const [insuranceDiscount, setInsuranceDiscount] = useState(12); // Default to industry avg
   const [monthlyWater, setMonthlyWater] = useState(180);
+  const [monthlyInternet, setMonthlyInternet] = useState(85);
   const [monthsAway, setMonthsAway] = useState(5);
 
   const slides = [
@@ -75,8 +77,8 @@ export default function HOAPresentation() {
       subtitle: "A Performing Asset",
       visual: "calculator",
       color: "text-emerald-500",
-      content: "Security isn't just an expense; it is a financial instrument. By combining insurance premium credits, monthly utility reductions, and seasonal internet subscription cancellations, SECURE Blue effectively pays you to protect your own home.",
-      metric: "RETURN_ON_INVESTMENT"
+      content: "Security isn't just an expense; it is a financial instrument. Use your actual property data to calculate how insurance premium credits, monthly utility reductions, and seasonal internet cancellations allow SECURE Blue to pay for itself.",
+      metric: "PERSONALIZED_ROI"
     }
   ];
 
@@ -85,9 +87,7 @@ export default function HOAPresentation() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // UX FIX: If they are interacting with a slider, don't change the slide!
       if (document.activeElement?.tagName === 'INPUT') return;
-      
       if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
       if (e.key === 'ArrowLeft') prevSlide();
     };
@@ -101,10 +101,10 @@ export default function HOAPresentation() {
 
   const current = slides[currentSlide];
 
-  // --- CALCULATOR LOGIC ---
-  const calcInsuranceSavings = propertyValue * 0.005 * 0.12; // Assuming ~0.5% premium, 12% savings credit
-  const calcUtilitySavings = monthlyWater * 12 * 0.45; // Assuming 45% reduction via A2W & Smart Irrigation
-  const calcSubscriptionSavings = monthsAway * 85; // Assuming $85/mo for canceled seasonal internet
+  // --- REFINED CALCULATOR LOGIC ---
+  const calcInsuranceSavings = annualInsurance * (insuranceDiscount / 100);
+  const calcUtilitySavings = monthlyWater * 12 * 0.45; // Assumes 45% reduction based on A2W + Smart Soil Telemetry
+  const calcSubscriptionSavings = monthsAway * monthlyInternet;
   const totalAnnualSavings = calcInsuranceSavings + calcUtilitySavings + calcSubscriptionSavings;
 
   const renderVisual = () => {
@@ -232,27 +232,44 @@ export default function HOAPresentation() {
         );
       case "calculator":
         return (
-          <div className="w-full max-w-[420px] bg-zinc-900 border border-emerald-500/30 rounded-[2rem] p-8 shadow-[0_0_50px_rgba(16,185,129,0.15)] flex flex-col">
-            <div className="flex items-center gap-3 mb-8 border-b border-zinc-800 pb-4">
-              <Calculator className="h-6 w-6 text-emerald-500" />
-              <h3 className="font-mono text-sm tracking-widest text-white uppercase">Sovereignty Projection</h3>
+          <div className="w-full max-w-[440px] bg-zinc-900 border border-emerald-500/30 rounded-[2rem] p-6 shadow-[0_0_50px_rgba(16,185,129,0.15)] flex flex-col">
+            <div className="flex items-center gap-3 mb-6 border-b border-zinc-800 pb-3">
+              <Calculator className="h-5 w-5 text-emerald-500" />
+              <h3 className="font-mono text-xs tracking-widest text-white uppercase">Sovereignty Projection</h3>
             </div>
 
             {/* SLIDERS */}
-            <div className="space-y-6 mb-8">
-              <div>
-                <div className="flex justify-between font-mono text-[10px] text-zinc-400 mb-2">
-                  <span>ESTATE VALUE</span>
-                  <span className="text-white">${propertyValue.toLocaleString()}</span>
+            <div className="space-y-5 mb-6">
+              
+              {/* Row 1: Insurance */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="flex justify-between font-mono text-[9px] text-zinc-400 mb-2">
+                    <span>ANNUAL INSURANCE</span>
+                    <span className="text-white">${annualInsurance.toLocaleString()}</span>
+                  </div>
+                  <input 
+                    type="range" min="1000" max="15000" step="100" 
+                    value={annualInsurance} onChange={(e) => setAnnualInsurance(Number(e.target.value))}
+                    className="w-full accent-emerald-500 h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer"
+                  />
                 </div>
-                <input 
-                  type="range" min="500000" max="5000000" step="50000" 
-                  value={propertyValue} onChange={(e) => setPropertyValue(Number(e.target.value))}
-                  className="w-full accent-emerald-500 h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer"
-                />
+                <div>
+                  <div className="flex justify-between font-mono text-[9px] text-zinc-400 mb-2">
+                    <span title="Industry avg discount for autonomous shut-off valves">CREDIT % (Avg: 12%)</span>
+                    <span className="text-white">{insuranceDiscount}%</span>
+                  </div>
+                  <input 
+                    type="range" min="0" max="25" step="1" 
+                    value={insuranceDiscount} onChange={(e) => setInsuranceDiscount(Number(e.target.value))}
+                    className="w-full accent-emerald-500 h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer"
+                  />
+                </div>
               </div>
+
+              {/* Row 2: Water */}
               <div>
-                <div className="flex justify-between font-mono text-[10px] text-zinc-400 mb-2">
+                <div className="flex justify-between font-mono text-[9px] text-zinc-400 mb-2">
                   <span>MONTHLY WATER BILL</span>
                   <span className="text-white">${monthlyWater}</span>
                 </div>
@@ -262,40 +279,58 @@ export default function HOAPresentation() {
                   className="w-full accent-blue-500 h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer"
                 />
               </div>
-              <div>
-                <div className="flex justify-between font-mono text-[10px] text-zinc-400 mb-2">
-                  <span>MONTHS AWAY FROM HOME</span>
-                  <span className="text-white">{monthsAway} Months</span>
+
+              {/* Row 3: Connectivity */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="flex justify-between font-mono text-[9px] text-zinc-400 mb-2">
+                    <span>MONTHLY INTERNET</span>
+                    <span className="text-white">${monthlyInternet}</span>
+                  </div>
+                  <input 
+                    type="range" min="40" max="250" step="5" 
+                    value={monthlyInternet} onChange={(e) => setMonthlyInternet(Number(e.target.value))}
+                    className="w-full accent-purple-500 h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer"
+                  />
                 </div>
-                <input 
-                  type="range" min="0" max="11" step="1" 
-                  value={monthsAway} onChange={(e) => setMonthsAway(Number(e.target.value))}
-                  className="w-full accent-purple-500 h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer"
-                />
+                <div>
+                  <div className="flex justify-between font-mono text-[9px] text-zinc-400 mb-2">
+                    <span>MONTHS AWAY</span>
+                    <span className="text-white">{monthsAway}</span>
+                  </div>
+                  <input 
+                    type="range" min="0" max="11" step="1" 
+                    value={monthsAway} onChange={(e) => setMonthsAway(Number(e.target.value))}
+                    className="w-full accent-purple-500 h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer"
+                  />
+                </div>
               </div>
+
             </div>
 
             {/* RESULTS */}
-            <div className="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-3">
+            <div className="bg-zinc-950 p-4 rounded-2xl border border-zinc-800 space-y-3">
               <div className="flex justify-between items-center border-b border-zinc-900 pb-2">
                 <span className="font-mono text-[10px] text-zinc-500">Est. Ins. Credit</span>
                 <span className="font-mono text-xs text-emerald-400">+${calcInsuranceSavings.toLocaleString(undefined, {maximumFractionDigits:0})}/yr</span>
               </div>
               <div className="flex justify-between items-center border-b border-zinc-900 pb-2">
-                <span className="font-mono text-[10px] text-zinc-500">Water Conservation</span>
+                <span className="font-mono text-[10px] text-zinc-500" title="Calculated at 45% reduction via A2W & Telemetry">Water Conservation</span>
                 <span className="font-mono text-xs text-blue-400">+${calcUtilitySavings.toLocaleString(undefined, {maximumFractionDigits:0})}/yr</span>
               </div>
               <div className="flex justify-between items-center border-b border-zinc-900 pb-2">
                 <span className="font-mono text-[10px] text-zinc-500">Seasonal Wi-Fi Cut</span>
                 <span className="font-mono text-xs text-purple-400">+${calcSubscriptionSavings.toLocaleString(undefined, {maximumFractionDigits:0})}/yr</span>
               </div>
-              <div className="flex justify-between items-center pt-2">
+              <div className="flex justify-between items-center pt-1">
                 <span className="font-mono text-xs font-bold text-white uppercase tracking-wider">Total ROI</span>
-                <span className="font-black text-xl text-emerald-500">${totalAnnualSavings.toLocaleString(undefined, {maximumFractionDigits:0})} / yr</span>
+                <span className="font-black text-lg text-emerald-500">${totalAnnualSavings.toLocaleString(undefined, {maximumFractionDigits:0})} / yr</span>
               </div>
             </div>
-            <div className="mt-4 text-center">
-              <span className="text-[9px] font-mono text-zinc-600 uppercase tracking-widest">*Calculations based on 2026 industry averages.</span>
+            <div className="mt-3 text-center">
+              <span className="text-[8px] font-mono text-zinc-600 uppercase tracking-widest">
+                *Water savings calculated at 45% efficiency using A2W & Telemetry tech.
+              </span>
             </div>
           </div>
         );
