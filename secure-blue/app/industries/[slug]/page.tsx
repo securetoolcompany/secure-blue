@@ -206,6 +206,7 @@ const productDatabase: Record<string, ProductModule> = {
   },
 
   // --- ATMOSPHERIC WATER ---
+  // --- 3. A2W MACHINES (MASSIVELY EXPANDED RAIN CYCLE SPECS) ---
   'a2w-machines': {
     name: 'Air-2-Water Arrays',
     systemLabel: 'GENERATE // INDEPENDENT_SOURCING',
@@ -214,20 +215,49 @@ const productDatabase: Record<string, ProductModule> = {
     icon: CloudRain,
     tagline: 'Mimicking the Natural Rain Cycle. Unbeatable Water Quality.',
     description: 'Extract high-purity, potable water directly from atmospheric humidity using advanced thermal condensation. We replicate the exact process of natural rain generation within a closed, ultra-sterile environment, completely severing your reliance on strained municipal grids.',
+    
     residentialContext: {
       headline: 'Complete Grid Independence. Estate Ready.',
       desc: "Why pay the city for water when you can literally pull it from the sky? SECURE Blue A2W units bring hyper-pure atmospheric water generation to your residence. Whether you are building an off-grid desert retreat, protecting your family against municipal boil-warnings, or simply want clinical-grade drinking water devoid of city chlorine, A2W removes your reliance on failing infrastructure.",
       icon: Home
     },
+
     sizes: ['40 Gallons/Day (Residential)', '130 Gallons/Day (Commercial)', '265 to 1,320+ Gallons/Day (Industrial)'],
+
+    // UPDATED: Gallon Conversions & Manufacturer Scrub
     architectures: [
-      { type: '150L / 40G Yield', title: 'A2W-150 [NEXUS]', desc: 'Provides up to 150 liters (40 gallons) per day of high-quality drinking water. Ideal for small businesses, residential homes, and schools.' },
-      { type: '250L / 65G Yield', title: 'A2W-250 [STRATUS]', desc: 'Provides up to 250 liters (65 gallons) per day. Perfectly scaled for medium-sized offices and multi-family apartments.' },
-      { type: '500L / 130G Yield', title: 'A2W-500 [CUMULUS]', desc: 'Provides up to 500 liters (130 gallons) per day. The core industrial standard for corporate offices and civic facilities.' },
-      { type: '1000L / 265G Yield', title: 'A2W-1000 [MONSOON]', desc: 'Provides up to 1,000 liters (265 gallons) per day. High-yield output designed for corporate hubs and apartment complexes.' },
-      { type: '2000L / 530G Yield', title: 'A2W-2000 [AEGIS]', desc: 'Provides up to 2,000 liters (530 gallons) per day. Institutional-grade generation built to sustain corporate campuses and sprawling resorts.' },
-      { type: '5000L / 1320G Yield', title: 'A2W-5000 [THE BEHEMOTH]', desc: 'Our flagship behemoth provides up to 5,000 liters (1,320 gallons) per day of hyper-pure water. Total off-grid infrastructure replacement.' }
+      {
+        type: '150L / 40G Yield',
+        title: 'A2W-150 [NEXUS]',
+        desc: 'Provides up to 150 liters (40 gallons) per day of high-quality drinking water. Ideal for small businesses, private laboratories, residential homes, and schools.',
+      },
+      {
+        type: '250L / 65G Yield',
+        title: 'A2W-250 [STRATUS]',
+        desc: 'Provides up to 250 liters (65 gallons) per day. Perfectly scaled for medium-sized offices, busy schools, clinical laboratories, and multi-family apartments.',
+      },
+      {
+        type: '500L / 130G Yield',
+        title: 'A2W-500 [CUMULUS]',
+        desc: 'Provides up to 500 liters (130 gallons) per day. The core industrial standard for large schools, mid-market corporate offices, and heavy-use civic facilities.',
+      },
+      {
+        type: '1000L / 265G Yield',
+        title: 'A2W-1000 [MONSOON]',
+        desc: 'Provides up to 1,000 liters (265 gallons) per day. High-yield output designed specifically for massive corporate hubs, public city kiosks, and large apartment complexes.',
+      },
+      {
+        type: '2000L / 530G Yield',
+        title: 'A2W-2000 [AEGIS]',
+        desc: 'Provides up to 2,000 liters (530 gallons) per day. Institutional-grade generation built to sustain corporate campuses, sprawling resorts, and massive multi-family housing blocks.',
+      },
+      {
+        type: '5000L / 1320G Yield',
+        title: 'A2W-5000 [THE BEHEMOTH]',
+        desc: 'Our flagship behemoth provides up to 5,000 liters (1,320 gallons) per day of hyper-pure water. Total off-grid infrastructure replacement for massive operations.',
+      }
     ],
+    
     boldUseCases: [
       {
         scenario: 'Remote Livestock & Wildlife Sustainment',
@@ -238,18 +268,29 @@ const productDatabase: Record<string, ProductModule> = {
         scenario: 'Containerized Hydroponic Feed Generation',
         context: 'Integrate A2W directly into climate-controlled feed growth systems. Produce tons of highly nutritious, hydroponic livestock feed daily in the middle of the desert, utilizing nothing but atmospheric water and renewable energy.',
         icon: Tractor, color: 'text-amber-400', bg: 'bg-amber-500/10 border-amber-500/30'
+      },
+      {
+        scenario: 'Off-Grid Estates & Disaster Relief',
+        context: 'Build your mountain retreat without drilling a $50,000 dry well, or deploy units to disaster zones where local utility plants have been compromised. A2W generates clinical-grade hydration entirely on-site.',
+        icon: ShieldCheck, color: 'text-blue-400', bg: 'bg-blue-500/10 border-blue-500/30'
       }
     ],
+
     telemetryData: [
       { label: 'CURRENT_YIELD_RATE', value: '4.2 GAL/HR', status: 'normal' },
       { label: 'AMBIENT_HUMIDITY', value: '48% (OPTIMAL)', status: 'normal' },
+      { label: 'AMBIENT_TEMP', value: '28°C (NOMINAL)', status: 'normal' },
       { label: 'CONDENSATION_COIL', value: 'ACTIVE', status: 'normal' },
-      { label: 'UV_PURIFICATION', value: 'LAMP_ACTIVE', status: 'normal' }
+      { label: 'UV_PURIFICATION', value: 'LAMP_ACTIVE', status: 'normal' },
+      { label: 'UNFAVORABLE_WEATHER', value: 'CLEAR (NO SHUTDOWN REQ)', status: 'info' }
     ],
+
     controlParams: [
       { label: 'Intelligent Sensor Auto-Shutdown', desc: 'The OS automatically suspends water generation during extreme, unfavorable weather conditions to preserve energy and prevent system wear.' },
-      { label: 'Renewable Energy Fallback', desc: 'Designed for absolute self-sustainability when paired directly with off-grid Solar Matrix power setups.' }
+      { label: 'Renewable Energy Fallback', desc: 'Designed for absolute self-sustainability when paired directly with off-grid Solar Matrix power setups.' },
+      { label: 'IoT Remote Diagnostics', desc: 'Internet-of-Things (IoT) integration allows for complete remote monitoring of air filters, condensation coil health, and live water yields.' }
     ],
+
     techSpecs: [
       {
         category: 'The Natural Rain Cycle',
@@ -267,7 +308,8 @@ const productDatabase: Record<string, ProductModule> = {
           'Sediment Filtration (Removes heavy atmospheric particulates)',
           'Multi-Stage Carbon Filtration (Neutralizes tastes and odors)',
           'UV-C Sterilization (Eliminates biological contaminants)',
-          'Patented Mineralization Technology (Restores essential alkaline health benefits)'
+          'Patented Mineralization Technology (Restores essential alkaline health benefits)',
+          '*Custom Options: Ozonation, Ultra, Nano, and Membrane Filtration available'
         ]
       },
       {
@@ -275,7 +317,8 @@ const productDatabase: Record<string, ProductModule> = {
         items: [
           'Wide Operating Temperature: 15°C to 45°C (59°F to 113°F)',
           'Wide Relative Humidity (RH) Range: 25% to 100%',
-          'Corrosion-Free Exterior: Constructed with Grade 316 Stainless Steel'
+          'Corrosion-Free Exterior: Constructed with Grade 316 Stainless Steel',
+          'True Plug-and-Play installation for rapid operational deployment'
         ]
       }
     ]
