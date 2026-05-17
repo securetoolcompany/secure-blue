@@ -588,12 +588,12 @@ const productDatabase: Record<string, ProductModule> = {
     architectures: [
       {
         type: 'Quad-Sensor Array',
-        title: 'EmberSense Pro 4',
+        title: 'EmberSense Pro',
         desc: 'The ultimate fail-safe. Features a Non-Dispersive Infrared (NDIR) CO₂ sensor alongside MEMS Temperature, Humidity, and Barometric Pressure sensors to algorithmically filter out false-positives from weather fronts. Configured via NFC & USB-C. IP65 rated.'
       },
       {
         type: 'Extended Range Array',
-        title: 'EmberSense Compact 3',
+        title: 'EmberSense Compact',
         desc: 'Designed for extreme environments. Features an extended-range CO₂ module capable of reading up to 10,000 ppm, alongside high-precision Temp and Humidity tracking. Encrypted Bluetooth 5.0 configuration. IP66 rated for severe outdoor exposure.'
       }
     ],
