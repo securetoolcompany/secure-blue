@@ -577,7 +577,7 @@ const productDatabase: Record<string, ProductModule> = {
     borderGlow: 'border-orange-500/50',
     icon: Flame,
     tagline: 'Algorithmic early-fire detection. The ultimate water conservation.',
-    description: 'A massive blaze doesn\'t just destroy infrastructure; it requires millions of gallons of municipal water to suppress. EmberSense is an enterprise-grade IoT fire mitigation node. Rather than waiting for smoke to hit a traditional ceiling alarm, our nodes detect specific Volatile Organic Compounds (VOCs) and off-gassing, identifying threats hours before an open flame ignites.',
+    description: 'A massive blaze doesn\'t just destroy infrastructure; it requires millions of gallons of municipal water to suppress. EmberSense is an enterprise-grade IoT fire mitigation array. Rather than waiting for smoke to hit a ceiling alarm, our nodes detect the specific Volatile Organic Compounds (VOCs), CO₂ spikes, and thermal variances of pre-ignition biomass decomposition—identifying threats hours before an open flame ignites.',
     
     residentialContext: {
       headline: 'Protect Your Legacy. Before the Flame.',
@@ -587,14 +587,14 @@ const productDatabase: Record<string, ProductModule> = {
 
     architectures: [
       {
-        type: 'Type I',
-        title: 'Indoor Facility Nodes (PoE)',
-        desc: 'Wired via Power-over-Ethernet for critical indoor infrastructure. Continuously analyzes ambient air chemistry in server rooms, electrical closets, and facility basements.'
+        type: 'Quad-Sensor Array',
+        title: 'EmberSense Pro 4',
+        desc: 'The ultimate fail-safe. Features a Non-Dispersive Infrared (NDIR) CO₂ sensor alongside MEMS Temperature, Humidity, and Barometric Pressure sensors to algorithmically filter out false-positives from weather fronts. Configured via NFC & USB-C. IP65 rated.'
       },
       {
-        type: 'Type II',
-        title: 'Off-Grid Perimeter Nodes (Solar)',
-        desc: 'Deployed on fence lines and structural perimeters. Uses Solar + LoRaWAN to monitor vast outdoor acreages for wildfire encroachment without needing external power.'
+        type: 'Extended Range Array',
+        title: 'EmberSense Compact 3',
+        desc: 'Designed for extreme environments. Features an extended-range CO₂ module capable of reading up to 10,000 ppm, alongside high-precision Temp and Humidity tracking. Encrypted Bluetooth 5.0 configuration. IP66 rated for severe outdoor exposure.'
       }
     ],
 
@@ -606,7 +606,7 @@ const productDatabase: Record<string, ProductModule> = {
       },
       {
         scenario: 'Wildfire Perimeter Defense',
-        context: 'Solar nodes mounted on the edge of mountain estates detect the VOC signature of approaching wildfires. The OS autonomously triggers external rooftop sprinklers to soak the property before embers land.',
+        context: 'Nodes deployed on a 250m grid along the edge of mountain estates detect the CO₂ and thermal signature of approaching wildfires. The OS autonomously triggers external rooftop sprinklers to soak the property before embers land.',
         icon: Flame, color: 'text-orange-400', bg: 'bg-orange-500/10 border-orange-500/30'
       },
       {
@@ -617,35 +617,48 @@ const productDatabase: Record<string, ProductModule> = {
     ],
 
     telemetryData: [
-      { label: 'AMBIENT_AIR_CHEMISTRY', value: 'BASELINE NOMINAL', status: 'normal' },
-      { label: 'VOC_PARTICULATE_COUNT', value: '0.02 PPM', status: 'normal' },
-      { label: 'THERMAL_VARIANCE', value: '+1.2°C/HR', status: 'info' },
-      { label: 'AI_THREAT_CONFIDENCE', value: '1.2% (NO THREAT)', status: 'normal' },
+      { label: 'CO2_NDIR_READING', value: '420 PPM (NOMINAL)', status: 'normal' },
+      { label: 'THERMAL_VARIANCE', value: '+0.1°C/HR', status: 'normal' },
+      { label: 'BAROMETRIC_PRESSURE', value: '1013 hPa (STABLE)', status: 'info' },
+      { label: 'TX_INTERVAL', value: '10 MIN (CONSERVING)', status: 'normal' },
       { label: 'SMOLDERING_SIGNATURE', value: 'DETECTED - ELECTRICAL', status: 'alert' }
     ],
 
     controlParams: [
-      { label: 'HVAC Damper Lockdown', desc: 'Autonomously close ventilation dampers to choke oxygen from the affected zone.' },
-      { label: 'Pre-Action Suppression Routing', desc: 'Pre-charge localized sprinkler zones only when the AI verifies a high-confidence threat.' },
-      { label: 'Automated Power Severance', desc: 'Trigger smart-breakers to cut electrical flow to overheating server racks or appliances.' }
+      { label: 'Multi-Parameter Anomaly Logic', desc: 'Triggers only when CO₂ spikes occur simultaneously with thermal increases and humidity drops. Barometric sensors filter out pressure drops from incoming rainstorms to eliminate false alarms.' },
+      { label: 'Adaptive Transmission Intervals', desc: 'Nodes conserve battery by reporting every 10-30 minutes. Upon anomaly detection, a downlink command instantly shifts the node into a 2-minute emergency pulse rate for high-resolution tracking.' },
+      { label: 'Data Integrity Buffering', desc: 'If network connectivity is lost during an event, nodes locally buffer up to 1,000 data entries and automatically blast the payload upon reconnection.' }
     ],
 
     techSpecs: [
       {
-        category: 'Edge AI & Detection',
+        category: 'Sensor Array Capabilities',
         items: [
-          'Raw sensor data classified locally on the MCU via TinyML',
-          'Detects specific Volatile Organic Compounds (VOCs) and off-gassing',
-          'Eliminates false positives by preventing bandwidth clutter; only verified payloads publish to MQTT',
-          'Machine-learning baseline adaptation to local environments'
+          'CO₂ (NDIR): 400–10,000 ppm range (1 ppm resolution)',
+          'Temperature (MEMS): -40°C to +85°C accuracy (±0.2°C)',
+          'Humidity (MEMS): 0–100% RH non-condensing',
+          'Barometric Pressure: 300–1,100 hPa (Pro 4 Exclusive)',
+          'Algorithmic remote baseline adjustment and calibration via downlink'
         ]
       },
       {
-        category: 'Environment Scaling',
+        category: 'Network & Power Endurance',
         items: [
-          'Agnostic deployment: Solar + LoRaWAN for off-grid outdoor perimeters',
-          'Wired PoE / NB-IoT for indoor data centers and commercial warehouses',
-          'System-wide OS actuation for emergency water pressure routing'
+          'Massive 19,000 mAh ER34615 Li-SOCl₂ replaceable battery',
+          'Operational life: Up to 10 years at a 10-minute transmission interval',
+          'Protocol: LoRaWAN 1.0.2 / 1.0.3 Class A (OTAA/ABP)',
+          'Extreme Range: 10 km (Line-of-Sight) / 2 km (Dense Urban)',
+          'Global Frequency Bands: US915, EU868, AU915, AS923, IN865'
+        ]
+      },
+      {
+        category: 'Physical & Deployment',
+        items: [
+          'Ruggedized IP65 (Pro 4) and IP66 (Compact 3) enclosures',
+          'Over-the-Air (OTA) firmware updates via encrypted LoRaWAN downlink',
+          'Zero-disassembly field provisioning via NFC or Bluetooth 5.0',
+          'Hot-swap battery architecture allows field replacement without device decommissioning',
+          'Certified: CE, FCC, LoRaWAN Certified, RoHS'
         ]
       }
     ]
