@@ -26,28 +26,28 @@ export default function Navbar() {
       href: '#',
       subGroups: [
         {
-          title: 'CORE INFRASTRUCTURE',
+          title: 'PREVENT',
           items: [
             { name: 'SECURE LeakStop', href: '/infrastructure/leakstop' },
             { name: 'Early Fire Detection', href: '/infrastructure/early-fire-detection' }
           ]
         },
         {
-          title: 'ATMOSPHERIC WATER',
+          title: 'GENERATE',
           items: [
             { name: 'Air-2-Water Generators', href: '/infrastructure/a2w-machines' },
             { name: 'A2W Graywater Unit', href: '/infrastructure/a2w-graywater' }
           ]
         },
         {
-          title: 'CONSERVATION',
+          title: 'CONSERVE',
           items: [
             { name: 'Smart Irrigation Arrays', href: '/infrastructure/smart-irrigation' },
             { name: 'Irrigation Graywater', href: '/infrastructure/irrigation-graywater' }
           ]
         },
         {
-          title: 'DATA & TELEMETRY',
+          title: 'AUTOMATE',
           items: [
             { name: 'Environmental Sensors', href: '/infrastructure/environmental-sensors' }
           ]
