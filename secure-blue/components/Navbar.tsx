@@ -21,7 +21,7 @@ export default function Navbar() {
 
   // Updated Nav Configuration with Sub-Groups for the Mega-Menu
   const navLinks = [
-    { name: 'INFRASTRUCTURE', href: '/#solutions' },
+    { name: 'PRODUCTS', href: '/#solutions' },
     { 
       name: 'INDUSTRIES', 
       href: '#',
