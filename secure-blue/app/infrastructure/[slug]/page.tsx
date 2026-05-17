@@ -247,6 +247,7 @@ const productDatabase: Record<string, ProductModule> = {
     accentColor: 'text-cyan-400',
     borderGlow: 'border-cyan-500/50',
     icon: Wind,
+    imagePath: '/images/products/atmospheric-water-generator/AirToWaterGenerator.png',
     tagline: 'Sever your reliance on strained municipal grids.',
     description: 'Extract high-purity, potable water directly from atmospheric humidity. Our industrial-scale Air-to-Water generation units provide resilient, decentralized sourcing for remote infrastructure, massive farms, or facilities looking to hedge against rising local utility costs and drought restrictions.',
     
