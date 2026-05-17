@@ -160,6 +160,7 @@ const productDatabase: Record<string, ProductModule> = {
     accentColor: 'text-emerald-400',
     borderGlow: 'border-emerald-500/50',
     icon: Droplets,
+    imagePath: '/images/products/smart-irrigation/SmartIrrigation.jpg', 
     tagline: 'Deploy water only when mathematically necessary.',
     description: 'Stop watering your landscaping on a blind timer. Our Smart Irrigation arrays aggregate real-time soil saturation telemetry and atmospheric forecasts to automate delivery systems. Water is deployed precisely to the zones that need it, slashing consumption for massive agricultural hubs and private estates alike.',
     

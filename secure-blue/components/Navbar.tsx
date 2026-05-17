@@ -19,9 +19,41 @@ export default function Navbar() {
 
   const closeMenu = () => setIsOpen(false);
 
-  // Updated Nav Configuration with Sub-Groups for the Mega-Menu
+  // Updated Nav Configuration with Product Sub-Groups
   const navLinks = [
-    { name: 'PRODUCTS', href: '/#solutions' },
+    { 
+      name: 'PRODUCTS', 
+      href: '#',
+      subGroups: [
+        {
+          title: 'CORE INFRASTRUCTURE',
+          items: [
+            { name: 'SECURE LeakStop', href: '/infrastructure/leakstop' },
+            { name: 'Early Fire Detection', href: '/infrastructure/early-fire-detection' }
+          ]
+        },
+        {
+          title: 'ATMOSPHERIC WATER',
+          items: [
+            { name: 'Air-2-Water Generators', href: '/infrastructure/a2w-machines' },
+            { name: 'A2W Graywater Unit', href: '/infrastructure/a2w-graywater' }
+          ]
+        },
+        {
+          title: 'CONSERVATION',
+          items: [
+            { name: 'Smart Irrigation Arrays', href: '/infrastructure/smart-irrigation' },
+            { name: 'Irrigation Graywater', href: '/infrastructure/irrigation-graywater' }
+          ]
+        },
+        {
+          title: 'DATA & TELEMETRY',
+          items: [
+            { name: 'Environmental Sensors', href: '/infrastructure/environmental-sensors' }
+          ]
+        }
+      ]
+    },
     { 
       name: 'INDUSTRIES', 
       href: '#',
