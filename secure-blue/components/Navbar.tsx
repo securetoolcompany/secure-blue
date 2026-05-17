@@ -19,23 +19,23 @@ export default function Navbar() {
 
   const closeMenu = () => setIsOpen(false);
 
-  // Updated Nav Configuration with Product Sub-Groups
+  // Updated Nav Configuration with all 12 specialized modules
   const navLinks = [
     { 
       name: 'PRODUCTS', 
-      href: '#',
+      href: '/infrastructure',
       subGroups: [
         {
           title: 'CORE INFRASTRUCTURE',
           items: [
             { name: 'SECURE LeakStop', href: '/infrastructure/leakstop' },
-            { name: 'Early Fire Detection', href: '/infrastructure/early-fire-detection' }
+            { name: 'EmberSense Fire Detection', href: '/infrastructure/early-fire-detection' }
           ]
         },
         {
           title: 'ATMOSPHERIC WATER',
           items: [
-            { name: 'Air-2-Water Generators', href: '/infrastructure/a2w-machines' },
+            { name: 'Air-2-Water Arrays', href: '/infrastructure/a2w-machines' },
             { name: 'A2W Graywater Unit', href: '/infrastructure/a2w-graywater' }
           ]
         },
@@ -49,7 +49,13 @@ export default function Navbar() {
         {
           title: 'DATA & TELEMETRY',
           items: [
-            { name: 'Environmental Sensors', href: '/infrastructure/environmental-sensors' }
+            { name: 'Ambient IAQ Nodes', href: '/infrastructure/iaq-sensors' },
+            { name: 'Cold-Chain & RTD Probes', href: '/infrastructure/cold-chain-sensors' },
+            { name: 'Ag. Weather Stations', href: '/infrastructure/ag-weather-stations' },
+            { name: 'AI Spatial & Occupancy', href: '/infrastructure/ai-occupancy-sensors' },
+            { name: 'Gas & Odor Detectors', href: '/infrastructure/gas-odor-detectors' },
+            { name: 'Liquid Level & Distance', href: '/infrastructure/liquid-level-nodes' },
+            { name: 'View Master Catalog →', href: '/infrastructure' }
           ]
         }
       ]
@@ -122,13 +128,22 @@ export default function Navbar() {
           {navLinks.map((link) => (
             <div key={link.name} className="relative group">
               {link.subGroups ? (
-                // Dropdown Trigger
-                <div className="px-4 py-2 font-mono text-[10px] tracking-widest flex items-center gap-1 text-zinc-400 hover:text-white cursor-pointer transition-colors">
-                  {link.name}
-                  <ChevronDown className="h-3 w-3 group-hover:rotate-180 transition-transform duration-200" />
+                // Dropdown Trigger (Clickable Top-Level)
+                <div className="flex items-center">
+                  <Link 
+                    href={link.href}
+                    className={`pl-4 py-2 font-mono text-[10px] tracking-widest transition-colors hover:text-white ${
+                      pathname.startsWith(link.href) && link.href !== '#' ? 'text-blue-400' : 'text-zinc-400'
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                  <div className="pr-4 py-2 cursor-pointer text-zinc-400 hover:text-white group-hover:text-white transition-colors">
+                    <ChevronDown className="h-3 w-3 group-hover:rotate-180 transition-transform duration-200" />
+                  </div>
                   
                   {/* Desktop Mega-Menu */}
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[480px] bg-zinc-950 border border-zinc-800 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 flex flex-col z-50 p-6 rounded-sm">
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[520px] bg-zinc-950 border border-zinc-800 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 flex flex-col z-50 p-6 rounded-sm">
                     <div className="grid grid-cols-2 gap-x-8 gap-y-6">
                       {link.subGroups.map((group) => (
                         <div key={group.title} className="flex flex-col">
@@ -141,10 +156,14 @@ export default function Navbar() {
                                  key={item.name} 
                                  href={item.href}
                                  className={`flex items-center gap-2 text-xs font-mono tracking-wider transition-colors ${
-                                   pathname === item.href ? 'text-blue-400' : 'text-zinc-500 hover:text-white'
+                                   pathname === item.href 
+                                   ? 'text-blue-400' 
+                                   : item.name.includes('View Master Catalog') 
+                                      ? 'text-emerald-400 hover:text-emerald-300 mt-2 border-t border-zinc-900 pt-2' 
+                                      : 'text-zinc-500 hover:text-white'
                                  }`}
                                >
-                                 <CornerDownRight className="h-3 w-3 text-zinc-700" />
+                                 {!item.name.includes('View Master') && <CornerDownRight className="h-3 w-3 text-zinc-700" />}
                                  {item.name}
                                </Link>
                              ))}
@@ -195,10 +214,14 @@ export default function Navbar() {
                 {link.subGroups ? (
                   // Mobile Mega-Menu Group
                   <>
-                    <div className="text-white font-mono text-sm tracking-widest border-b border-zinc-900 pb-2 flex items-center justify-between">
+                    <Link 
+                      href={link.href} 
+                      onClick={closeMenu}
+                      className="text-white font-mono text-sm tracking-widest border-b border-zinc-900 pb-2 flex items-center justify-between"
+                    >
                       {link.name}
                       <ChevronDown className="h-4 w-4 text-zinc-600" />
-                    </div>
+                    </Link>
                     <div className="flex flex-col gap-6 pl-4 border-l border-zinc-900">
                       {link.subGroups.map((group) => (
                         <div key={group.title} className="flex flex-col gap-3">
@@ -212,7 +235,7 @@ export default function Navbar() {
                                 pathname === item.href ? 'text-blue-400' : 'text-zinc-500 hover:text-white'
                               }`}
                             >
-                              <CornerDownRight className="h-3 w-3 text-zinc-800" />
+                              {!item.name.includes('View Master') && <CornerDownRight className="h-3 w-3 text-zinc-800" />}
                               {item.name}
                             </Link>
                           ))}
