@@ -34,8 +34,7 @@ type ProductModule = {
   sizes?: string[];
   customSizesNote?: string;
 
-  architectures?: { type: string; title: string; desc: string }[];
-  boldUseCases?: { scenario: string; context: string; icon: LucideIcon; color: string; bg: string }[];
+  architectures?: { type: string; title: string; desc: string; imagePath?: string }[];  boldUseCases?: { scenario: string; context: string; icon: LucideIcon; color: string; bg: string }[];
   telemetryData?: { label: string; value: string; status: 'normal' | 'alert' | 'info' }[];
   controlParams?: { label: string; desc: string }[];
   techSpecs?: { category: string; items: string[] }[];
@@ -576,6 +575,7 @@ const productDatabase: Record<string, ProductModule> = {
     accentColor: 'text-orange-400',
     borderGlow: 'border-orange-500/50',
     icon: Flame,
+    imagePath: '/images/products/early-fire-detection/EmberSensePro.jpg',
     tagline: 'Algorithmic early-fire detection. The ultimate water conservation.',
     description: 'A massive blaze doesn\'t just destroy infrastructure; it requires millions of gallons of municipal water to suppress. EmberSense is an enterprise-grade IoT fire mitigation array. Rather than waiting for smoke to hit a ceiling alarm, our nodes detect the specific Volatile Organic Compounds (VOCs), CO₂ spikes, and thermal variances of pre-ignition biomass decomposition—identifying threats hours before an open flame ignites.',
     
@@ -589,12 +589,14 @@ const productDatabase: Record<string, ProductModule> = {
       {
         type: 'Quad-Sensor Array',
         title: 'EmberSense Pro',
-        desc: 'The ultimate fail-safe. Features a Non-Dispersive Infrared (NDIR) CO₂ sensor alongside MEMS Temperature, Humidity, and Barometric Pressure sensors to algorithmically filter out false-positives from weather fronts. Configured via NFC & USB-C. IP65 rated.'
+        desc: 'The ultimate fail-safe. Features a Non-Dispersive Infrared (NDIR) CO₂ sensor alongside MEMS Temperature, Humidity, and Barometric Pressure sensors to algorithmically filter out false-positives from weather fronts. Configured via NFC & USB-C. IP65 rated.',
+        imagePath: '/images/products/early-fire-detection/EmberSensePro.jpg' // <-- Added image path
       },
       {
         type: 'Extended Range Array',
         title: 'EmberSense Compact',
-        desc: 'Designed for extreme environments. Features an extended-range CO₂ module capable of reading up to 10,000 ppm, alongside high-precision Temp and Humidity tracking. Encrypted Bluetooth 5.0 configuration. IP66 rated for severe outdoor exposure.'
+        desc: 'Designed for extreme environments. Features an extended-range CO₂ module capable of reading up to 10,000 ppm, alongside high-precision Temp and Humidity tracking. Encrypted Bluetooth 5.0 configuration. IP66 rated for severe outdoor exposure.',
+        imagePath: '/images/products/early-fire-detection/EmberSenseCompact.jpg' // <-- Added image path
       }
     ],
 
@@ -787,6 +789,18 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                   <div className={`font-mono text-[10px] uppercase tracking-widest ${product.accentColor} mb-4 bg-zinc-900 inline-block px-3 py-1 rounded`}>
                     {arch.type}
                   </div>
+
+                {arch.imagePath ? (
+                    <div className="mb-6 w-full aspect-square relative border border-zinc-800 bg-zinc-900/50 rounded-xl overflow-hidden shadow-inner">
+                      <Image src={arch.imagePath} alt={arch.title} fill className="object-contain p-4 drop-shadow-xl" />
+                    </div>
+                  ) : (
+                    <div className="mb-6 w-full aspect-video border border-zinc-800 border-dashed bg-zinc-900/20 rounded-xl flex flex-col items-center justify-center">
+                      <Box className="h-6 w-6 text-zinc-800 mb-2" />
+                      <span className="font-mono text-[9px] text-zinc-600 tracking-widest uppercase">AWAITING_RENDER</span>
+                    </div>
+                  )}
+                  
                   <h3 className="text-2xl font-bold text-white mb-4">{arch.title}</h3>
                   <p className="text-zinc-400 leading-relaxed text-lg">{arch.desc}</p>
                 </div>
