@@ -363,6 +363,7 @@ const productDatabase: Record<string, ProductModule> = {
     accentColor: 'text-purple-400',
     borderGlow: 'border-purple-500/50',
     icon: Filter,
+    imagePath: '/images/products/graywater-distillation/a2wgraywater.png',
     tagline: 'Closed-loop conservation through thermal distillation.',
     description: 'The ultimate closed-loop ecosystem. This unit doesn\'t just filter graywater; it utilizes advanced thermal distillation. Wastewater is vaporized, leaving behind nutrient-rich solutes that can be harvested as pure fertilizer. The pure water vapor is then captured and condensed by the A2W matrix, returning 100% potable, clinical-grade water back into your facility.',
     
@@ -782,17 +783,33 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               </div>
             )}
 
+            {/* --- UPDATED DYNAMIC ARCHITECTURE GRID --- */}
             <div className="grid md:grid-cols-2 gap-8">
               {product.architectures.map((arch, idx) => (
-                <div key={idx} className="bg-zinc-950 border border-zinc-800 p-8 rounded-2xl hover:border-zinc-600 transition-colors">
-                  <div className={`font-mono text-[10px] uppercase tracking-widest ${product.accentColor} mb-4 bg-zinc-900 inline-block px-3 py-1 rounded`}>
-                    {arch.type}
+                <div key={idx} className="bg-zinc-950 border border-zinc-800 rounded-2xl hover:border-zinc-600 transition-colors flex flex-col overflow-hidden">
+                  
+                  {/* IMAGE HEADER - ONLY RENDERS IF imagePath EXISTS */}
+                  {arch.imagePath && (
+                    <div className="relative w-full h-64 bg-black/50 border-b border-zinc-800 flex items-center justify-center p-6">
+                       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:12px_12px] pointer-events-none" />
+                       <Image src={arch.imagePath} alt={arch.title} fill className="object-contain p-4 relative z-10" />
+                    </div>
+                  )}
+
+                  {/* TEXT CONTENT - FLEX-1 ENSURES IT FILLS REMAINING SPACE */}
+                  <div className="p-8 flex-1">
+                    <div className={`font-mono text-[10px] uppercase tracking-widest ${product.accentColor} mb-4 bg-zinc-900 inline-block px-3 py-1 rounded`}>
+                      {arch.type}
+                    </div>
+                    <h3 className="text-2xl font-bold text-white mb-4">{arch.title}</h3>
+                    <p className="text-zinc-400 leading-relaxed text-lg">{arch.desc}</p>
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-4">{arch.title}</h3>
-                  <p className="text-zinc-400 leading-relaxed text-lg">{arch.desc}</p>
+                  
                 </div>
               ))}
             </div>
+            {/* --- END UPDATED GRID --- */}
+
           </div>
         </section>
       )}
