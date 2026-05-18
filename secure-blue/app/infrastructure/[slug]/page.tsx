@@ -34,7 +34,9 @@ type ProductModule = {
   sizes?: string[];
   customSizesNote?: string;
 
-  architectures?: { type: string; title: string; desc: string; imagePath?: string }[];  boldUseCases?: { scenario: string; context: string; icon: LucideIcon; color: string; bg: string }[];
+  // ADDED 'specs' property to render the engineering tables
+  architectures?: { type: string; title: string; desc: string; imagePath?: string; specs?: string[] }[]; 
+  boldUseCases?: { scenario: string; context: string; icon: LucideIcon; color: string; bg: string }[];
   telemetryData?: { label: string; value: string; status: 'normal' | 'alert' | 'info' }[];
   controlParams?: { label: string; desc: string }[];
   techSpecs?: { category: string; items: string[] }[];
@@ -258,37 +260,84 @@ const productDatabase: Record<string, ProductModule> = {
 
     sizes: ['40 Gallons/Day (Residential)', '130 Gallons/Day (Commercial)', '265 to 1,320+ Gallons/Day (Industrial)'],
 
-    // UPDATED: Gallon Conversions & Manufacturer Scrub
     architectures: [
       {
         type: '150L / 40G Yield',
+        imagePath: '/images/products/atmospheric-water-generator/a2w150.png',
         title: 'A2W-150 [NEXUS]',
         desc: 'Provides up to 150 liters (40 gallons) per day of high-quality drinking water. Ideal for small businesses, private laboratories, residential homes, and schools.',
+        specs: [
+          'Power Draw: 2.0 kW',
+          'Supply: 1-Phase, 230V, AC, 50/60 Hz',
+          'Tank: 60 Liters (15.8 Gal)',
+          'Weight: 180 Kgs',
+          'Dimensions: 960(L) x 790(W) x 1250(H) mm'
+        ]
       },
       {
         type: '250L / 65G Yield',
+        imagePath: '/images/products/atmospheric-water-generator/a2w250.png',        
         title: 'A2W-250 [STRATUS]',
         desc: 'Provides up to 250 liters (65 gallons) per day. Perfectly scaled for medium-sized offices, busy schools, clinical laboratories, and multi-family apartments.',
+        specs: [
+          'Power Draw: 3.4 kW',
+          'Supply: 3-Phase, 440V, AC, 50/60 Hz',
+          'Tank: 100 Liters (26.4 Gal)',
+          'Weight: 260 Kgs',
+          'Dimensions: 1000(L) x 850(W) x 1505(H) mm'
+        ]
       },
       {
         type: '500L / 130G Yield',
+        imagePath: '/images/products/atmospheric-water-generator/a2w500.png',
         title: 'A2W-500 [CUMULUS]',
         desc: 'Provides up to 500 liters (130 gallons) per day. The core industrial standard for large schools, mid-market corporate offices, and heavy-use civic facilities.',
+        specs: [
+          'Power Draw: 5.0 - 5.5 kW',
+          'Supply: 3-Phase, 440V, AC, 50/60 Hz',
+          'Tank: 300 Liters (79.2 Gal)',
+          'Weight: 380 Kgs',
+          'Dimensions: 1150(L) x 1820(W) x 1200(H) mm'
+        ]
       },
       {
         type: '1000L / 265G Yield',
+        imagePath: '/images/products/atmospheric-water-generator/a2w500.png',
         title: 'A2W-1000 [MONSOON]',
         desc: 'Provides up to 1,000 liters (265 gallons) per day. High-yield output designed specifically for massive corporate hubs, public city kiosks, and large apartment complexes.',
+        specs: [
+          'Power Draw: 9.0 - 11.0 kW',
+          'Supply: 3-Phase, 440V, AC, 50/60 Hz',
+          'Tank: 500 Liters (132 Gal)',
+          'Weight: 450 Kgs',
+          'Dimensions: 1200(L) x 1500(W) x 1650(H) mm'
+        ]
       },
       {
         type: '2000L / 530G Yield',
+        imagePath: '/images/products/atmospheric-water-generator/a2w5000.png',
         title: 'A2W-2000 [AEGIS]',
         desc: 'Provides up to 2,000 liters (530 gallons) per day. Institutional-grade generation built to sustain corporate campuses, sprawling resorts, and massive multi-family housing blocks.',
+        specs: [
+          'Power Draw: 18.0 - 22.0 kW',
+          'Supply: 3-Phase, 440V, AC, 50/60 Hz',
+          'Tank: 700 Liters (185 Gal)',
+          'Weight: 900 Kgs',
+          'Dimensions: 2700(L) x 1500(W) x 1650(H) mm'
+        ]
       },
       {
         type: '5000L / 1320G Yield',
+        imagePath: '/images/products/atmospheric-water-generator/a2w5000.png',
         title: 'A2W-5000 [THE BEHEMOTH]',
         desc: 'Our flagship behemoth provides up to 5,000 liters (1,320 gallons) per day of hyper-pure water. Total off-grid infrastructure replacement for massive operations.',
+        specs: [
+          'Power Draw: 55.0 kW',
+          'Supply: 3-Phase, 440V, AC, 50/60 Hz',
+          'Tank: 1000 Liters (264 Gal)',
+          'Weight: 2100 Kgs',
+          'Dimensions: 3300(L) x 2030(W) x 1900(H) mm'
+        ]
       }
     ],
     
@@ -357,6 +406,7 @@ const productDatabase: Record<string, ProductModule> = {
       }
     ]
   },
+
   // --- 4. A2W GRAYWATER ---
   'a2w-graywater': {
     name: 'A2W Graywater Distillation',
@@ -590,13 +640,13 @@ const productDatabase: Record<string, ProductModule> = {
         type: 'Quad-Sensor Array',
         title: 'EmberSense Pro',
         desc: 'The ultimate fail-safe. Features a Non-Dispersive Infrared (NDIR) CO₂ sensor alongside MEMS Temperature, Humidity, and Barometric Pressure sensors to algorithmically filter out false-positives from weather fronts. Configured via NFC & USB-C. IP65 rated.',
-        imagePath: '/images/products/early-fire-detection/EmberSensePro.jpg' // <-- Added image path
+        imagePath: '/images/products/early-fire-detection/EmberSensePro.jpg'
       },
       {
         type: 'Extended Range Array',
         title: 'EmberSense Compact',
         desc: 'Designed for extreme environments. Features an extended-range CO₂ module capable of reading up to 10,000 ppm, alongside high-precision Temp and Humidity tracking. Encrypted Bluetooth 5.0 configuration. IP66 rated for severe outdoor exposure.',
-        imagePath: '/images/products/early-fire-detection/EmberSenseCompact.jpg' // <-- Added image path
+        imagePath: '/images/products/early-fire-detection/EmberSenseCompact.jpg'
       }
     ],
 
@@ -783,26 +833,42 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               </div>
             )}
 
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className={`grid grid-cols-1 md:grid-cols-2 gap-8 ${product.architectures.length > 2 ? 'lg:grid-cols-3' : ''}`}>
               {product.architectures.map((arch, idx) => (
-                <div key={idx} className="bg-zinc-950 border border-zinc-800 p-8 rounded-2xl hover:border-zinc-600 transition-colors">
-                  <div className={`font-mono text-[10px] uppercase tracking-widest ${product.accentColor} mb-4 bg-zinc-900 inline-block px-3 py-1 rounded`}>
+                <div key={idx} className="bg-zinc-950 border border-zinc-800 p-8 rounded-2xl flex flex-col hover:border-zinc-600 transition-colors h-full">
+                  <div className={`font-mono text-[10px] uppercase tracking-widest ${product.accentColor} mb-4 bg-zinc-900 inline-block px-3 py-1 rounded self-start`}>
                     {arch.type}
                   </div>
 
-                {arch.imagePath ? (
-                    <div className="mb-6 w-full aspect-square relative border border-zinc-800 bg-zinc-900/50 rounded-xl overflow-hidden shadow-inner">
+                  {arch.imagePath ? (
+                    <div className="mb-6 w-full aspect-square relative border border-zinc-800 bg-zinc-900/50 rounded-xl overflow-hidden shadow-inner shrink-0">
                       <Image src={arch.imagePath} alt={arch.title} fill className="object-contain p-4 drop-shadow-xl" />
                     </div>
                   ) : (
-                    <div className="mb-6 w-full aspect-video border border-zinc-800 border-dashed bg-zinc-900/20 rounded-xl flex flex-col items-center justify-center">
+                    <div className="mb-6 w-full aspect-video border border-zinc-800 border-dashed bg-zinc-900/20 rounded-xl flex flex-col items-center justify-center shrink-0">
                       <Box className="h-6 w-6 text-zinc-800 mb-2" />
                       <span className="font-mono text-[9px] text-zinc-600 tracking-widest uppercase">AWAITING_RENDER</span>
                     </div>
                   )}
                   
                   <h3 className="text-2xl font-bold text-white mb-4">{arch.title}</h3>
-                  <p className="text-zinc-400 leading-relaxed text-lg">{arch.desc}</p>
+                  <p className="text-zinc-400 leading-relaxed text-sm mb-6">{arch.desc}</p>
+
+                  {/* NEW: DYNAMIC SPECS RENDERING TABLE */}
+                  {arch.specs && (
+                    <div className="mt-auto space-y-2 pt-4 border-t border-zinc-800/80">
+                      {arch.specs.map((specLine, sIdx) => {
+                        const [label, val] = specLine.split(': ');
+                        return (
+                          <div key={sIdx} className="flex justify-between items-center text-[11px] font-mono">
+                            <span className="text-zinc-500">{label}:</span>
+                            <span className="text-zinc-300 text-right">{val}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
                 </div>
               ))}
             </div>
