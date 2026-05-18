@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Terminal, Filter, Zap, CheckCircle2, Database, ChevronDown } from 'lucide-react';
+import { Terminal, Filter, Zap, CheckCircle2, Database, ChevronDown, Search, X } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
@@ -277,25 +277,36 @@ export default function HardwareHub() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [activeIndustry, setActiveIndustry] = useState('All');
   const [activeEnv, setActiveEnv] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
   
-  // NEW: State for collapsing/expanding the filter menu
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
   const filteredHardware = hardwareCatalog.filter((item) => {
+    // Check buttons
     const matchCategory = activeCategory === 'All' || item.categories.includes(activeCategory);
     const matchIndustry = activeIndustry === 'All' || item.industries.includes(activeIndustry);
     const matchEnv = activeEnv === 'All' || item.environments.includes(activeEnv);
-    return matchCategory && matchIndustry && matchEnv;
+    
+    // Check search query (scans name, tagline, systemLabel, and specs)
+    const query = searchQuery.toLowerCase();
+    const matchSearch = query === '' || 
+      item.name.toLowerCase().includes(query) ||
+      item.tagline.toLowerCase().includes(query) ||
+      item.systemLabel.toLowerCase().includes(query) ||
+      item.keySpecs.some(spec => spec.toLowerCase().includes(query));
+
+    return matchCategory && matchIndustry && matchEnv && matchSearch;
   });
 
   // Calculate active filter count for the badge
   const activeFiltersCount = (activeCategory !== 'All' ? 1 : 0) + (activeIndustry !== 'All' ? 1 : 0) + (activeEnv !== 'All' ? 1 : 0);
 
   const handleResetFilters = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevents the accordion from toggling when clicking reset
+    e.stopPropagation(); 
     setActiveCategory('All');
     setActiveIndustry('All');
     setActiveEnv('All');
+    setSearchQuery('');
   };
 
   return (
@@ -314,13 +325,13 @@ export default function HardwareHub() {
         </p>
       </section>
 
-      {/* REFINED: Sleek Collapsible Filter Bar */}
-      <section className="sticky top-[72px] z-40 bg-zinc-950/90 backdrop-blur-xl border-b border-zinc-900 shadow-2xl">
+      {/* FIXED: Gap removed. Set to top-[64px] to hug the bottom of the scrolled navbar exactly. */}
+      <section className="sticky top-[64px] z-40 bg-zinc-950/90 backdrop-blur-xl border-b border-zinc-900 shadow-2xl">
         <div className="max-w-7xl mx-auto">
           
           {/* Thin Control Bar (Always visible) */}
           <div 
-            className="px-8 py-4 flex items-center justify-between cursor-pointer group hover:bg-zinc-900/50 transition-colors"
+            className="px-8 py-4 flex flex-col sm:flex-row gap-4 sm:gap-0 items-start sm:items-center justify-between cursor-pointer group hover:bg-zinc-900/50 transition-colors"
             onClick={() => setIsFiltersOpen(!isFiltersOpen)}
           >
             <div className="flex items-center gap-3 text-zinc-400 group-hover:text-white transition-colors">
@@ -329,22 +340,44 @@ export default function HardwareHub() {
                 Search Products
               </span>
               {activeFiltersCount > 0 && (
-                <span className="bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded font-mono text-[10px] ml-2">
+                <span className="bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded font-mono text-[10px]">
                   {activeFiltersCount} ACTIVE
                 </span>
               )}
             </div>
             
-            <div className="flex items-center gap-4">
-              {activeFiltersCount > 0 && (
+            <div className="flex items-center gap-4 w-full sm:w-auto">
+              
+              {/* NEW: Search Bar Integration */}
+              <div 
+                className="flex items-center bg-zinc-900/80 border border-zinc-800 rounded px-3 py-1.5 focus-within:border-blue-500 transition-colors w-full sm:w-auto"
+                onClick={(e) => e.stopPropagation()} // Prevents the accordion from toggling when typing
+              >
+                <Search className="h-3.5 w-3.5 text-zinc-500 mr-2 shrink-0" />
+                <input 
+                  type="text" 
+                  placeholder="Search catalog..." 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="bg-transparent text-[11px] font-mono text-white placeholder:text-zinc-600 focus:outline-none w-full sm:w-48"
+                />
+                {searchQuery && (
+                  <X 
+                    className="h-3.5 w-3.5 text-zinc-500 hover:text-white cursor-pointer ml-2 shrink-0" 
+                    onClick={() => setSearchQuery('')}
+                  />
+                )}
+              </div>
+
+              {(activeFiltersCount > 0 || searchQuery !== '') && (
                 <button 
                   onClick={handleResetFilters}
-                  className="font-mono text-[10px] text-red-400 hover:text-red-300 hover:bg-red-400/10 px-2 py-1 rounded transition-colors uppercase tracking-widest hidden sm:block"
+                  className="font-mono text-[10px] text-red-400 hover:text-red-300 hover:bg-red-400/10 px-2 py-1 rounded transition-colors uppercase tracking-widest hidden sm:block shrink-0"
                 >
                   [ Clear All ]
                 </button>
               )}
-              <ChevronDown className={`h-4 w-4 text-zinc-500 transition-transform duration-300 ${isFiltersOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`h-4 w-4 text-zinc-500 transition-transform duration-300 hidden sm:block ${isFiltersOpen ? 'rotate-180' : ''}`} />
             </div>
           </div>
 
@@ -422,9 +455,9 @@ export default function HardwareHub() {
         {filteredHardware.length === 0 && (
           <div className="w-full py-24 flex flex-col items-center justify-center border border-dashed border-zinc-800 rounded-xl bg-zinc-900/10">
             <Terminal className="h-8 w-8 text-zinc-600 mb-4" />
-            <p className="text-zinc-400 font-mono">ERR: NO_MODULES_MATCH_PARAMETERS</p>
+            <p className="text-zinc-400 font-mono text-center px-4">ERR: NO_MODULES_MATCH_PARAMETERS</p>
             <button onClick={handleResetFilters} className="mt-4 text-xs text-blue-400 hover:text-blue-300 font-mono uppercase tracking-widest underline">
-              Reset Filters
+              Reset Search & Filters
             </button>
           </div>
         )}
