@@ -295,7 +295,7 @@ export default function HardwareHub() {
           <span className="font-mono text-xs tracking-widest text-zinc-500 uppercase">Master_Hardware_Directory</span>
         </div>
         <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-white mb-6">
-          Infrastructure Modules.
+          Product Modules.
         </h1>
         <p className="text-xl text-zinc-400 max-w-3xl font-light">
           Filter and review technical specifications across our entire proprietary hardware ecosystem.
