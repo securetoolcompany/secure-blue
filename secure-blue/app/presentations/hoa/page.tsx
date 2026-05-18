@@ -3,15 +3,68 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { 
   ArrowRight, ArrowLeft, ShieldCheck, Droplets, 
-  Zap, Radio, Home, Bath, Sprout, Building, Calculator
+  Zap, Radio, Home, Bath, Sprout, Building, Calculator, X, CheckCircle2, Terminal, Cpu
 } from 'lucide-react';
+import Image from 'next/image';
+
+// --- LOCAL HARDWARE DATABASE FOR POPUPS ---
+const HOA_PRODUCTS = {
+  'leakstop': { 
+    name: 'SECURE LeakStop', 
+    tagline: 'Autonomous mitigation for catastrophic leaks.', 
+    specs: [
+      'LoRaWAN wireless, battery-operated (10+ years autonomy)', 
+      'Sub-50ms actuation latency upon anomaly trigger', 
+      'Integrates directly with mainline plumbing or retrofit solenoids'
+    ], 
+    image: '/images/products/leakstop/LeakStop.png', 
+    color: 'text-blue-400',
+    border: 'border-blue-500/30',
+    hoverBorder: 'hover:border-blue-500/80',
+    bgGlow: 'bg-blue-500/5',
+    hoverBg: 'hover:bg-blue-500/10'
+  },
+  'a2w-machines': { 
+    name: 'Air-2-Water Arrays', 
+    tagline: 'Atmospheric generation for absolute grid independence.', 
+    specs: [
+      'Yields scale from 40 to 1,320+ Gallons/Day', 
+      'Multi-Stage Sediment, Carbon, & UV-C Filtration', 
+      'Direct integration with off-grid Solar Matrix setups'
+    ], 
+    image: '/images/products/atmospheric-water-generator/AirToWaterGenerator.png', 
+    color: 'text-cyan-400',
+    border: 'border-cyan-500/30',
+    hoverBorder: 'hover:border-cyan-500/80',
+    bgGlow: 'bg-cyan-500/5',
+    hoverBg: 'hover:bg-cyan-500/10'
+  },
+  'smart-irrigation': { 
+    name: 'Smart Irrigation Arrays', 
+    tagline: 'Deploy water only when mathematically necessary.', 
+    specs: [
+      'Direct 9VDC/12VDC latching solenoid control', 
+      'Bypasses the need to trench miles of copper wiring', 
+      'Embedded time-control executes offline schedules automatically'
+    ], 
+    image: '/images/products/smart-irrigation/SmartIrrigation.jpg', 
+    color: 'text-emerald-400',
+    border: 'border-emerald-500/30',
+    hoverBorder: 'hover:border-emerald-500/80',
+    bgGlow: 'bg-emerald-500/5',
+    hoverBg: 'hover:bg-emerald-500/10'
+  }
+};
 
 export default function HOAPresentation() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  
+  // --- HARDWARE MODAL STATE ---
+  const [activeProduct, setActiveProduct] = useState<keyof typeof HOA_PRODUCTS | null>(null);
 
   // --- REFINED CALCULATOR STATE ---
   const [annualInsurance, setAnnualInsurance] = useState(4500);
-  const [insuranceDiscount, setInsuranceDiscount] = useState(12); // Default to industry avg
+  const [insuranceDiscount, setInsuranceDiscount] = useState(12);
   const [monthlyWater, setMonthlyWater] = useState(180);
   const [monthlyInternet, setMonthlyInternet] = useState(85);
   const [monthsAway, setMonthsAway] = useState(5);
@@ -42,7 +95,8 @@ export default function HOAPresentation() {
       visual: "individual",
       color: "text-amber-400",
       content: "Secure your home from the inside out. Our LeakStop system autonomously shuts off your water if a pipe fails while you're away. Meanwhile, our A2W bathroom retrofits create off-grid water for your showers and toilets, removing your home's biggest utility burdens.",
-      metric: "PERSONAL_SOVEREIGNTY"
+      metric: "PERSONAL_SOVEREIGNTY",
+      relatedProducts: ['leakstop', 'a2w-machines']
     },
     {
       id: 4,
@@ -51,7 +105,8 @@ export default function HOAPresentation() {
       visual: "community",
       color: "text-cyan-400",
       content: "Protect the beauty of your neighborhood without draining the HOA reserves. We deploy smart topography sensors to optimize common-area irrigation, and install industrial A2W machines to fill community cisterns completely off the grid.",
-      metric: "SHARED_ASSET_PROTECTION"
+      metric: "SHARED_ASSET_PROTECTION",
+      relatedProducts: ['smart-irrigation', 'a2w-machines']
     },
     {
       id: 5,
@@ -60,7 +115,8 @@ export default function HOAPresentation() {
       visual: "business",
       color: "text-purple-400",
       content: "Sovereignty extends to your community's local businesses and clubhouses. We equip restaurants and community centers with A2W generation, providing hyper-pure, atmospheric water for drinking fountains and premium cooking.",
-      metric: "COMMERCIAL_UPGRADES"
+      metric: "COMMERCIAL_UPGRADES",
+      relatedProducts: ['a2w-machines']
     },
     {
       id: 6,
@@ -87,13 +143,20 @@ export default function HOAPresentation() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (document.activeElement?.tagName === 'INPUT') return;
+      if (document.activeElement?.tagName === 'INPUT') return; 
+      
+      // If modal is open, intercept keys
+      if (activeProduct) {
+        if (e.key === 'Escape') setActiveProduct(null);
+        return; 
+      }
+
       if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
       if (e.key === 'ArrowLeft') prevSlide();
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [nextSlide, prevSlide]);
+  }, [nextSlide, prevSlide, activeProduct]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -103,7 +166,7 @@ export default function HOAPresentation() {
 
   // --- REFINED CALCULATOR LOGIC ---
   const calcInsuranceSavings = annualInsurance * (insuranceDiscount / 100);
-  const calcUtilitySavings = monthlyWater * 12 * 0.45; // Assumes 45% reduction based on A2W + Smart Soil Telemetry
+  const calcUtilitySavings = monthlyWater * 12 * 0.45;
   const calcSubscriptionSavings = monthsAway * monthlyInternet;
   const totalAnnualSavings = calcInsuranceSavings + calcUtilitySavings + calcSubscriptionSavings;
 
@@ -241,7 +304,6 @@ export default function HOAPresentation() {
             {/* SLIDERS */}
             <div className="space-y-5 mb-6">
               
-              {/* Row 1: Insurance */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <div className="flex justify-between font-mono text-[9px] text-zinc-400 mb-2">
@@ -267,7 +329,6 @@ export default function HOAPresentation() {
                 </div>
               </div>
 
-              {/* Row 2: Water */}
               <div>
                 <div className="flex justify-between font-mono text-[9px] text-zinc-400 mb-2">
                   <span>MONTHLY WATER BILL</span>
@@ -280,7 +341,6 @@ export default function HOAPresentation() {
                 />
               </div>
 
-              {/* Row 3: Connectivity */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <div className="flex justify-between font-mono text-[9px] text-zinc-400 mb-2">
@@ -315,7 +375,7 @@ export default function HOAPresentation() {
                 <span className="font-mono text-xs text-emerald-400">+${calcInsuranceSavings.toLocaleString(undefined, {maximumFractionDigits:0})}/yr</span>
               </div>
               <div className="flex justify-between items-center border-b border-zinc-900 pb-2">
-                <span className="font-mono text-[10px] text-zinc-500" title="Calculated at 45% reduction via A2W & Telemetry">Water Conservation</span>
+                <span className="font-mono text-[10px] text-zinc-500">Water Conservation</span>
                 <span className="font-mono text-xs text-blue-400">+${calcUtilitySavings.toLocaleString(undefined, {maximumFractionDigits:0})}/yr</span>
               </div>
               <div className="flex justify-between items-center border-b border-zinc-900 pb-2">
@@ -327,11 +387,6 @@ export default function HOAPresentation() {
                 <span className="font-black text-lg text-emerald-500">${totalAnnualSavings.toLocaleString(undefined, {maximumFractionDigits:0})} / yr</span>
               </div>
             </div>
-            <div className="mt-3 text-center">
-              <span className="text-[8px] font-mono text-zinc-600 uppercase tracking-widest">
-                *Water savings calculated at 45% efficiency using A2W & Telemetry tech.
-              </span>
-            </div>
           </div>
         );
       default:
@@ -340,7 +395,76 @@ export default function HOAPresentation() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-50 font-sans flex flex-col overflow-hidden">
+    <div className="min-h-screen bg-zinc-950 text-zinc-50 font-sans flex flex-col overflow-hidden relative">
+      
+      {/* ---------------------------------------------------- */}
+      {/* HARDWARE OVERLAY MODAL */}
+      {/* ---------------------------------------------------- */}
+      {activeProduct && (
+        <div className="fixed inset-0 z-[200] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-300">
+          <div className={`bg-zinc-950 border border-zinc-800 rounded-3xl w-full max-w-5xl flex flex-col overflow-hidden relative shadow-[0_0_100px_rgba(0,0,0,0.8)]`}>
+            
+            {/* Modal Header & Close */}
+            <div className="p-6 flex justify-between items-center border-b border-zinc-900 bg-zinc-900/50">
+              <div className="flex items-center gap-3">
+                <Cpu className={`h-5 w-5 ${HOA_PRODUCTS[activeProduct].color}`} />
+                <span className="font-mono text-xs tracking-widest uppercase text-zinc-400">HARDWARE_INSPECTION</span>
+              </div>
+              <button 
+                onClick={() => setActiveProduct(null)} 
+                className="text-zinc-500 hover:text-white bg-zinc-900 hover:bg-zinc-800 p-2 rounded-full transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Modal Content Grid */}
+            <div className="grid md:grid-cols-2">
+              
+              {/* Product Info Side */}
+              <div className="p-8 lg:p-12 flex flex-col justify-center">
+                <h2 className="text-4xl font-black tracking-tighter text-white mb-4">
+                  {HOA_PRODUCTS[activeProduct].name}
+                </h2>
+                <p className="text-xl text-zinc-400 font-light mb-8">
+                  {HOA_PRODUCTS[activeProduct].tagline}
+                </p>
+                
+                <div className="space-y-4 mb-10">
+                  {HOA_PRODUCTS[activeProduct].specs.map((spec, i) => (
+                    <div key={i} className="flex items-start gap-3">
+                      <CheckCircle2 className={`h-5 w-5 shrink-0 mt-0.5 ${HOA_PRODUCTS[activeProduct].color}`} />
+                      <span className="text-zinc-300 text-sm leading-relaxed">{spec}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className={`mt-auto border-t border-zinc-800 pt-6 flex items-center gap-3 font-mono text-[10px] tracking-widest uppercase ${HOA_PRODUCTS[activeProduct].color}`}>
+                   <span className="relative flex h-2 w-2">
+                     <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-current`}></span>
+                     <span className={`relative inline-flex rounded-full h-2 w-2 bg-current`}></span>
+                   </span>
+                   STATUS: READY FOR DEPLOYMENT
+                </div>
+              </div>
+
+              {/* Hardware Render Side */}
+              <div className={`relative p-12 flex items-center justify-center border-l border-zinc-900 ${HOA_PRODUCTS[activeProduct].bgGlow}`}>
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:12px_12px] pointer-events-none" />
+                <Image 
+                  src={HOA_PRODUCTS[activeProduct].image} 
+                  alt={HOA_PRODUCTS[activeProduct].name} 
+                  width={400} height={400} 
+                  className="relative z-10 object-contain drop-shadow-2xl" 
+                />
+              </div>
+
+            </div>
+          </div>
+        </div>
+      )}
+      {/* ---------------------------------------------------- */}
+
       <header className="p-8 flex justify-between items-center z-10 border-b border-zinc-900/50">
         <div className="font-bold tracking-tighter text-xl flex items-center gap-2">
           <div className="h-6 w-6 bg-blue-600 rounded-sm" />
@@ -369,23 +493,68 @@ export default function HOAPresentation() {
         </div>
 
         <div key={current.id} className="max-w-7xl w-full grid lg:grid-cols-2 gap-16 items-center animate-in fade-in slide-in-from-bottom-8 duration-700 relative z-10">
-          <div className="space-y-6">
-            <div className={`font-mono text-xs font-bold uppercase tracking-[0.3em] ${current.color}`}>
+          
+          {/* LEFT COLUMN: Text Content */}
+          <div className="flex flex-col justify-center">
+            <div className={`font-mono text-xs font-bold uppercase tracking-[0.3em] ${current.color} mb-6`}>
               {current.metric}
             </div>
-            <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] text-white">
+            <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] text-white mb-6">
               {current.title}
             </h1>
-            <h2 className="text-3xl md:text-4xl text-zinc-400 font-light italic">
+            <h2 className="text-3xl md:text-4xl text-zinc-400 font-light italic mb-6">
               {current.subtitle}
             </h2>
             <p className="text-xl md:text-2xl text-zinc-300 leading-relaxed border-l-2 border-zinc-800 pl-8 py-4">
               {current.content}
             </p>
           </div>
-          <div className="flex justify-center lg:justify-end">
-            {renderVisual()}
+          
+          {/* RIGHT COLUMN: Visuals & Intervention Cards */}
+          <div className="flex flex-col justify-center lg:justify-end items-center lg:items-end gap-8 w-full">
+            
+            {/* The Original Slide Graphic */}
+            <div className="w-full flex justify-center lg:justify-end">
+              {renderVisual()}
+            </div>
+            
+            {/* MASSIVE HARDWARE TRIGGER CARDS */}
+            {current.relatedProducts && (
+              <div className="w-full flex justify-center lg:justify-end animate-in fade-in slide-in-from-bottom-4 delay-300">
+                <div className="w-full max-w-[400px]">
+                  <h3 className="text-zinc-500 font-mono text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <Terminal className="h-4 w-4" />
+                    Available Interventions
+                  </h3>
+                  <div className="flex flex-col gap-3">
+                    {current.relatedProducts.map((productKey) => {
+                      const product = HOA_PRODUCTS[productKey as keyof typeof HOA_PRODUCTS];
+                      return (
+                        <button 
+                          key={productKey}
+                          onClick={() => setActiveProduct(productKey as keyof typeof HOA_PRODUCTS)}
+                          className={`group flex items-center justify-between gap-4 ${product.bgGlow} ${product.hoverBg} border ${product.border} ${product.hoverBorder} transition-all duration-300 p-4 rounded-xl w-full text-left shadow-lg`}
+                        >
+                          <div className="flex items-center gap-4">
+                            <div className={`p-3 rounded-lg bg-zinc-950 border border-zinc-800 group-hover:border-zinc-600 transition-colors shadow-inner`}>
+                              <Cpu className={`h-6 w-6 ${product.color}`} />
+                            </div>
+                            <div>
+                              <div className="text-white font-bold text-lg tracking-tight leading-none mb-1.5">{product.name}</div>
+                              <div className={`font-mono text-[9px] uppercase tracking-widest ${product.color} leading-none`}>Inspect Architecture</div>
+                            </div>
+                          </div>
+                          <ArrowRight className={`h-5 w-5 ${product.color} opacity-50 group-hover:opacity-100 group-hover:translate-x-2 transition-all`} />
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+
           </div>
+
         </div>
       </main>
 
