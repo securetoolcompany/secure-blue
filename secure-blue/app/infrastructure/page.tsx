@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Terminal, Filter, Zap, CheckCircle2, Database } from 'lucide-react';
+import { Terminal, Filter, Zap, CheckCircle2, Database, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
@@ -277,14 +277,26 @@ export default function HardwareHub() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [activeIndustry, setActiveIndustry] = useState('All');
   const [activeEnv, setActiveEnv] = useState('All');
+  
+  // NEW: State for collapsing/expanding the filter menu
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
   const filteredHardware = hardwareCatalog.filter((item) => {
-    // UPDATED: Now checks if the array includes the active category
     const matchCategory = activeCategory === 'All' || item.categories.includes(activeCategory);
     const matchIndustry = activeIndustry === 'All' || item.industries.includes(activeIndustry);
     const matchEnv = activeEnv === 'All' || item.environments.includes(activeEnv);
     return matchCategory && matchIndustry && matchEnv;
   });
+
+  // Calculate active filter count for the badge
+  const activeFiltersCount = (activeCategory !== 'All' ? 1 : 0) + (activeIndustry !== 'All' ? 1 : 0) + (activeEnv !== 'All' ? 1 : 0);
+
+  const handleResetFilters = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevents the accordion from toggling when clicking reset
+    setActiveCategory('All');
+    setActiveIndustry('All');
+    setActiveEnv('All');
+  };
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-50 font-sans selection:bg-zinc-800">
@@ -302,75 +314,105 @@ export default function HardwareHub() {
         </p>
       </section>
 
-      <section className="px-8 py-8 border-b border-zinc-900 bg-zinc-900/20 sticky top-[72px] z-40 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto flex flex-col xl:flex-row gap-8 items-start xl:items-center">
+      {/* REFINED: Sleek Collapsible Filter Bar */}
+      <section className="sticky top-[72px] z-40 bg-zinc-950/90 backdrop-blur-xl border-b border-zinc-900 shadow-2xl">
+        <div className="max-w-7xl mx-auto">
           
-          <div className="flex items-center gap-2 text-zinc-500 font-mono text-sm uppercase tracking-widest shrink-0">
-            <Filter className="h-4 w-4" /> Parameters:
+          {/* Thin Control Bar (Always visible) */}
+          <div 
+            className="px-8 py-4 flex items-center justify-between cursor-pointer group hover:bg-zinc-900/50 transition-colors"
+            onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+          >
+            <div className="flex items-center gap-3 text-zinc-400 group-hover:text-white transition-colors">
+              <Filter className="h-4 w-4" />
+              <span className="font-mono text-xs uppercase tracking-widest font-bold">
+                Search Products
+              </span>
+              {activeFiltersCount > 0 && (
+                <span className="bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded font-mono text-[10px] ml-2">
+                  {activeFiltersCount} ACTIVE
+                </span>
+              )}
+            </div>
+            
+            <div className="flex items-center gap-4">
+              {activeFiltersCount > 0 && (
+                <button 
+                  onClick={handleResetFilters}
+                  className="font-mono text-[10px] text-red-400 hover:text-red-300 hover:bg-red-400/10 px-2 py-1 rounded transition-colors uppercase tracking-widest hidden sm:block"
+                >
+                  [ Clear All ]
+                </button>
+              )}
+              <ChevronDown className={`h-4 w-4 text-zinc-500 transition-transform duration-300 ${isFiltersOpen ? 'rotate-180' : ''}`} />
+            </div>
           </div>
 
-          <div className="flex flex-wrap gap-x-8 gap-y-6">
-            
-            {/* System Classification */}
-            <div className="flex flex-col gap-2">
-              <span className="text-[10px] text-zinc-600 font-mono uppercase tracking-widest">System Pillar</span>
-              <div className="flex flex-wrap gap-2">
-                {CATEGORIES.map(cat => (
-                  <button
-                    key={cat}
-                    onClick={() => setActiveCategory(cat)}
-                    className={`px-3 py-1.5 font-mono text-xs border transition-colors ${
-                      activeCategory === cat 
-                        ? 'bg-blue-600/10 border-blue-500 text-blue-400' 
-                        : 'bg-zinc-950 border-zinc-800 text-zinc-500 hover:border-zinc-600 hover:text-zinc-300'
-                    }`}
-                  >
-                    {cat}
-                  </button>
-                ))}
+          {/* Expandable Filter Content */}
+          <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isFiltersOpen ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}>
+            <div className="px-8 pb-8 pt-4 border-t border-zinc-900/50 flex flex-col lg:flex-row gap-8 items-start">
+              
+              {/* System Classification */}
+              <div className="flex flex-col gap-3 w-full lg:w-1/3">
+                <span className="text-[10px] text-zinc-500 font-mono uppercase tracking-widest">System Pillar</span>
+                <div className="flex flex-wrap gap-2">
+                  {CATEGORIES.map(cat => (
+                    <button
+                      key={cat}
+                      onClick={() => setActiveCategory(cat)}
+                      className={`px-3 py-1.5 font-mono text-xs border transition-colors ${
+                        activeCategory === cat 
+                          ? 'bg-blue-600/10 border-blue-500 text-blue-400' 
+                          : 'bg-zinc-950 border-zinc-800 text-zinc-500 hover:border-zinc-600 hover:text-zinc-300'
+                      }`}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* Target Industry Filter */}
-            <div className="flex flex-col gap-2">
-              <span className="text-[10px] text-zinc-600 font-mono uppercase tracking-widest">Target Sector</span>
-              <div className="flex flex-wrap gap-2">
-                {INDUSTRIES.map(ind => (
-                  <button
-                    key={ind}
-                    onClick={() => setActiveIndustry(ind)}
-                    className={`px-3 py-1.5 font-mono text-xs border transition-colors ${
-                      activeIndustry === ind 
-                        ? 'bg-purple-600/10 border-purple-500 text-purple-400' 
-                        : 'bg-zinc-950 border-zinc-800 text-zinc-500 hover:border-zinc-600 hover:text-zinc-300'
-                    }`}
-                  >
-                    {ind}
-                  </button>
-                ))}
+              {/* Target Industry Filter */}
+              <div className="flex flex-col gap-3 w-full lg:w-1/3">
+                <span className="text-[10px] text-zinc-500 font-mono uppercase tracking-widest">Target Sector</span>
+                <div className="flex flex-wrap gap-2">
+                  {INDUSTRIES.map(ind => (
+                    <button
+                      key={ind}
+                      onClick={() => setActiveIndustry(ind)}
+                      className={`px-3 py-1.5 font-mono text-xs border transition-colors ${
+                        activeIndustry === ind 
+                          ? 'bg-purple-600/10 border-purple-500 text-purple-400' 
+                          : 'bg-zinc-950 border-zinc-800 text-zinc-500 hover:border-zinc-600 hover:text-zinc-300'
+                      }`}
+                    >
+                      {ind}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* Environment Filter */}
-            <div className="flex flex-col gap-2">
-              <span className="text-[10px] text-zinc-600 font-mono uppercase tracking-widest">Environment</span>
-              <div className="flex flex-wrap gap-2">
-                {ENVIRONMENTS.map(env => (
-                  <button
-                    key={env}
-                    onClick={() => setActiveEnv(env)}
-                    className={`px-3 py-1.5 font-mono text-xs border transition-colors ${
-                      activeEnv === env 
-                        ? 'bg-emerald-600/10 border-emerald-500 text-emerald-400' 
-                        : 'bg-zinc-950 border-zinc-800 text-zinc-500 hover:border-zinc-600 hover:text-zinc-300'
-                    }`}
-                  >
-                    {env}
-                  </button>
-                ))}
+              {/* Environment Filter */}
+              <div className="flex flex-col gap-3 w-full lg:w-1/3">
+                <span className="text-[10px] text-zinc-500 font-mono uppercase tracking-widest">Environment</span>
+                <div className="flex flex-wrap gap-2">
+                  {ENVIRONMENTS.map(env => (
+                    <button
+                      key={env}
+                      onClick={() => setActiveEnv(env)}
+                      className={`px-3 py-1.5 font-mono text-xs border transition-colors ${
+                        activeEnv === env 
+                          ? 'bg-emerald-600/10 border-emerald-500 text-emerald-400' 
+                          : 'bg-zinc-950 border-zinc-800 text-zinc-500 hover:border-zinc-600 hover:text-zinc-300'
+                      }`}
+                    >
+                      {env}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
 
+            </div>
           </div>
         </div>
       </section>
@@ -381,7 +423,7 @@ export default function HardwareHub() {
           <div className="w-full py-24 flex flex-col items-center justify-center border border-dashed border-zinc-800 rounded-xl bg-zinc-900/10">
             <Terminal className="h-8 w-8 text-zinc-600 mb-4" />
             <p className="text-zinc-400 font-mono">ERR: NO_MODULES_MATCH_PARAMETERS</p>
-            <button onClick={() => {setActiveCategory('All'); setActiveEnv('All'); setActiveIndustry('All');}} className="mt-4 text-xs text-blue-400 hover:text-blue-300 font-mono uppercase tracking-widest underline">
+            <button onClick={handleResetFilters} className="mt-4 text-xs text-blue-400 hover:text-blue-300 font-mono uppercase tracking-widest underline">
               Reset Filters
             </button>
           </div>
@@ -391,8 +433,8 @@ export default function HardwareHub() {
           {filteredHardware.map((product) => (
             <div 
               key={product.slug} 
-              id={product.slug} // <-- Added ID for the anchor links
-              className={`scroll-mt-32 bg-black border border-zinc-800 p-8 flex flex-col transition-all duration-300 ${product.borderHover} hover:shadow-2xl hover:bg-zinc-900/20 group`} // <-- Added scroll-mt-32
+              id={product.slug}
+              className={`scroll-mt-32 bg-black border border-zinc-800 p-8 flex flex-col transition-all duration-300 ${product.borderHover} hover:shadow-2xl hover:bg-zinc-900/20 group`}
             >
               <div className="flex justify-between items-start mb-6">
                 <div className={`inline-flex items-center border border-zinc-800 bg-zinc-900/80 px-3 py-1 text-[10px] font-mono uppercase tracking-widest ${product.accentColor}`}>
