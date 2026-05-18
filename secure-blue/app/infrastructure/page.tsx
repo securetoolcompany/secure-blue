@@ -326,7 +326,7 @@ export default function HardwareHub() {
       </section>
 
       {/* FIXED: Gap removed. Set to top-[64px] to hug the bottom of the scrolled navbar exactly. */}
-      <section className="sticky top-[64px] z-40 bg-zinc-950/90 backdrop-blur-xl border-b border-zinc-900 shadow-2xl">
+      <section className="sticky top-[53px] z-40 bg-zinc-950/90 backdrop-blur-xl border-b border-zinc-900 shadow-2xl">
         <div className="max-w-7xl mx-auto">
           
           {/* Thin Control Bar (Always visible) */}
