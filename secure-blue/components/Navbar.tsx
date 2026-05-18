@@ -19,7 +19,7 @@ export default function Navbar() {
 
   const closeMenu = () => setIsOpen(false);
 
-  // Updated Nav Configuration with all 12 modules + Master Catalog Link
+  // Updated Nav Configuration with proper anchor links for unbuilt pages
   const navLinks = [
     { 
       name: 'PRODUCTS', 
@@ -30,8 +30,8 @@ export default function Navbar() {
           items: [
             { name: 'SECURE LeakStop', href: '/infrastructure/leakstop' },
             { name: 'EmberSense Fire', href: '/infrastructure/early-fire-detection' },
-            { name: 'Liquid Ecology', href: '/infrastructure/water-ecology-nodes' },
-            { name: 'Leaf Wetness', href: '/infrastructure/leaf-wetness-nodes' }
+            { name: 'Liquid Ecology', href: '/infrastructure#water-ecology-nodes' },
+            { name: 'Leaf Wetness', href: '/infrastructure#leaf-wetness-nodes' }
           ]
         },
         {
@@ -40,7 +40,7 @@ export default function Navbar() {
             { name: 'Smart Irrigation', href: '/infrastructure/smart-irrigation' },
             { name: 'Graywater Distillation', href: '/infrastructure/a2w-graywater' },
             { name: 'Irrigation Graywater', href: '/infrastructure/irrigation-graywater' },
-            { name: 'Botanical PAR', href: '/infrastructure/botanical-par-sensors' }
+            { name: 'Botanical PAR', href: '/infrastructure#botanical-par-sensors' }
           ]
         },
         {
@@ -52,12 +52,12 @@ export default function Navbar() {
         {
           title: 'AUTOMATE & TELEMETRY',
           items: [
-            { name: 'Ambient IAQ Nodes', href: '/infrastructure/iaq-sensors' },
-            { name: 'Cold-Chain Probes', href: '/infrastructure/cold-chain-sensors' },
-            { name: 'Ag Weather Stations', href: '/infrastructure/ag-weather-stations' },
-            { name: 'AI Occupancy', href: '/infrastructure/ai-occupancy-sensors' },
-            { name: 'Gas & Odor', href: '/infrastructure/gas-odor-detectors' },
-            { name: 'Liquid Level Nodes', href: '/infrastructure/liquid-level-nodes' },
+            { name: 'Ambient IAQ Nodes', href: '/infrastructure#iaq-sensors' },
+            { name: 'Cold-Chain Probes', href: '/infrastructure#cold-chain-sensors' },
+            { name: 'Ag Weather Stations', href: '/infrastructure#ag-weather-stations' },
+            { name: 'AI Occupancy', href: '/infrastructure#ai-occupancy-sensors' },
+            { name: 'Gas & Odor', href: '/infrastructure#gas-odor-detectors' },
+            { name: 'Liquid Level Nodes', href: '/infrastructure#liquid-level-nodes' },
             { name: 'View Master Catalog →', href: '/infrastructure' }
           ]
         }
@@ -159,7 +159,7 @@ export default function Navbar() {
                                  key={item.name} 
                                  href={item.href}
                                  className={`flex items-center gap-2 text-xs font-mono tracking-wider transition-colors ${
-                                   pathname === item.href 
+                                   pathname === item.href || pathname + '#' + item.href.split('#')[1] === item.href
                                    ? 'text-blue-400' 
                                    : item.name.includes('View Master Catalog') 
                                       ? 'text-emerald-400 hover:text-emerald-300 mt-2 border-t border-zinc-900 pt-2' 

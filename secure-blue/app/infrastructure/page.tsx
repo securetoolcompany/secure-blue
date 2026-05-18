@@ -391,7 +391,8 @@ export default function HardwareHub() {
           {filteredHardware.map((product) => (
             <div 
               key={product.slug} 
-              className={`bg-black border border-zinc-800 p-8 flex flex-col transition-all duration-300 ${product.borderHover} hover:shadow-2xl hover:bg-zinc-900/20 group`}
+              id={product.slug} // <-- Added ID for the anchor links
+              className={`scroll-mt-32 bg-black border border-zinc-800 p-8 flex flex-col transition-all duration-300 ${product.borderHover} hover:shadow-2xl hover:bg-zinc-900/20 group`} // <-- Added scroll-mt-32
             >
               <div className="flex justify-between items-start mb-6">
                 <div className={`inline-flex items-center border border-zinc-800 bg-zinc-900/80 px-3 py-1 text-[10px] font-mono uppercase tracking-widest ${product.accentColor}`}>
