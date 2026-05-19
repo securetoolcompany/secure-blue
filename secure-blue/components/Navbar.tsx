@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Terminal, Menu, X, ChevronDown, CornerDownRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -116,14 +117,15 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
         
         {/* LOGO */}
-        <Link href="/" onClick={closeMenu} className="flex items-center gap-3 group">
-          <div className="bg-blue-600 p-1.5 rounded-sm group-hover:bg-blue-500 transition-colors">
-            <Terminal className="h-5 w-5 text-white" />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-bold tracking-tighter text-xl leading-none uppercase text-white">SECURE BLUE</span>
-            <span className="text-[8px] font-mono text-zinc-500 tracking-[0.2em] uppercase leading-none mt-1">Industrial_Intelligence</span>
-          </div>
+        <Link href="/" onClick={closeMenu} className="flex items-center group">
+          <Image 
+            src="/images/logo.png" 
+            alt="SECURE BLUE Logo" 
+            width={240} 
+            height={60} 
+            className="h-18 w-auto object-contain transition-opacity duration-300 group-hover:opacity-80"
+            priority
+          />
         </Link>
 
         {/* DESKTOP NAV */}
