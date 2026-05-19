@@ -414,6 +414,7 @@ const productDatabase: Record<string, ProductModule> = {
     accentColor: 'text-purple-400',
     borderGlow: 'border-purple-500/50',
     icon: Filter,
+    imagePath: '/images/products/graywater-distillation/a2wgraywater.png',
     tagline: 'Closed-loop conservation through thermal distillation.',
     description: 'The ultimate closed-loop ecosystem. This unit doesn\'t just filter graywater; it utilizes advanced thermal distillation. Wastewater is vaporized, leaving behind nutrient-rich solutes that can be harvested as pure fertilizer. The pure water vapor is then captured and condensed by the A2W matrix, returning 100% potable, clinical-grade water back into your facility.',
     
