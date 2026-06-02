@@ -241,7 +241,7 @@ const productDatabase: Record<string, ProductModule> = {
     ]
   },
 
-  // --- 3. A2W MACHINES (MASSIVELY EXPANDED RAIN CYCLE SPECS) ---
+  // --- 3. A2W MACHINES ---
   'a2w-machines': {
     name: 'Air-2-Water Arrays',
     systemLabel: 'GENERATE // INDEPENDENT_SOURCING',
@@ -427,6 +427,7 @@ const productDatabase: Record<string, ProductModule> = {
     architectures: [
       {
         type: 'Type I',
+        imagePath: '/images/products/graywater-distillation/a2wGraywaterSystem.jpg',
         title: 'Primary A2W Integration',
         desc: 'Acts as a direct modular attachment to your existing Atmospheric Water Generator, looping facility graywater into a thermal distillation chamber for absolute purification.'
       }
