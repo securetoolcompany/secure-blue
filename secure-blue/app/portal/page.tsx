@@ -1,74 +1,84 @@
 "use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Lock, ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useState } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 export default function PortalLogin() {
   const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Mock authentication delay - replace with real auth later
-    setTimeout(() => {
-      router.push('/portal/dashboard');
-    }, 800);
+    setError("");
+
+    // This is the magic function that talks to auth.ts and MongoDB!
+    const res = await signIn("credentials", {
+      email,
+      password,
+      redirect: false, // We handle the redirect manually below
+    });
+
+    if (res?.error) {
+      setError("Invalid email or password");
+      setLoading(false);
+    } else {
+      // Success! The cookie is set. Send them to the dashboard.
+      router.push("/portal/dashboard");
+      router.refresh(); // Forces Next.js to update the session state
+    }
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 relative overflow-hidden">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-900/10 rounded-full blur-[120px] pointer-events-none" />
-      
-      <div className="w-full max-w-md z-10">
-        <div className="flex flex-col items-center mb-8">
-          <div className="h-12 w-12 bg-blue-500/10 border border-blue-500/30 rounded-sm flex items-center justify-center mb-6">
-            <Lock className="h-5 w-5 text-blue-400" />
-          </div>
-          <h1 className="text-2xl font-mono text-white tracking-widest">SECURE_PORTAL</h1>
-          <p className="text-zinc-500 font-mono text-xs mt-2 uppercase tracking-widest">Authorized Access Only</p>
+    <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-6">
+      <div className="w-full max-w-md bg-zinc-900 border border-zinc-800 p-8">
+        <div className="mb-8">
+          <h1 className="text-2xl font-mono text-white tracking-widest mb-2">SECURE BLUE</h1>
+          <p className="text-zinc-500 font-mono text-sm uppercase tracking-widest">Client Portal Access</p>
         </div>
 
-        <form onSubmit={handleLogin} className="bg-zinc-900/50 border border-zinc-800 p-8 backdrop-blur-sm">
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest">Client ID / Email</label>
-              <input 
-                type="email" 
-                required
-                className="w-full bg-zinc-950 border border-zinc-800 p-3 text-white font-mono text-sm focus:outline-none focus:border-blue-500/50 transition-colors"
-                placeholder="admin@fairlakesgc.com"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <label className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest">Access Token</label>
-              <input 
-                type="password" 
-                required
-                className="w-full bg-zinc-950 border border-zinc-800 p-3 text-white font-mono text-sm focus:outline-none focus:border-blue-500/50 transition-colors"
-                placeholder="••••••••••••"
-              />
-            </div>
-
-            <Button 
-              type="submit" 
-              disabled={loading}
-              className="w-full h-12 bg-blue-600 hover:bg-blue-500 text-white font-mono uppercase tracking-widest rounded-none transition-all flex items-center justify-center gap-2"
-            >
-              {loading ? 'Authenticating...' : 'Initialize Session'}
-              {!loading && <ArrowRight className="h-4 w-4" />}
-            </Button>
+        <form onSubmit={handleLogin} className="space-y-6">
+          <div className="space-y-2">
+            <label className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Email Address</label>
+            <input 
+              type="email" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full bg-zinc-950 border border-zinc-800 text-white p-3 font-mono focus:outline-none focus:border-blue-500 transition-colors"
+              required
+            />
           </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Password</label>
+            <input 
+              type="password" 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full bg-zinc-950 border border-zinc-800 text-white p-3 font-mono focus:outline-none focus:border-blue-500 transition-colors"
+              required
+            />
+          </div>
+
+          {error && (
+            <div className="text-red-400 text-sm font-mono bg-red-500/10 border border-red-500/20 p-3">
+              {error}
+            </div>
+          )}
+
+          <button 
+            type="submit" 
+            disabled={loading}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-mono uppercase tracking-widest py-4 transition-colors flex justify-center items-center"
+          >
+            {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : "AUTHENTICATE"}
+          </button>
         </form>
-        
-        <div className="mt-8 text-center">
-          <p className="text-[10px] font-mono text-zinc-600">
-            For support access, contact SECURE BLUE NOC.
-          </p>
-        </div>
       </div>
     </div>
   );

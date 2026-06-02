@@ -44,12 +44,10 @@ export async function GET() {
       dbStates.map((doc) => [doc.devEui, doc])
     );
 
-    // 4. Filter and map devices so users only see their own active equipment
-    const devices: Device[] = res.result
-      .filter((d: ChirpStackDeviceListItem) => stateMap.has(d.devEui)) // Only show devices tracked under this tenant
-      .map((d: ChirpStackDeviceListItem) => {
-        const state = stateMap.get(d.devEui)!;
-        const lastSeen = state.lastSeenAt || d.lastSeenAt;
+    // 4. Map devices (ChirpStack already scopes this to the correct App ID)
+    const devices: Device[] = res.result.map((d: ChirpStackDeviceListItem) => {
+        const state = stateMap.get(d.devEui);
+        const lastSeen = state?.lastSeenAt || d.lastSeenAt;
         
         let onlineState: 'online' | 'warning' | 'offline' = 'offline';
         if (lastSeen) {
@@ -62,16 +60,17 @@ export async function GET() {
           devEui: d.devEui,
           name: d.name,
           lastSeenAt: lastSeen ? new Date(lastSeen).toISOString() : null,
-          valveState: state.valveState || 'unknown',
-          batteryMv: state.batteryMv || null,
-          cableFault: state.cableFault || false,
-          rssi: state.rssi || null,
-          snr: state.snr || null,
+          valveState: state?.valveState || 'unknown',
+          batteryMv: state?.batteryMv || null,
+          cableFault: state?.cableFault || false,
+          rssi: state?.rssi || null,
+          snr: state?.snr || null,
           onlineState
         };
       });
 
     return NextResponse.json({ devices });
+    
   } catch (error) {
     console.error("🔥 FETCH ERROR:", error); 
     return NextResponse.json({ error: 'Failed to fetch devices' }, { status: 500 });
