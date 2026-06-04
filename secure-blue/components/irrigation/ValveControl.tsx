@@ -89,14 +89,22 @@ export function ValveControl({ devEui, currentMode }: ValveControlProps) {
     const fPort = 9;
     const hexData = mode === 'C' ? '31' : '30';
     
+    // 1. Send the physical command to ChirpStack
     await fetch(`/api/chirpstack/devices/${devEui}/queue`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ fPort, hexData })
     });
+
+    // 2. NEW: Save the state to MongoDB so the UI remembers it!
+    await fetch(`/api/devices/${devEui}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ deviceClass: mode })
+    });
     
-    // Reset after 3 seconds or wait for the next refresh interval
-    setTimeout(() => setPendingMode(null), 3000);
+    // Reset the loading state
+    setTimeout(() => setPendingMode(null), 1000);
   };
 
   return (
@@ -219,24 +227,32 @@ export function ValveControl({ devEui, currentMode }: ValveControlProps) {
               </p>
             </div>
             
-            {/* STREGA FPort 9 - Hex 30 for Class A */}
+            {/* CLASS A BUTTON */}
             <Button 
-              onClick={() => enqueue(9, '30')} 
-              disabled={loading}
-              className="h-24 bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 font-mono flex flex-col gap-2 rounded-none"
+              onClick={() => handleModeChange('A')} 
+              disabled={loading || pendingMode !== null}
+              className={`h-24 font-mono flex flex-col gap-2 rounded-none transition-colors border ${
+                pendingMode === 'A' || (!pendingMode && currentMode === 'A')
+                  ? 'bg-zinc-700 border-zinc-500 text-white' // ACTIVE HIGHLIGHT
+                  : 'bg-zinc-900/80 hover:bg-zinc-800 border-zinc-700 text-zinc-500' // INACTIVE
+              }`}
             >
-              <Battery className="h-6 w-6 text-zinc-400" />
-              <span>CLASS A <span className="text-xs block text-zinc-500 mt-1">Battery Saving</span></span>
+              <Battery className="h-6 w-6" />
+              <span>CLASS A <span className="text-xs block mt-1 opacity-70">Battery Saving</span></span>
             </Button>
             
-            {/* STREGA FPort 9 - Hex 31 for Class C */}
+            {/* CLASS C BUTTON */}
             <Button 
-              onClick={() => enqueue(9, '31')} 
-              disabled={loading}
-              className="h-24 bg-yellow-900/20 hover:bg-yellow-800/40 border border-yellow-500/50 text-yellow-500 font-mono flex flex-col gap-2 rounded-none"
+              onClick={() => handleModeChange('C')} 
+              disabled={loading || pendingMode !== null}
+              className={`h-24 font-mono flex flex-col gap-2 rounded-none transition-colors border ${
+                pendingMode === 'C' || (!pendingMode && currentMode === 'C')
+                  ? 'bg-yellow-600 hover:bg-yellow-500 border-yellow-400 text-white' // ACTIVE HIGHLIGHT
+                  : 'bg-yellow-900/20 hover:bg-yellow-800/40 border-yellow-500/50 text-yellow-600' // INACTIVE
+              }`}
             >
               <Zap className="h-6 w-6" />
-              <span>CLASS C <span className="text-xs block text-yellow-600/80 mt-1">Always Listening</span></span>
+              <span>CLASS C <span className="text-xs block mt-1 opacity-70">Always Listening</span></span>
             </Button>
           </div>
         )}
