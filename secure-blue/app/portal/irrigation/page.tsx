@@ -144,7 +144,10 @@ export default function FleetOverview() {
                 <div className="space-y-2 font-mono text-[11px] text-zinc-400 border-t border-zinc-800 pt-3">
                   <div className="flex justify-between">
                     <span className="flex items-center gap-2"><BatteryIcon className="h-3 w-3" /> {batteryUI.text}</span>
-                    <span className="flex items-center gap-2"><Zap className="h-3 w-3" /> {device.dr || 'Class A'}</span>
+                    <span className="flex items-center gap-2">
+                      <Zap className="h-3 w-3" /> 
+                      {device.deviceClass ? `Class ${device.deviceClass}` : 'Class A'}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="flex items-center gap-2"><Signal className="h-3 w-3" /> {device.rssi ?? 'N/A'} dBm</span>

@@ -14,10 +14,15 @@ interface Zone {
   devices: string[];
 }
 
-export function ValveControl({ devEui }: { devEui: string }) {
+interface ValveControlProps {
+  devEui: string;
+  currentMode: 'A' | 'C'; // ADD THIS PROP
+}
+
+export function ValveControl({ devEui, currentMode }: ValveControlProps) {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'manual' | 'power' | 'schedule'>('manual');
-  
+
   // State for the zone input text
   const [zoneInput, setZoneInput] = useState('');
   
@@ -77,6 +82,23 @@ export function ValveControl({ devEui }: { devEui: string }) {
     setLoading(false);
   };
 
+  const [pendingMode, setPendingMode] = useState<'A' | 'C' | null>(null);
+
+  const handleModeChange = async (mode: 'A' | 'C') => {
+    setPendingMode(mode); // Immediate visual feedback
+    const fPort = 9;
+    const hexData = mode === 'C' ? '31' : '30';
+    
+    await fetch(`/api/portal/irrigation/${devEui}/queue`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fPort, hexData })
+    });
+    
+    // Reset after 3 seconds or wait for the next refresh interval
+    setTimeout(() => setPendingMode(null), 3000);
+  };
+
   return (
     <div className="space-y-6">
       
@@ -95,13 +117,18 @@ export function ValveControl({ devEui }: { devEui: string }) {
                  activeZones.map((z: Zone) => (
                    <span key={z._id} className="inline-flex items-center gap-2 bg-blue-900/30 text-blue-400 border border-blue-500/30 px-3 py-1 rounded-full font-mono text-xs uppercase">
                      {z.name}
-                     <button 
-                       onClick={() => removeZone(z.name)}
-                       disabled={loading}
-                       className="hover:text-white transition-colors"
-                     >
-                       ×
-                     </button>
+                     <Button 
+                        onClick={() => handleModeChange('A')} 
+                        className={pendingMode === 'A' || (!pendingMode && currentMode === 'A') ? "bg-zinc-700" : "bg-zinc-900"}
+                      >
+                        CLASS A
+                      </Button>
+                      <Button 
+                        onClick={() => handleModeChange('C')} 
+                        className={pendingMode === 'C' || (!pendingMode && currentMode === 'C') ? "bg-yellow-600" : "bg-yellow-900/20"}
+                      >
+                        CLASS C
+                      </Button>
                    </span>
                  ))
                )}
