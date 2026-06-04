@@ -5,7 +5,7 @@ import useSWR from 'swr';
 import { useRouter } from 'next/navigation';
 import { 
   Battery, BatteryFull, BatteryMedium, BatteryLow, BatteryWarning, 
-  WifiHigh, MapPin, Layers, Search, CheckCircle2, Circle, Zap, Signal 
+  WifiHigh, MapPin, Layers, Search, CheckCircle2, Circle, Zap, Signal, RefreshCw
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Device } from '@/lib/types';
@@ -39,9 +39,9 @@ export default function FleetOverview() {
   const [bulkZoneInput, setBulkZoneInput] = useState('');
   const [isBulkLoading, setIsBulkLoading] = useState(false);
 
-  const { data } = useSWR('/api/chirpstack/devices', fetcher, { refreshInterval: 10000 });
+  const { data, mutate: mutateDevices } = useSWR('/api/chirpstack/devices', fetcher, { refreshInterval: 10000, revalidateOnFocus: true, dedupingInterval: 0 });
   const { data: zonesData, mutate: mutateZones } = useSWR('/api/zones', fetcher);
-
+  
   const filteredDevices = useMemo(() => {
     if (!data?.devices) return [];
     return data.devices.filter((d: Device) => {
@@ -92,6 +92,12 @@ export default function FleetOverview() {
           </select>
           <Button onClick={() => router.push('/portal/irrigation/zones')} className="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-none font-mono uppercase">
             <Layers className="h-4 w-4 mr-2" /> Manage Zones
+          </Button>
+          <Button 
+            onClick={() => mutateDevices()} // Forces a re-fetch from the API
+            className="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-none font-mono uppercase"
+          >
+            <RefreshCw className="h-4 w-4 mr-2" /> Refresh
           </Button>
         </div>
 

@@ -19,8 +19,15 @@ interface Zone {
     classCStart: string;
     classCEnd: string;
   };
+  hardwareSchedule?: {
+    startHour: number;
+    startMin: number;
+    endHour: number;
+    endMin: number;
+  }[];
 }
 
+// Explicitly defined ZoneCard component
 function ZoneCard({ zone, mutateZones }: { zone: Zone, mutateZones: () => void }) {
   const [loading, setLoading] = useState(false);
   const [enabled, setEnabled] = useState(zone.powerSchedule?.enabled || false);
@@ -63,21 +70,21 @@ function ZoneCard({ zone, mutateZones }: { zone: Zone, mutateZones: () => void }
         </Accordion.Trigger>
       </Accordion.Header>
 
-      <Accordion.Content className="p-6 pt-0 border-t border-zinc-800 overflow-hidden data-[state=closed]:animate-out data-[state=open]:animate-in">
+      <Accordion.Content className="p-6 pt-0 border-t border-zinc-800 overflow-hidden">
         <div className="pt-6 space-y-8">
           {/* INSTANT BULK CONTROLS */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Button onClick={() => enqueueZone(1, '31')} disabled={loading || zone.devices.length === 0} className="h-16 bg-blue-900/40 hover:bg-blue-800/60 border border-blue-500/50 text-blue-400 font-mono rounded-none">
+            <Button onClick={() => enqueueZone(1, '31')} disabled={loading} className="h-16 bg-blue-900/40 hover:bg-blue-800/60 border border-blue-500/50 text-blue-400 font-mono rounded-none">
               <Droplets className="h-4 w-4 mr-2" /> OPEN ALL
             </Button>
-            <Button onClick={() => enqueueZone(1, '30')} disabled={loading || zone.devices.length === 0} className="h-16 bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 font-mono rounded-none">
+            <Button onClick={() => enqueueZone(1, '30')} disabled={loading} className="h-16 bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 font-mono rounded-none">
               <XCircle className="h-4 w-4 mr-2" /> CLOSE ALL
             </Button>
-            <Button onClick={() => enqueueZone(9, '30')} disabled={loading || zone.devices.length === 0} className="h-16 bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 font-mono rounded-none">
-              <Battery className="h-4 w-4 mr-2" /> CLASS A (SAVE)
+            <Button onClick={() => enqueueZone(9, '30')} disabled={loading} className="h-16 bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 font-mono rounded-none">
+              <Battery className="h-4 w-4 mr-2" /> CLASS A
             </Button>
-            <Button onClick={() => enqueueZone(9, '31')} disabled={loading || zone.devices.length === 0} className="h-16 bg-yellow-900/20 hover:bg-yellow-800/40 border border-yellow-500/50 text-yellow-500 font-mono rounded-none">
-              <Zap className="h-4 w-4 mr-2" /> CLASS C (ON)
+            <Button onClick={() => enqueueZone(9, '31')} disabled={loading} className="h-16 bg-yellow-900/20 hover:bg-yellow-800/40 border border-yellow-500/50 text-yellow-500 font-mono rounded-none">
+              <Zap className="h-4 w-4 mr-2" /> CLASS C
             </Button>
           </div>
 
@@ -85,8 +92,24 @@ function ZoneCard({ zone, mutateZones }: { zone: Zone, mutateZones: () => void }
             <div className="border border-zinc-800 p-5 bg-zinc-950/50">
               <div className="flex items-center gap-2 mb-4">
                 <CalendarClock className="h-5 w-5 text-blue-500" />
-                <h3 className="text-white font-mono uppercase tracking-widest text-sm">Autonomous Valve Schedule</h3>
+                <h3 className="text-white font-mono uppercase tracking-widest text-sm">Autonomous Hardware Schedule</h3>
               </div>
+              
+              {/* DISPLAY ACTIVE HARDWARE SCHEDULE */}
+              <div className="mb-4 p-4 bg-black/40 border border-zinc-800">
+                <h4 className="text-zinc-500 font-mono text-xs uppercase mb-2">Current Hardware Config</h4>
+                {zone.hardwareSchedule && zone.hardwareSchedule.length > 0 ? (
+                  <ul className="space-y-1">
+                    {zone.hardwareSchedule.map((s, i) => (
+                      <li key={i} className="text-zinc-300 font-mono text-sm">
+                        Slot {i + 1}: {String(s.startHour).padStart(2, '0')}:{String(s.startMin).padStart(2, '0')} 
+                        → {String(s.endHour).padStart(2, '0')}:{String(s.endMin).padStart(2, '0')}
+                      </li>
+                    ))}
+                  </ul>
+                ) : <span className="text-zinc-700 font-mono text-sm italic">No hardware schedule set.</span>}
+              </div>
+
               <ScheduleBuilder zoneId={zone._id} />
             </div>
 
