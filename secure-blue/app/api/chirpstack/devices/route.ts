@@ -53,8 +53,13 @@ export async function GET() {
         let onlineState: 'online' | 'warning' | 'offline' = 'offline';
         if (lastSeen) {
           const mins = differenceInMinutes(new Date(), new Date(lastSeen));
-          if (mins < 10) onlineState = 'online';
-          else if (mins <= 30) onlineState = 'warning';
+          
+          if (mins < 65) {
+            onlineState = 'online';
+          } 
+          else if (mins <= 120) {
+            onlineState = 'warning';
+          }
         }
 
         return {

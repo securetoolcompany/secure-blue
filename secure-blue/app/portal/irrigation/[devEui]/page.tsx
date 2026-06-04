@@ -11,7 +11,7 @@ export default async function DeviceDetailPage(
     <div className="min-h-screen bg-zinc-950 pt-24 px-6 pb-12">
       <div className="max-w-4xl mx-auto">
         
-        <Link href="/irrigation" className="inline-flex items-center gap-2 text-zinc-500 hover:text-emerald-400 font-mono text-sm mb-8 transition-colors">
+        <Link href="/portal/irrigation" className="inline-flex items-center gap-2 text-zinc-500 hover:text-emerald-400 font-mono text-sm mb-8 transition-colors">
           <ArrowLeft className="h-4 w-4" />
           BACK TO FLEET
         </Link>
