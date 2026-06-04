@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import useSWR from 'swr';
 import Link from 'next/link';
-import { ArrowLeft, Droplets, XCircle, Battery, Zap, MapPin, Layers, Clock, Save, CalendarClock, ChevronDown } from 'lucide-react';
+import { ArrowLeft, Droplets, XCircle, Battery, Zap, MapPin, Layers, Clock, Save, CalendarClock, ChevronDown, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScheduleBuilder } from '@/components/irrigation/ScheduleBuilder';
 import * as Accordion from '@radix-ui/react-accordion';
@@ -117,6 +117,28 @@ function ZoneCard({ zone, mutateZones }: { zone: Zone, mutateZones: () => void }
               <div className="flex items-center gap-2 mb-4">
                 <Clock className="h-5 w-5 text-emerald-500" />
                 <h3 className="text-white font-mono uppercase tracking-widest text-sm">Power Mode Automation</h3>
+              </div>
+              <div className="mb-6 p-4 bg-black/40 border border-zinc-800">
+                <h4 className="text-zinc-500 font-mono text-xs uppercase mb-3">Current Cron Config</h4>
+                {zone.powerSchedule?.enabled ? (
+                  <div className="space-y-2">
+                    <div className="text-emerald-500 font-mono text-sm font-bold flex items-center gap-2 mb-2">
+                      <CheckCircle2 className="h-4 w-4" /> CRON ACTIVE
+                    </div>
+                    <div className="text-zinc-300 font-mono text-sm flex justify-between border-b border-zinc-800/50 pb-1">
+                      <span className="text-zinc-500">Class C Start:</span> 
+                      <span>{zone.powerSchedule.classCStart}</span>
+                    </div>
+                    <div className="text-zinc-300 font-mono text-sm flex justify-between">
+                      <span className="text-zinc-500">Class A End:</span> 
+                      <span>{zone.powerSchedule.classCEnd}</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-zinc-600 font-mono text-sm italic flex items-center gap-2">
+                    <XCircle className="h-4 w-4" /> Automation Disabled
+                  </div>
+                )}
               </div>
               <div className="flex flex-col gap-6">
                 <div className="space-y-2">
