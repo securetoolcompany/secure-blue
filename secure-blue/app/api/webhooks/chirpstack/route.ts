@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
         snr: rxInfo.snr || null,
         lastSeenAt: new Date()
       },
-      { upsert: true, new: true }
+      { upsert: true, returnDocument: 'after' }
     );
 
     return NextResponse.json({ success: true });

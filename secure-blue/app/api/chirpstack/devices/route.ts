@@ -36,9 +36,10 @@ export async function GET() {
     const res = await fetchChirpStack(`/api/devices?applicationId=${appId}&limit=100`);
     if (!res.result) throw new Error("ChirpStack API returned an empty result.");
 
-    // 3. Query MongoDB for states matching ONLY this user's tenantId
+    // 3. Extract the EUIs from ChirpStack and fetch their live MongoDB states
     await connectToDatabase();
-    const dbStates = await DevicePayload.find({ tenantId: userTenantId }).lean() as IDevicePayload[];
+        const devEuis = res.result.map((d: ChirpStackDeviceListItem) => d.devEui);
+        const dbStates = await DevicePayload.find({ devEui: { $in: devEuis } }).lean() as IDevicePayload[];
     
     const stateMap = new Map<string, IDevicePayload>(
       dbStates.map((doc) => [doc.devEui, doc])

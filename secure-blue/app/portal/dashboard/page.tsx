@@ -9,7 +9,7 @@ const authorizedApps = [
     name: 'Smart Irrigation Management',
     description: 'STREGA LoRaWAN Actuator Fleet',
     icon: Droplets,
-    href: '/irrigation', 
+    href: '/portal/irrigation', 
     status: 'Operational',
     color: 'text-blue-400',
     bgColor: 'bg-blue-500/10',
