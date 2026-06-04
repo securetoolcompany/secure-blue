@@ -89,7 +89,7 @@ export function ValveControl({ devEui, currentMode }: ValveControlProps) {
     const fPort = 9;
     const hexData = mode === 'C' ? '31' : '30';
     
-    await fetch(`/api/portal/irrigation/${devEui}/queue`, {
+    await fetch(`/api/chirpstack/devices/${devEui}/queue`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ fPort, hexData })
