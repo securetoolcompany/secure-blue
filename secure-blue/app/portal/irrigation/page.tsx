@@ -5,7 +5,7 @@ import useSWR from 'swr';
 import { useRouter } from 'next/navigation';
 import { 
   Battery, BatteryFull, BatteryMedium, BatteryLow, BatteryWarning, 
-  WifiHigh, MapPin, Layers, Search, CheckCircle2, Circle 
+  WifiHigh, MapPin, Layers, Search, CheckCircle2, Circle, Zap, Signal 
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Device } from '@/lib/types';
@@ -39,7 +39,7 @@ export default function FleetOverview() {
   const [bulkZoneInput, setBulkZoneInput] = useState('');
   const [isBulkLoading, setIsBulkLoading] = useState(false);
 
-  const { data, mutate: mutateDevices } = useSWR('/api/chirpstack/devices', fetcher, { refreshInterval: 10000 });
+  const { data } = useSWR('/api/chirpstack/devices', fetcher, { refreshInterval: 10000 });
   const { data: zonesData, mutate: mutateZones } = useSWR('/api/zones', fetcher);
 
   const filteredDevices = useMemo(() => {
@@ -118,8 +118,15 @@ export default function FleetOverview() {
                   {isSelected ? <CheckCircle2 className="h-6 w-6 text-blue-500" /> : <Circle className="h-6 w-6 text-zinc-600 group-hover:text-zinc-400" />}
                 </div>
 
-                <h3 className="text-white font-mono text-lg font-bold mb-4 pr-8">{device.name}</h3>
-                
+                <div className="flex justify-between items-start mb-4 pr-8">
+                  <h3 className="text-white font-mono text-lg font-bold">{device.name}</h3>
+                  <div className={`px-2 py-0.5 text-[10px] font-mono font-bold uppercase rounded-sm ${
+                    device.valveState === 'open' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' : 'bg-zinc-800 text-zinc-400 border border-zinc-700'
+                  }`}>
+                    {device.valveState}
+                  </div>
+                </div>
+
                 <div className="flex flex-wrap gap-2 mb-4">
                   {deviceZones.map((z: Zone) => (
                     <span key={z._id} className="inline-flex items-center gap-1 bg-blue-900/30 text-blue-400 border border-blue-500/30 px-2 py-0.5 rounded-sm font-mono text-[10px] uppercase">
@@ -128,13 +135,13 @@ export default function FleetOverview() {
                   ))}
                 </div>
 
-                <div className="space-y-3 font-mono text-sm text-zinc-400">
-                  <div className="flex items-center gap-3">
-                    <BatteryIcon className={`h-4 w-4 ${batteryUI.color}`} />
-                    <span className={batteryUI.color}>{batteryUI.text}</span>
+                <div className="space-y-2 font-mono text-[11px] text-zinc-400 border-t border-zinc-800 pt-3">
+                  <div className="flex justify-between">
+                    <span className="flex items-center gap-2"><BatteryIcon className="h-3 w-3" /> {batteryUI.text}</span>
+                    <span className="flex items-center gap-2"><Zap className="h-3 w-3" /> {device.dr || 'Class A'}</span>
                   </div>
-                  <div className="pt-4 border-t border-zinc-800 text-xs flex justify-between">
-                    <span>Last Seen</span>
+                  <div className="flex justify-between">
+                    <span className="flex items-center gap-2"><Signal className="h-3 w-3" /> {device.rssi ?? 'N/A'} dBm</span>
                     <span>{device.lastSeenAt ? formatDistanceToNow(new Date(device.lastSeenAt), { addSuffix: true }) : 'Never'}</span>
                   </div>
                 </div>
@@ -148,7 +155,7 @@ export default function FleetOverview() {
       {selectedEuis.length > 0 && (
         <div className="fixed bottom-0 left-0 w-full bg-zinc-900 border-t border-zinc-800 p-4 z-50 flex justify-center">
           <div className="max-w-4xl w-full flex items-center justify-between gap-4">
-            <span className="text-white font-mono">{selectedEuis.length} Selected</span>
+            <span className="text-white font-mono uppercase tracking-widest">{selectedEuis.length} Devices Selected</span>
             <div className="flex gap-2">
               <input
                 placeholder="Zone name..."

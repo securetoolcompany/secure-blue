@@ -8,6 +8,8 @@ export interface Device {
   rssi: number | null;
   snr: number | null;
   onlineState: 'online' | 'warning' | 'offline';
+  deviceClass: 'A' | 'B' | 'C'; // Ensures your Power Mode display works
+  dr?: number;                 // Fixes the "dr does not exist" error
 }
 
 export interface QueueItem {
@@ -41,6 +43,6 @@ export interface DeviceEvent {
     Battery?: number;
     Cable?: number;
     MMType?: string;
-    [key: string]: unknown; // Changed from 'any' to 'unknown' to pass linting
+    [key: string]: unknown;
   };
 }

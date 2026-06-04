@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@/auth'; // <-- Import the Auth helper
+import { auth } from '@/auth';
 import { fetchChirpStack } from '@/lib/chirpstack';
 import { connectToDatabase } from '@/lib/mongodb';
 import DevicePayload from '@/lib/models/DevicePayload';
@@ -21,7 +21,6 @@ interface IDevicePayload {
 
 export async function GET() {
   try {
-    // 1. Verify the user is logged in
     const session = await auth();
     const userTenantId = session?.user?.tenantId;
 
@@ -29,37 +28,37 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // 2. Fetch all registered devices from ChirpStack
     const appId = process.env.CHIRPSTACK_APP_ID;
     if (!appId) throw new Error("CHIRPSTACK_APP_ID is missing.");
 
+    // 1. Fetch all devices
     const res = await fetchChirpStack(`/api/devices?applicationId=${appId}&limit=100`);
     if (!res.result) throw new Error("ChirpStack API returned an empty result.");
 
-    // 3. Extract the EUIs from ChirpStack and fetch their live MongoDB states
+    // 2. Fetch local DB states
     await connectToDatabase();
-        const devEuis = res.result.map((d: ChirpStackDeviceListItem) => d.devEui);
-        const dbStates = await DevicePayload.find({ devEui: { $in: devEuis } }).lean() as IDevicePayload[];
+    const devEuis = res.result.map((d: ChirpStackDeviceListItem) => d.devEui);
+    const dbStates = await DevicePayload.find({ devEui: { $in: devEuis } }).lean() as IDevicePayload[];
     
     const stateMap = new Map<string, IDevicePayload>(
       dbStates.map((doc) => [doc.devEui, doc])
     );
 
-    // 4. Map devices (ChirpStack already scopes this to the correct App ID)
-    const devices: Device[] = res.result.map((d: ChirpStackDeviceListItem) => {
+    // 3. Map devices and fetch real-time session class for each
+    const devices: Device[] = await Promise.all(
+      res.result.map(async (d: ChirpStackDeviceListItem) => {
         const state = stateMap.get(d.devEui);
         const lastSeen = state?.lastSeenAt || d.lastSeenAt;
+        
+        // Fetch real-time activation to get the actual LoRaWAN Class
+        const activationRes = await fetchChirpStack(`/api/devices/${d.devEui}/activation`).catch(() => null);
+        const deviceClass = activationRes?.deviceActivation?.deviceClass || 'A';
         
         let onlineState: 'online' | 'warning' | 'offline' = 'offline';
         if (lastSeen) {
           const mins = differenceInMinutes(new Date(), new Date(lastSeen));
-          
-          if (mins < 65) {
-            onlineState = 'online';
-          } 
-          else if (mins <= 120) {
-            onlineState = 'warning';
-          }
+          if (mins < 65) onlineState = 'online';
+          else if (mins <= 120) onlineState = 'warning';
         }
 
         return {
@@ -71,9 +70,11 @@ export async function GET() {
           cableFault: state?.cableFault || false,
           rssi: state?.rssi || null,
           snr: state?.snr || null,
-          onlineState
+          onlineState,
+          deviceClass // Now included for your dashboard
         };
-      });
+      })
+    );
 
     return NextResponse.json({ devices });
     
