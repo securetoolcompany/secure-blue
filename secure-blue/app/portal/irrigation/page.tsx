@@ -5,7 +5,7 @@ import useSWR from 'swr';
 import { useRouter } from 'next/navigation';
 import { 
   Battery, BatteryFull, BatteryMedium, BatteryLow, BatteryWarning, 
-  WifiHigh, AlertTriangle, MapPin, Layers, Search 
+  WifiHigh, MapPin, Layers, Search, CheckCircle2, Circle 
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Device } from '@/lib/types';
@@ -35,11 +35,13 @@ export default function FleetOverview() {
   const router = useRouter();
   const [search, setSearch] = useState('');
   const [zoneFilter, setZoneFilter] = useState('ALL');
+  const [selectedEuis, setSelectedEuis] = useState<string[]>([]);
+  const [bulkZoneInput, setBulkZoneInput] = useState('');
+  const [isBulkLoading, setIsBulkLoading] = useState(false);
 
-  const { data } = useSWR('/api/chirpstack/devices', fetcher, { refreshInterval: 10000 });
-  const { data: zonesData } = useSWR('/api/zones', fetcher);
+  const { data, mutate: mutateDevices } = useSWR('/api/chirpstack/devices', fetcher, { refreshInterval: 10000 });
+  const { data: zonesData, mutate: mutateZones } = useSWR('/api/zones', fetcher);
 
-  // Client-side filtering logic
   const filteredDevices = useMemo(() => {
     if (!data?.devices) return [];
     return data.devices.filter((d: Device) => {
@@ -49,8 +51,26 @@ export default function FleetOverview() {
     });
   }, [data, search, zoneFilter, zonesData]);
 
+  const toggleSelection = (eui: string) => {
+    setSelectedEuis(prev => prev.includes(eui) ? prev.filter(id => id !== eui) : [...prev, eui]);
+  };
+
+  const assignBulkZone = async () => {
+    if (!bulkZoneInput || selectedEuis.length === 0) return;
+    setIsBulkLoading(true);
+    await fetch('/api/zones', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: bulkZoneInput, devEuis: selectedEuis, action: 'add' })
+    });
+    setBulkZoneInput('');
+    setSelectedEuis([]);
+    await mutateZones(); 
+    setIsBulkLoading(false);
+  };
+
   return (
-    <div className="min-h-screen bg-zinc-950 pt-24 px-6 pb-12">
+    <div className="min-h-screen bg-zinc-950 pt-24 px-6 pb-32">
       <div className="max-w-7xl mx-auto">
         
         {/* MANAGEMENT & CONTROL STRIP */}
@@ -70,10 +90,7 @@ export default function FleetOverview() {
             <option value="ALL">All Zones</option>
             {zonesData?.zones?.map((z: Zone) => <option key={z._id} value={z.name}>{z.name}</option>)}
           </select>
-          <Button 
-            onClick={() => router.push('/portal/irrigation/zones')} 
-            className="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-none font-mono uppercase"
-          >
+          <Button onClick={() => router.push('/portal/irrigation/zones')} className="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-none font-mono uppercase">
             <Layers className="h-4 w-4 mr-2" /> Manage Zones
           </Button>
         </div>
@@ -83,31 +100,26 @@ export default function FleetOverview() {
           {filteredDevices.map((device: Device) => {
             const batteryUI = getBatteryUI(device.batteryMv);
             const BatteryIcon = batteryUI.Icon;
+            const isSelected = selectedEuis.includes(device.devEui);
             const deviceZones = zonesData?.zones?.filter((z: Zone) => z.devices.includes(device.devEui)) || [];
 
             return (
               <div 
                 key={device.devEui} 
-                className="bg-zinc-900 border border-zinc-800 p-6 hover:border-blue-500/50 transition-colors cursor-pointer relative overflow-hidden group"
+                className={`bg-zinc-900 border ${isSelected ? 'border-blue-500 bg-blue-900/10' : 'border-zinc-800 hover:border-blue-500/50'} p-6 transition-colors cursor-pointer relative overflow-hidden group`}
                 onClick={() => router.push(`/portal/irrigation/${device.devEui}`)}
               >
-                <div className={`absolute top-0 left-0 w-1 h-full ${
-                  device.onlineState === 'online' ? 'bg-emerald-500' :
-                  device.onlineState === 'warning' ? 'bg-yellow-500' : 'bg-red-500'
-                }`} />
+                <div className={`absolute top-0 left-0 w-1 h-full ${device.onlineState === 'online' ? 'bg-emerald-500' : 'bg-red-500'}`} />
                 
-                <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-white font-mono text-lg font-bold">{device.name}</h3>
-                  <div className={`px-2 py-1 text-xs font-mono font-bold uppercase rounded-sm ${
-                    device.valveState === 'open' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
-                    device.valveState === 'closed' ? 'bg-zinc-800 text-zinc-400 border border-zinc-700' :
-                    'bg-yellow-500/20 text-yellow-500 border border-yellow-500/30'
-                  }`}>
-                    {device.valveState}
-                  </div>
+                <div 
+                  className="absolute top-4 right-4 z-10 p-2"
+                  onClick={(e) => { e.stopPropagation(); toggleSelection(device.devEui); }}
+                >
+                  {isSelected ? <CheckCircle2 className="h-6 w-6 text-blue-500" /> : <Circle className="h-6 w-6 text-zinc-600 group-hover:text-zinc-400" />}
                 </div>
 
-                {/* ZONE TAGS */}
+                <h3 className="text-white font-mono text-lg font-bold mb-4 pr-8">{device.name}</h3>
+                
                 <div className="flex flex-wrap gap-2 mb-4">
                   {deviceZones.map((z: Zone) => (
                     <span key={z._id} className="inline-flex items-center gap-1 bg-blue-900/30 text-blue-400 border border-blue-500/30 px-2 py-0.5 rounded-sm font-mono text-[10px] uppercase">
@@ -119,22 +131,11 @@ export default function FleetOverview() {
                 <div className="space-y-3 font-mono text-sm text-zinc-400">
                   <div className="flex items-center gap-3">
                     <BatteryIcon className={`h-4 w-4 ${batteryUI.color}`} />
-                    <span className={batteryUI.color}>
-                      {batteryUI.text}
-                      {device.batteryMv && <span className="text-zinc-600 text-xs ml-2">({device.batteryMv}mV)</span>}
-                    </span>
+                    <span className={batteryUI.color}>{batteryUI.text}</span>
                   </div>
-                  
-                  <div className="flex items-center gap-3">
-                    <WifiHigh className="h-4 w-4 text-zinc-500" />
-                    <span>{device.rssi ? `${device.rssi} dBm / ${device.snr} SNR` : 'No Signal Data'}</span>
-                  </div>
-
                   <div className="pt-4 border-t border-zinc-800 text-xs flex justify-between">
                     <span>Last Seen</span>
-                    <span className={device.onlineState === 'offline' ? 'text-red-400' : 'text-zinc-300'}>
-                      {device.lastSeenAt ? formatDistanceToNow(new Date(device.lastSeenAt), { addSuffix: true }) : 'Never'}
-                    </span>
+                    <span>{device.lastSeenAt ? formatDistanceToNow(new Date(device.lastSeenAt), { addSuffix: true }) : 'Never'}</span>
                   </div>
                 </div>
               </div>
@@ -142,6 +143,26 @@ export default function FleetOverview() {
           })}
         </div>
       </div>
+
+      {/* BULK ACTION BAR */}
+      {selectedEuis.length > 0 && (
+        <div className="fixed bottom-0 left-0 w-full bg-zinc-900 border-t border-zinc-800 p-4 z-50 flex justify-center">
+          <div className="max-w-4xl w-full flex items-center justify-between gap-4">
+            <span className="text-white font-mono">{selectedEuis.length} Selected</span>
+            <div className="flex gap-2">
+              <input
+                placeholder="Zone name..."
+                value={bulkZoneInput}
+                onChange={(e) => setBulkZoneInput(e.target.value)}
+                className="bg-zinc-950 border border-zinc-800 text-white px-3 py-2 font-mono text-sm outline-none"
+              />
+              <Button onClick={assignBulkZone} disabled={isBulkLoading || !bulkZoneInput} className="bg-blue-600 hover:bg-blue-500 rounded-none font-mono uppercase">
+                Add to Zone
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
