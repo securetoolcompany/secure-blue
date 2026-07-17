@@ -100,7 +100,10 @@ export async function POST(req: NextRequest) {
 
     await DevicePayload.findOneAndUpdate(
       { devEui },
-      { $set: updateData }, 
+      {
+        $set: updateData,
+        $setOnInsert: { devEui },
+      },
       { upsert: true, returnDocument: 'after' }
     );
 
