@@ -1,150 +1,297 @@
 "use client";
 
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { CalendarClock, CheckCircle2, Clock, RefreshCw } from 'lucide-react';
-import { encodeSchedulerPayload } from '@/lib/strega-codec';
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { CalendarClock, CheckCircle2, Clock, RefreshCw, AlertCircle } from "lucide-react";
 
 interface ScheduleSlot {
-  startHour: number; startMin: number; endHour: number; endMin: number;
+  startHour: number;
+  startMin: number;
+  endHour: number;
+  endMin: number;
 }
 
-export function ScheduleBuilder({ devEui, zoneId, syncedSchedule, lastTimeSyncAt }: { devEui?: string, zoneId?: string, syncedSchedule?: ScheduleSlot[], lastTimeSyncAt?: string | null }) {
-  const [slots, setSlots] = useState<ScheduleSlot[]>([{ startHour: 6, startMin: 0, endHour: 8, endMin: 0 }]);
-  const [status, setStatus] = useState('');
-  const [timeStatus, setTimeStatus] = useState('');
+interface ScheduleBuilderProps {
+  devEui?: string;
+  zoneId?: string;
+  irrigationSchedule?: ScheduleSlot[];
+  syncedSchedule?: ScheduleSlot[];
+  pendingSchedule?: string | null;
+  lastTimeSyncAt?: string | null;
+}
 
-  // 1. Time Sync Function
-  const syncTime = async () => {
-    setTimeStatus('Requesting Sync...');
-    await fetch(`/api/chirpstack/devices/${devEui}/queue`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ fPort: 13, hexData: '01' })
-    });
-    setTimeStatus('Sync queued!');
-    setTimeout(() => setTimeStatus(''), 3000);
+function formatSlot(slot: ScheduleSlot) {
+  return `${String(slot.startHour).padStart(2, "0")}:${String(slot.startMin).padStart(2, "0")} → ${String(slot.endHour).padStart(2, "0")}:${String(slot.endMin).padStart(2, "0")}`;
+}
+
+export function ScheduleBuilder({
+  devEui,
+  zoneId,
+  irrigationSchedule,
+  syncedSchedule,
+  pendingSchedule,
+  lastTimeSyncAt,
+}: ScheduleBuilderProps) {
+  const router = useRouter();
+
+  const initialSlots = useMemo<ScheduleSlot[]>(() => {
+    if (irrigationSchedule && irrigationSchedule.length > 0) return irrigationSchedule;
+    if (syncedSchedule && syncedSchedule.length > 0) return syncedSchedule;
+    return [{ startHour: 6, startMin: 0, endHour: 8, endMin: 0 }];
+  }, [irrigationSchedule, syncedSchedule]);
+
+  const [slots, setSlots] = useState<ScheduleSlot[]>(initialSlots);
+  const [status, setStatus] = useState("");
+  const [timeStatus, setTimeStatus] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const [isSyncingTime, setIsSyncingTime] = useState(false);
+
+  useEffect(() => {
+    setSlots(initialSlots);
+  }, [initialSlots]);
+
+  const isSyncing = Boolean(pendingSchedule);
+  const isSynced = !pendingSchedule && Array.isArray(syncedSchedule) && syncedSchedule.length > 0;
+
+  useEffect(() => {
+    if (!isSyncing) return;
+
+    setStatus("Schedule saved. Waiting for next device check-in...");
+
+    const interval = setInterval(() => {
+      router.refresh();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [isSyncing, router]);
+
+  const updateSlot = (idx: number, field: keyof ScheduleSlot, value: number) => {
+    setSlots((prev) =>
+      prev.map((slot, i) => (i === idx ? { ...slot, [field]: Number.isNaN(value) ? 0 : value } : slot))
+    );
   };
 
-  // 2. Push Schedule Function
-  const pushSchedule = async () => {
-    setStatus('Encoding...');
-    const hexData = encodeSchedulerPayload([], slots); 
-    const endpoint = zoneId ? `/api/zones/${zoneId}/queue` : `/api/chirpstack/devices/${devEui}/queue`;
+  const addSlot = () => {
+    setSlots((prev) => [
+      ...prev,
+      { startHour: 0, startMin: 0, endHour: 0, endMin: 0 },
+    ]);
+  };
 
-    setStatus('Pushing Config (FPort 25)...');
-    await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ fPort: 25, hexData })
-    });
-
-    setStatus('Pushing Enable (FPort 21)...');
-    await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ fPort: 21, hexData: '30' })
-    });
-    
-    if (devEui) {
-      await fetch(`/api/devices/${devEui}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ irrigationSchedule: slots })
-      });
+  const syncTime = async () => {
+    if (!devEui) {
+      setTimeStatus("Missing device ID.");
+      return;
     }
-    setStatus('Schedule queued & saved!');
+
+    try {
+      setIsSyncingTime(true);
+      setTimeStatus("Requesting clock sync...");
+
+      const res = await fetch(`/api/chirpstack/devices/${devEui}/queue`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fPort: 13, hexData: "01" }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to queue time sync.");
+      }
+
+      setTimeStatus("Clock sync queued.");
+      router.refresh();
+    } catch (error) {
+      setTimeStatus("Clock sync failed.");
+    } finally {
+      setIsSyncingTime(false);
+      setTimeout(() => setTimeStatus(""), 3000);
+    }
+  };
+
+  const pushSchedule = async () => {
+    if (!devEui) {
+      setStatus("Missing device ID.");
+      return;
+    }
+
+    try {
+      setIsSaving(true);
+      setStatus("Saving schedule...");
+
+      const res = await fetch(`/api/devices/${devEui}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ irrigationSchedule: slots }),
+      });
+
+      const data = await res.json().catch(() => null);
+
+      if (!res.ok || !data?.success) {
+        throw new Error(data?.error || "Failed to save schedule.");
+      }
+
+      setStatus("Schedule saved. Waiting for next device check-in...");
+      router.refresh();
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : "Failed to save schedule.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
     <div className="bg-zinc-950 border border-zinc-800 p-6 space-y-6">
-      
-      {/* TIME SYNC DISPLAY */}
-      <div className="mb-2 p-4 bg-black/40 border border-zinc-800 flex justify-between items-center">
+      <div className="mb-2 p-4 bg-black/40 border border-zinc-800 flex justify-between items-center gap-4">
         <div>
           <h4 className="text-zinc-500 font-mono text-xs uppercase mb-1 flex items-center gap-2">
             <Clock className="h-4 w-4" /> Device Clock Sync
           </h4>
           <div className="text-zinc-300 font-mono text-sm">
-            Last Synced: {lastTimeSyncAt ? new Date(lastTimeSyncAt).toLocaleString() : 'Never'}
+            Last Synced: {lastTimeSyncAt ? new Date(lastTimeSyncAt).toLocaleString() : "Never"}
           </div>
         </div>
+
         <div className="flex flex-col items-end">
-          <Button onClick={syncTime} variant="outline" className="border-blue-500/30 text-blue-400 hover:bg-blue-500/10 rounded-none h-8 text-xs">
-            <RefreshCw className="h-3 w-3 mr-2" /> Resync Time
+          <Button
+            onClick={syncTime}
+            disabled={isSyncingTime || !devEui}
+            variant="outline"
+            className="border-blue-500/30 text-blue-400 hover:bg-blue-500/10 rounded-none h-8 text-xs disabled:opacity-50"
+          >
+            <RefreshCw className={`h-3 w-3 mr-2 ${isSyncingTime ? "animate-spin" : ""}`} />
+            Resync Time
           </Button>
           {timeStatus && <span className="text-blue-400 text-xs mt-1">{timeStatus}</span>}
         </div>
       </div>
 
-      {/* CONFIRMED SCHEDULE DISPLAY */}
       <div className="mb-6 p-4 bg-black/40 border border-zinc-800">
         <h4 className="text-zinc-500 font-mono text-xs uppercase mb-3 flex items-center gap-2">
-          <CalendarClock className="h-4 w-4" /> Confirmed Hardware Schedule
+          <CalendarClock className="h-4 w-4" /> Hardware Schedule Status
         </h4>
-        {syncedSchedule && syncedSchedule.length > 0 ? (
+
+        {isSyncing ? (
+          <div className="space-y-2">
+            <div className="text-amber-400 font-mono text-sm font-bold flex items-center gap-2 mb-2">
+              <RefreshCw className="h-4 w-4 animate-spin" /> SYNCING...
+            </div>
+            <div className="text-zinc-400 font-mono text-sm">
+              A new schedule is staged and will be delivered on the next uplink.
+            </div>
+            {syncedSchedule && syncedSchedule.length > 0 && (
+              <div className="pt-2 border-t border-zinc-800/60">
+                <div className="text-zinc-500 font-mono text-xs uppercase mb-2">
+                  Last Confirmed Hardware Schedule
+                </div>
+                <div className="space-y-2">
+                  {syncedSchedule.map((slot, i) => (
+                    <div
+                      key={i}
+                      className="text-zinc-300 font-mono text-sm flex justify-between border-b border-zinc-800/50 pb-1"
+                    >
+                      <span className="text-zinc-500">Slot {i + 1}:</span>
+                      <span>{formatSlot(slot)}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        ) : isSynced ? (
           <div className="space-y-2">
             <div className="text-emerald-500 font-mono text-sm font-bold flex items-center gap-2 mb-2">
               <CheckCircle2 className="h-4 w-4" /> HARDWARE SYNCED
             </div>
-            {syncedSchedule.map((slot, i) => (
-              <div key={i} className="text-zinc-300 font-mono text-sm flex justify-between border-b border-zinc-800/50 pb-1">
-                <span className="text-zinc-500">Slot {i + 1}:</span> 
-                <span>
-                  {String(slot.startHour).padStart(2, '0')}:{String(slot.startMin).padStart(2, '0')} → {String(slot.endHour).padStart(2, '0')}:{String(slot.endMin).padStart(2, '0')}
-                </span>
+            {syncedSchedule!.map((slot, i) => (
+              <div
+                key={i}
+                className="text-zinc-300 font-mono text-sm flex justify-between border-b border-zinc-800/50 pb-1"
+              >
+                <span className="text-zinc-500">Slot {i + 1}:</span>
+                <span>{formatSlot(slot)}</span>
               </div>
             ))}
           </div>
         ) : (
-          <div className="text-zinc-600 font-mono text-sm italic">
+          <div className="text-zinc-600 font-mono text-sm italic flex items-center gap-2">
+            <AlertCircle className="h-4 w-4" />
             No schedule confirmed by hardware yet.
           </div>
         )}
       </div>
 
       <h3 className="text-white font-mono text-lg mb-4 tracking-widest border-t border-zinc-800 pt-6">
-        {zoneId ? 'Bulk Fleet Schedule Config' : 'Device Schedule Config'}
+        {zoneId ? "Bulk Fleet Schedule Config" : "Device Schedule Config"}
       </h3>
-      
+
       {slots.map((slot, idx) => (
-        <div key={idx} className="flex flex-wrap gap-4 items-center bg-zinc-900 p-4 border border-zinc-800">
+        <div
+          key={idx}
+          className="flex flex-wrap gap-4 items-center bg-zinc-900 p-4 border border-zinc-800"
+        >
           <span className="text-zinc-400 font-mono text-sm">Slot {idx + 1}</span>
+
           <div className="flex items-center gap-2">
             <span className="text-zinc-500 text-xs uppercase">Start</span>
-            <input type="number" value={slot.startHour} onChange={e => {
-              const newSlots = [...slots]; newSlots[idx].startHour = Number(e.target.value); setSlots(newSlots);
-            }} className="w-16 bg-zinc-950 border border-zinc-700 text-white p-1 text-center font-mono focus:border-blue-500/50 outline-none" />
+            <input
+              type="number"
+              value={slot.startHour}
+              onChange={(e) => updateSlot(idx, "startHour", Number(e.target.value))}
+              className="w-16 bg-zinc-950 border border-zinc-700 text-white p-1 text-center font-mono focus:border-blue-500/50 outline-none"
+            />
             <span className="text-zinc-500">:</span>
-            <input type="number" value={slot.startMin} onChange={e => {
-              const newSlots = [...slots]; newSlots[idx].startMin = Number(e.target.value); setSlots(newSlots);
-            }} className="w-16 bg-zinc-950 border border-zinc-700 text-white p-1 text-center font-mono focus:border-blue-500/50 outline-none" />
+            <input
+              type="number"
+              value={slot.startMin}
+              onChange={(e) => updateSlot(idx, "startMin", Number(e.target.value))}
+              className="w-16 bg-zinc-950 border border-zinc-700 text-white p-1 text-center font-mono focus:border-blue-500/50 outline-none"
+            />
           </div>
+
           <span className="text-zinc-600">→</span>
+
           <div className="flex items-center gap-2">
             <span className="text-zinc-500 text-xs uppercase">End</span>
-            <input type="number" value={slot.endHour} onChange={e => {
-              const newSlots = [...slots]; newSlots[idx].endHour = Number(e.target.value); setSlots(newSlots);
-            }} className="w-16 bg-zinc-950 border border-zinc-700 text-white p-1 text-center font-mono focus:border-blue-500/50 outline-none" />
+            <input
+              type="number"
+              value={slot.endHour}
+              onChange={(e) => updateSlot(idx, "endHour", Number(e.target.value))}
+              className="w-16 bg-zinc-950 border border-zinc-700 text-white p-1 text-center font-mono focus:border-blue-500/50 outline-none"
+            />
             <span className="text-zinc-500">:</span>
-            <input type="number" value={slot.endMin} onChange={e => {
-              const newSlots = [...slots]; newSlots[idx].endMin = Number(e.target.value); setSlots(newSlots);
-            }} className="w-16 bg-zinc-950 border border-zinc-700 text-white p-1 text-center font-mono focus:border-blue-500/50 outline-none" />
+            <input
+              type="number"
+              value={slot.endMin}
+              onChange={(e) => updateSlot(idx, "endMin", Number(e.target.value))}
+              className="w-16 bg-zinc-950 border border-zinc-700 text-white p-1 text-center font-mono focus:border-blue-500/50 outline-none"
+            />
           </div>
         </div>
       ))}
-      
+
       {slots.length < 4 && (
-        <Button variant="outline" onClick={() => setSlots([...slots, { startHour: 0, startMin: 0, endHour: 0, endMin: 0 }])}
-          className="border-zinc-700 text-zinc-400 font-mono uppercase text-xs rounded-none hover:bg-zinc-800">
+        <Button
+          variant="outline"
+          onClick={addSlot}
+          className="border-zinc-700 text-zinc-400 font-mono uppercase text-xs rounded-none hover:bg-zinc-800"
+        >
           + Add Time Slot
         </Button>
       )}
 
-      <div className="pt-6 border-t border-zinc-800 flex justify-between items-center">
+      <div className="pt-6 border-t border-zinc-800 flex justify-between items-center gap-4">
         <span className="text-blue-400 font-mono text-sm max-w-[60%]">{status}</span>
-        <Button onClick={pushSchedule} className="bg-blue-600 hover:bg-blue-500 text-white font-mono uppercase tracking-widest rounded-none">
-          {zoneId ? 'Push Bulk Schedule' : 'Push Device Schedule'}
+        <Button
+          onClick={pushSchedule}
+          disabled={isSaving || !devEui}
+          className="bg-blue-600 hover:bg-blue-500 text-white font-mono uppercase tracking-widest rounded-none disabled:opacity-50"
+        >
+          {isSaving
+            ? "Saving..."
+            : zoneId
+              ? "Save Bulk Schedule"
+              : "Save Device Schedule"}
         </Button>
       </div>
     </div>
