@@ -70,10 +70,10 @@ export async function POST(req: NextRequest) {
         await fetchChirpStack(`/api/devices/${devEui}/queue`, {
           method: 'POST',
           body: JSON.stringify({
-            deviceQueueItem: {
-              devEui,
+            queueItem: {
+              devEui: devEui,
               confirmed: true,
-              fPort: 25,
+              f_port: 25,
               data: Buffer.from(deviceDoc.pendingSchedule, 'hex').toString('base64'),
             },
           }),
@@ -85,9 +85,17 @@ export async function POST(req: NextRequest) {
           { devEui },
           { $unset: { pendingSchedule: '' } }
         );
-      } catch (pushErr) {
-        console.error(`ChirpStack queue push failed for ${devEui}:`, pushErr);
-      }
+      } catch (pushErr: any) {
+  console.error(`ChirpStack queue push failed for ${devEui}:`, pushErr);
+  return NextResponse.json(
+    {
+      success: false,
+      stage: 'chirpstack-queue',
+      error: pushErr?.message || String(pushErr),
+    },
+    { status: 500 }
+  );
+}
     }
 
     await DevicePayload.findOneAndUpdate(
