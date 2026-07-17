@@ -34,6 +34,9 @@ import { connectToDatabase } from '@/lib/mongodb';export default async function 
         <ValveControl 
           devEui={device.devEui} 
           currentMode={device.deviceClass || 'A'} 
+          valveState={device.valveState || 'unknown'}
+          lastTimeSyncAt={device.lastTimeSyncAt?.toString()} // Pass it!
+          syncedSchedule={device.syncedIrrigationSchedule}   // Pass it!
         />
       </div>
     </div>
