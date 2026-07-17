@@ -37,6 +37,9 @@ const DevicePayloadSchema = new mongoose.Schema({
     endMin: { type: Number }
   }],
 
+  // NEW: Hex-encoded schedule waiting for the device's next uplink check-in
+  pendingSchedule: { type: String, default: null },
+
   // NEW: The exact time the clock was last synced
   lastTimeSyncAt: { type: Date }
 

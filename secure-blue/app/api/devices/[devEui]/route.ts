@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
 import Device from '@/lib/models/DevicePayload';
+import { encodeSchedulerPayload } from '@/lib/strega-codec';
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ devEui: string }> }) {
   try {
@@ -8,10 +9,22 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ devEui
     const body = await req.json();
     
     await connectToDatabase();
+
+    const updatePayload: Record<string, unknown> = { ...body };
+
+    // If a new irrigation schedule is being saved, encode it and stage it
+    // as pending until the device's next uplink check-in (Class A constraint).
+    if (body.irrigationSchedule) {
+      const hexPayload = encodeSchedulerPayload(
+        body.irrigationDays ?? [],
+        body.irrigationSchedule
+      );
+      updatePayload.pendingSchedule = hexPayload;
+    }
     
     const updatedDevice = await Device.findOneAndUpdate(
       { devEui },
-      { $set: body },
+      { $set: updatePayload },
       { new: true }
     );
 

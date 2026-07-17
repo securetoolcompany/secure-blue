@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
 import DevicePayload from '@/lib/models/DevicePayload';
+import { fetchChirpStack } from '@/lib/chirpstack';
 
 interface DeviceUpdateData {
   tenantId: string;
@@ -52,12 +53,40 @@ export async function POST(req: NextRequest) {
       updateData.lastTimeSyncAt = new Date();
     }
 
-    // Catch Schedule Confirmation (FPort 25)
+    // Catch Schedule Confirmation (FPort 25) — legacy ack path, kept for compatibility
     // The device doesn't echo the schedule back, so we copy what we have in the DB as "confirmed"
     if (payload.Ack_Port === 25 && payload.Ack_Value === 1) {
       const existingDoc = await DevicePayload.findOne({ devEui });
       if (existingDoc && existingDoc.irrigationSchedule) {
         updateData.syncedIrrigationSchedule = existingDoc.irrigationSchedule;
+      }
+    }
+
+    // Sync-on-Uplink: on every uplink, check for a pending schedule and
+    // push it into the device's downlink queue while it's awake (Class A window).
+    const deviceDoc = await DevicePayload.findOne({ devEui });
+    if (deviceDoc?.pendingSchedule) {
+      try {
+        await fetchChirpStack(`/api/devices/${devEui}/queue`, {
+          method: 'POST',
+          body: JSON.stringify({
+            deviceQueueItem: {
+              devEui,
+              confirmed: true,
+              fPort: 25,
+              data: Buffer.from(deviceDoc.pendingSchedule, 'hex').toString('base64'),
+            },
+          }),
+        });
+
+        // Move pending -> synced now that the queue push succeeded
+        updateData.syncedIrrigationSchedule = deviceDoc.irrigationSchedule;
+        await DevicePayload.findOneAndUpdate(
+          { devEui },
+          { $unset: { pendingSchedule: '' } }
+        );
+      } catch (pushErr) {
+        console.error(`ChirpStack queue push failed for ${devEui}:`, pushErr);
       }
     }
 
