@@ -46,6 +46,20 @@ function getBatteryUI(mV: number | null) {
   return { text: `${percent}%`, color: "text-red-500", Icon: BatteryWarning };
 }
 
+function schedulesMatch(a: any[] = [], b: any[] = []) {
+  if (a.length !== b.length) return false;
+
+  return a.every((slot, index) => {
+    const other = b[index];
+    return (
+      slot?.startHour === other?.startHour &&
+      slot?.startMin === other?.startMin &&
+      slot?.endHour === other?.endHour &&
+      slot?.endMin === other?.endMin
+    );
+  });
+}
+
 function getScheduleSyncUI(device: any) {
   if (device?.pendingSchedule) {
     return {
@@ -56,7 +70,17 @@ function getScheduleSyncUI(device: any) {
     };
   }
 
-  if (Array.isArray(device?.syncedIrrigationSchedule) && device.syncedIrrigationSchedule.length > 0) {
+  const desired = Array.isArray(device?.irrigationSchedule)
+    ? device.irrigationSchedule
+    : [];
+
+  const synced = Array.isArray(device?.syncedIrrigationSchedule)
+    ? device.syncedIrrigationSchedule
+    : [];
+
+  const isSynced = desired.length > 0 && schedulesMatch(desired, synced);
+
+  if (isSynced) {
     return {
       label: "Synced",
       className: "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30",
@@ -169,7 +193,11 @@ export default function FleetOverview() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredDevices.map((device: Device & { pendingSchedule?: string | null; syncedIrrigationSchedule?: unknown[] }) => {
+          {filteredDevices.map((device: Device & {
+            pendingSchedule?: string | null;
+            syncedIrrigationSchedule?: unknown[];
+            irrigationSchedule?: unknown[];
+          }) => {
             const batteryUI = getBatteryUI(device.batteryMv);
             const BatteryIcon = batteryUI.Icon;
             const isSelected = selectedEuis.includes(device.devEui);

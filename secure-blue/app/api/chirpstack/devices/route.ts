@@ -17,6 +17,10 @@ interface IDevicePayload {
   rssi?: number;
   snr?: number;
   lastSeenAt?: Date | string;
+  lastTimeSyncAt?: Date | string;
+  irrigationSchedule?: any[];
+  syncedIrrigationSchedule?: any[];
+  pendingSchedule?: string | null;
 }
 
 function pickNewestDate(
@@ -95,18 +99,25 @@ export async function GET() {
           ? activationResult.value?.deviceActivation?.deviceClass ?? 'A'
           : 'A';
 
-      return {
-        devEui: d.devEui,
-        name: d.name,
-        lastSeenAt: lastSeenDate ? lastSeenDate.toISOString() : null,
-        valveState: state?.valveState ?? 'unknown',
-        batteryMv: state?.batteryMv ?? null,
-        cableFault: state?.cableFault ?? false,
-        rssi: state?.rssi ?? null,
-        snr: state?.snr ?? null,
-        onlineState,
-        deviceClass,
-      };
+     return {
+      devEui: d.devEui,
+      name: d.name,
+      lastSeenAt: lastSeenDate ? lastSeenDate.toISOString() : null,
+      valveState: state?.valveState ?? 'unknown',
+      batteryMv: state?.batteryMv ?? null,
+      cableFault: state?.cableFault ?? false,
+      rssi: state?.rssi ?? null,
+      snr: state?.snr ?? null,
+      onlineState,
+      deviceClass,
+
+      lastTimeSyncAt: state?.lastTimeSyncAt
+        ? new Date(state.lastTimeSyncAt).toISOString()
+        : null,
+      irrigationSchedule: state?.irrigationSchedule ?? [],
+      syncedIrrigationSchedule: state?.syncedIrrigationSchedule ?? [],
+      pendingSchedule: state?.pendingSchedule ?? null,
+    };
     });
 
     return NextResponse.json({ devices });
