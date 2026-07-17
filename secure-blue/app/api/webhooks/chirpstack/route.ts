@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
           method: 'POST',
           body: JSON.stringify({
             queueItem: {
-              devEui: devEui,
+              devEui,
               confirmed: true,
               f_port: 25,
               data: Buffer.from(deviceDoc.pendingSchedule, 'hex').toString('base64'),
