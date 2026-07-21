@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { ScheduleBuilder } from "@/components/irrigation/ScheduleBuilder";
+import { ValveControl } from "@/components/irrigation/ValveControl";
 import Device from "@/lib/models/DevicePayload";
 import { connectToDatabase } from "@/lib/mongodb";
 
@@ -47,19 +47,21 @@ export default async function DeviceDetailPage({
 
         <div className="mb-8 border-b border-zinc-800 pb-6">
           <h1 className="text-3xl font-mono text-white tracking-widest mb-2">
-            DEVICE SCHEDULE
+            DEVICE CONTROL
           </h1>
           <p className="text-zinc-500 font-mono text-sm uppercase tracking-widest">
             EUI: {devEui}
           </p>
         </div>
 
-        <ScheduleBuilder
-          devEui={device.devEui}
-          irrigationSchedule={device.irrigationSchedule}
-          syncedSchedule={device.syncedIrrigationSchedule}
-          pendingSchedule={device.pendingSchedule}
+        <ValveControl
+          devEui={String(device.devEui)}
+          currentMode={(device.deviceClass as "A" | "C") || "A"}
+          valveState={
+            (device.valveState as "open" | "closed" | "unknown") || "unknown"
+          }
           lastTimeSyncAt={device.lastTimeSyncAt}
+          syncedSchedule={device.syncedIrrigationSchedule}
         />
       </div>
     </div>
