@@ -16,10 +16,13 @@ interface Zone {
 
 interface ValveControlProps {
   devEui: string;
-  currentMode: 'A' | 'C'; // ADD THIS PROP
+  currentMode: 'A' | 'C';
+  valveState: 'open' | 'closed' | 'unknown';
+  lastTimeSyncAt?: string | null;
+  syncedSchedule?: any[];
 }
 
-export function ValveControl({ devEui, currentMode }: ValveControlProps) {
+export function ValveControl({ devEui, currentMode, valveState, lastTimeSyncAt, syncedSchedule }: ValveControlProps) {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'manual' | 'power' | 'schedule'>('manual');
 
@@ -260,7 +263,11 @@ export function ValveControl({ devEui, currentMode }: ValveControlProps) {
         {/* 3. SCHEDULER */}
         {activeTab === 'schedule' && (
           <div className="animate-in fade-in duration-300">
-            <ScheduleBuilder devEui={devEui} />
+            <ScheduleBuilder 
+              devEui={devEui} 
+              syncedSchedule={syncedSchedule} 
+              lastTimeSyncAt={lastTimeSyncAt} 
+            />
           </div>
         )}
       </div>

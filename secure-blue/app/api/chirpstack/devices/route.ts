@@ -16,7 +16,34 @@ interface IDevicePayload {
   cableFault?: boolean;
   rssi?: number;
   snr?: number;
-  lastSeenAt?: Date;
+  lastSeenAt?: Date | string;
+  lastTimeSyncAt?: Date | string;
+  irrigationSchedule?: any[];
+  syncedIrrigationSchedule?: any[];
+  pendingSchedule?: string | null;
+}
+
+function pickNewestDate(
+  a?: Date | string | null,
+  b?: Date | string | null
+): Date | null {
+  const da = a ? new Date(a) : null;
+  const db = b ? new Date(b) : null;
+
+  const aValid = da && !Number.isNaN(da.getTime());
+  const bValid = db && !Number.isNaN(db.getTime());
+
+  if (aValid && bValid) return da! > db! ? da! : db!;
+  if (aValid) return da!;
+  if (bValid) return db!;
+  return null;
+}
+
+function getOnlineState(lastSeen: Date | null): 'online' | 'offline' {
+  if (!lastSeen || Number.isNaN(lastSeen.getTime())) return 'offline';
+
+  const mins = Math.max(0, differenceInMinutes(new Date(), lastSeen));
+  return mins < 65 ? 'online' : 'offline';
 }
 
 export async function GET() {
@@ -29,57 +56,73 @@ export async function GET() {
     }
 
     const appId = process.env.CHIRPSTACK_APP_ID;
-    if (!appId) throw new Error("CHIRPSTACK_APP_ID is missing.");
+    if (!appId) {
+      throw new Error('CHIRPSTACK_APP_ID is missing.');
+    }
 
-    // 1. Fetch all devices
-    const res = await fetchChirpStack(`/api/devices?applicationId=${appId}&limit=100`);
-    if (!res.result) throw new Error("ChirpStack API returned an empty result.");
+    const chirpRes = await fetchChirpStack(
+      `/api/devices?applicationId=${appId}&limit=100`
+    );
 
-    // 2. Fetch local DB states
+    if (!chirpRes?.result || !Array.isArray(chirpRes.result)) {
+      throw new Error('ChirpStack API returned an empty or invalid result.');
+    }
+
+    const chirpDevices = chirpRes.result as ChirpStackDeviceListItem[];
+    const devEuis = chirpDevices.map((d) => d.devEui);
+
     await connectToDatabase();
-    const devEuis = res.result.map((d: ChirpStackDeviceListItem) => d.devEui);
-    const dbStates = await DevicePayload.find({ devEui: { $in: devEuis } }).lean() as IDevicePayload[];
-    
+
+    const dbStates = (await DevicePayload.find({
+      tenantId: userTenantId,
+      devEui: { $in: devEuis },
+    }).lean()) as IDevicePayload[];
+
     const stateMap = new Map<string, IDevicePayload>(
       dbStates.map((doc) => [doc.devEui, doc])
     );
 
-    // 3. Map devices and fetch real-time session class for each
-    const devices: Device[] = await Promise.all(
-      res.result.map(async (d: ChirpStackDeviceListItem) => {
-        const state = stateMap.get(d.devEui);
-        const lastSeen = state?.lastSeenAt || d.lastSeenAt;
-        
-        // Fetch real-time activation to get the actual LoRaWAN Class
-        const activationRes = await fetchChirpStack(`/api/devices/${d.devEui}/activation`).catch(() => null);
-        const deviceClass = activationRes?.deviceActivation?.deviceClass || 'A';
-        
-        let onlineState: 'online' | 'warning' | 'offline' = 'offline';
-        if (lastSeen) {
-          const mins = differenceInMinutes(new Date(), new Date(lastSeen));
-          if (mins < 65) onlineState = 'online';
-          else if (mins <= 120) onlineState = 'warning';
-        }
-
-        return {
-          devEui: d.devEui,
-          name: d.name,
-          lastSeenAt: lastSeen ? new Date(lastSeen).toISOString() : null,
-          valveState: state?.valveState || 'unknown',
-          batteryMv: state?.batteryMv || null,
-          cableFault: state?.cableFault || false,
-          rssi: state?.rssi || null,
-          snr: state?.snr || null,
-          onlineState,
-          deviceClass // Now included for your dashboard
-        };
-      })
+    const activationResults = await Promise.allSettled(
+      chirpDevices.map((d) =>
+        fetchChirpStack(`/api/devices/${d.devEui}/activation`)
+      )
     );
 
+    const devices: Device[] = chirpDevices.map((d, index) => {
+      const state = stateMap.get(d.devEui);
+      const lastSeenDate = pickNewestDate(state?.lastSeenAt, d.lastSeenAt);
+      const onlineState = getOnlineState(lastSeenDate);
+
+      const activationResult = activationResults[index];
+      const deviceClass =
+        activationResult.status === 'fulfilled'
+          ? activationResult.value?.deviceActivation?.deviceClass ?? 'A'
+          : 'A';
+
+     return {
+      devEui: d.devEui,
+      name: d.name,
+      lastSeenAt: lastSeenDate ? lastSeenDate.toISOString() : null,
+      valveState: state?.valveState ?? 'unknown',
+      batteryMv: state?.batteryMv ?? null,
+      cableFault: state?.cableFault ?? false,
+      rssi: state?.rssi ?? null,
+      snr: state?.snr ?? null,
+      onlineState,
+      deviceClass,
+
+      lastTimeSyncAt: state?.lastTimeSyncAt
+        ? new Date(state.lastTimeSyncAt).toISOString()
+        : null,
+      irrigationSchedule: state?.irrigationSchedule ?? [],
+      syncedIrrigationSchedule: state?.syncedIrrigationSchedule ?? [],
+      pendingSchedule: state?.pendingSchedule ?? null,
+    };
+    });
+
     return NextResponse.json({ devices });
-    
   } catch (error) {
-    console.error("🔥 FETCH ERROR:", error); 
+    console.error('🔥 FETCH ERROR:', error);
     return NextResponse.json({ error: 'Failed to fetch devices' }, { status: 500 });
   }
 }

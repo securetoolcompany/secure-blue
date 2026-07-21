@@ -4,13 +4,14 @@ export function encodeSchedulerPayload(
 ): string {
   let dayByte = 0;
   if (days.length === 0 || days.length === 7) {
-    dayByte = 0xFF; 
+    dayByte = 0x80; 
   } else {
     for (const d of days) dayByte |= (1 << d);
   }
   
   const bytes: number[] = [dayByte];
   
+  // Replace the loop with this:
   for (let i = 0; i < 4; i++) {
     const slot = slots[i];
     if (slot) {
@@ -18,8 +19,6 @@ export function encodeSchedulerPayload(
       bytes.push(slot.startMin);
       bytes.push(slot.endHour);
       bytes.push(slot.endMin);
-    } else {
-      bytes.push(0, 0, 0, 0);
     }
   }
   return Buffer.from(bytes).toString('hex');
