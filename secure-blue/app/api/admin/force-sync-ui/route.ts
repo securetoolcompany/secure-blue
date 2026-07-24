@@ -8,9 +8,11 @@ export async function POST() {
 
     const nowIso = new Date().toISOString();
 
-    // Update all ONLINE devices
+    // Define "green/online" as: seen in the last N hours
+    const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000); // 24 hours
+
     const result = await Device.updateMany(
-      { status: "online" },          // <<< adjust this field if needed
+      { lastSeenAt: { $gte: cutoff } },      // only "recent" devices
       { $set: { lastTimeSyncAt: nowIso } }
     );
 
@@ -19,6 +21,7 @@ export async function POST() {
       syncedAt: nowIso,
       matchedCount: (result as any).matchedCount ?? (result as any).n ?? 0,
       modifiedCount: (result as any).modifiedCount ?? 0,
+      cutoff,
     });
   } catch (error) {
     return NextResponse.json(
