@@ -3,13 +3,24 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { CalendarClock, CheckCircle2, Clock, RefreshCw, AlertCircle } from "lucide-react";
+import {
+  CalendarClock,
+  CheckCircle2,
+  Clock,
+  RefreshCw,
+  AlertCircle,
+} from "lucide-react";
 
 interface ScheduleSlot {
   startHour: number;
   startMin: number;
   endHour: number;
   endMin: number;
+}
+
+interface TimeSlotForm {
+  start: string;
+  end: string;
 }
 
 interface ScheduleBuilderProps {
@@ -22,7 +33,40 @@ interface ScheduleBuilderProps {
 }
 
 function formatSlot(slot: ScheduleSlot) {
-  return `${String(slot.startHour).padStart(2, "0")}:${String(slot.startMin).padStart(2, "0")} → ${String(slot.endHour).padStart(2, "0")}:${String(slot.endMin).padStart(2, "0")}`;
+  return `${String(slot.startHour).padStart(2, "0")}:${String(
+    slot.startMin
+  ).padStart(2, "0")} → ${String(slot.endHour).padStart(2, "0")}:${String(
+    slot.endMin
+  ).padStart(2, "0")}`;
+}
+
+function slotToTime(slot: ScheduleSlot): TimeSlotForm {
+  return {
+    start: `${String(slot.startHour).padStart(2, "0")}:${String(
+      slot.startMin
+    ).padStart(2, "0")}`,
+    end: `${String(slot.endHour).padStart(2, "0")}:${String(slot.endMin).padStart(
+      2,
+      "0"
+    )}`,
+  };
+}
+
+function timeToSlot(slot: TimeSlotForm): ScheduleSlot {
+  const [startHour, startMin] = slot.start.split(":").map(Number);
+  const [endHour, endMin] = slot.end.split(":").map(Number);
+
+  return {
+    startHour,
+    startMin,
+    endHour,
+    endMin,
+  };
+}
+
+function toMinutes(value: string) {
+  const [hours, minutes] = value.split(":").map(Number);
+  return hours * 60 + minutes;
 }
 
 export function ScheduleBuilder({
@@ -35,13 +79,17 @@ export function ScheduleBuilder({
 }: ScheduleBuilderProps) {
   const router = useRouter();
 
-  const initialSlots = useMemo<ScheduleSlot[]>(() => {
-    if (irrigationSchedule && irrigationSchedule.length > 0) return irrigationSchedule;
-    if (syncedSchedule && syncedSchedule.length > 0) return syncedSchedule;
-    return [{ startHour: 6, startMin: 0, endHour: 8, endMin: 0 }];
+  const initialSlots = useMemo<TimeSlotForm[]>(() => {
+    if (irrigationSchedule && irrigationSchedule.length > 0) {
+      return irrigationSchedule.map(slotToTime);
+    }
+    if (syncedSchedule && syncedSchedule.length > 0) {
+      return syncedSchedule.map(slotToTime);
+    }
+    return [{ start: "06:00", end: "08:00" }];
   }, [irrigationSchedule, syncedSchedule]);
 
-  const [slots, setSlots] = useState<ScheduleSlot[]>(initialSlots);
+  const [slots, setSlots] = useState<TimeSlotForm[]>(initialSlots);
   const [status, setStatus] = useState("");
   const [timeStatus, setTimeStatus] = useState("");
   const [isSaving, setIsSaving] = useState(false);
@@ -66,18 +114,26 @@ export function ScheduleBuilder({
     return () => clearInterval(interval);
   }, [isSyncing, router]);
 
-  const updateSlot = (idx: number, field: keyof ScheduleSlot, value: number) => {
+  const updateSlot = (idx: number, field: keyof TimeSlotForm, value: string) => {
     setSlots((prev) =>
-      prev.map((slot, i) => (i === idx ? { ...slot, [field]: Number.isNaN(value) ? 0 : value } : slot))
+      prev.map((slot, i) => (i === idx ? { ...slot, [field]: value } : slot))
     );
   };
 
   const addSlot = () => {
-    setSlots((prev) => [
-      ...prev,
-      { startHour: 0, startMin: 0, endHour: 0, endMin: 0 },
-    ]);
+    setSlots((prev) => [...prev, { start: "06:00", end: "07:00" }]);
   };
+
+  const removeSlot = (idx: number) => {
+    setSlots((prev) => prev.filter((_, i) => i !== idx));
+  };
+
+  const hasInvalidSlots = slots.some(
+    (slot) =>
+      !slot.start ||
+      !slot.end ||
+      toMinutes(slot.end) <= toMinutes(slot.start)
+  );
 
   const syncTime = async () => {
     if (!devEui) {
@@ -115,14 +171,21 @@ export function ScheduleBuilder({
       return;
     }
 
+    if (hasInvalidSlots) {
+      setStatus("Each slot must have a valid start and end time.");
+      return;
+    }
+
     try {
       setIsSaving(true);
       setStatus("Saving schedule...");
 
+      const payload = slots.map(timeToSlot);
+
       const res = await fetch(`/api/devices/${devEui}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ irrigationSchedule: slots }),
+        body: JSON.stringify({ irrigationSchedule: payload }),
       });
 
       const data = await res.json().catch(() => null);
@@ -221,51 +284,63 @@ export function ScheduleBuilder({
         )}
       </div>
 
-      <h3 className="text-white font-mono text-lg mb-4 tracking-widest border-t border-zinc-800 pt-6">
+      <h3 className="text-white font-mono text-lg mb-2 tracking-widest border-t border-zinc-800 pt-6">
         {zoneId ? "Bulk Fleet Schedule Config" : "Device Schedule Config"}
       </h3>
+
+      <p className="text-zinc-500 font-mono text-xs uppercase tracking-widest mb-4">
+        Enter all schedule times in 24-hour format.
+      </p>
 
       {slots.map((slot, idx) => (
         <div
           key={idx}
-          className="flex flex-wrap gap-4 items-center bg-zinc-900 p-4 border border-zinc-800"
+          className="bg-zinc-900 border border-zinc-800 p-4 md:p-5"
         >
-          <span className="text-zinc-400 font-mono text-sm">Slot {idx + 1}</span>
+          <div className="grid grid-cols-1 md:grid-cols-[auto_1fr_auto_1fr_auto] gap-4 items-end">
+            <div className="text-zinc-500 font-mono text-sm uppercase tracking-widest">
+              Slot {idx + 1}
+            </div>
 
-          <div className="flex items-center gap-2">
-            <span className="text-zinc-500 text-xs uppercase">Start</span>
-            <input
-              type="number"
-              value={slot.startHour}
-              onChange={(e) => updateSlot(idx, "startHour", Number(e.target.value))}
-              className="w-16 bg-zinc-950 border border-zinc-700 text-white p-1 text-center font-mono focus:border-blue-500/50 outline-none"
-            />
-            <span className="text-zinc-500">:</span>
-            <input
-              type="number"
-              value={slot.startMin}
-              onChange={(e) => updateSlot(idx, "startMin", Number(e.target.value))}
-              className="w-16 bg-zinc-950 border border-zinc-700 text-white p-1 text-center font-mono focus:border-blue-500/50 outline-none"
-            />
-          </div>
+            <div>
+              <label className="block text-zinc-500 font-mono text-xs uppercase tracking-widest mb-2">
+                Start time
+              </label>
+              <input
+                type="time"
+                step={60}
+                value={slot.start}
+                onChange={(e) => updateSlot(idx, "start", e.target.value)}
+                className="w-full bg-zinc-950 border border-zinc-800 text-white px-3 py-2 font-mono text-sm focus:border-emerald-500 outline-none transition-colors"
+              />
+              <p className="text-zinc-600 font-mono text-xs mt-2">24-hour format</p>
+            </div>
 
-          <span className="text-zinc-600">→</span>
+            <div className="hidden md:flex items-center justify-center text-zinc-600 font-mono text-lg pb-6">
+              →
+            </div>
 
-          <div className="flex items-center gap-2">
-            <span className="text-zinc-500 text-xs uppercase">End</span>
-            <input
-              type="number"
-              value={slot.endHour}
-              onChange={(e) => updateSlot(idx, "endHour", Number(e.target.value))}
-              className="w-16 bg-zinc-950 border border-zinc-700 text-white p-1 text-center font-mono focus:border-blue-500/50 outline-none"
-            />
-            <span className="text-zinc-500">:</span>
-            <input
-              type="number"
-              value={slot.endMin}
-              onChange={(e) => updateSlot(idx, "endMin", Number(e.target.value))}
-              className="w-16 bg-zinc-950 border border-zinc-700 text-white p-1 text-center font-mono focus:border-blue-500/50 outline-none"
-            />
+            <div>
+              <label className="block text-zinc-500 font-mono text-xs uppercase tracking-widest mb-2">
+                End time
+              </label>
+              <input
+                type="time"
+                step={60}
+                value={slot.end}
+                onChange={(e) => updateSlot(idx, "end", e.target.value)}
+                className="w-full bg-zinc-950 border border-zinc-800 text-white px-3 py-2 font-mono text-sm focus:border-emerald-500 outline-none transition-colors"
+              />
+              <p className="text-zinc-600 font-mono text-xs mt-2">24-hour format</p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => removeSlot(idx)}
+              className="h-10 px-3 border border-red-500/30 text-red-400 hover:bg-red-500/10 font-mono text-xs uppercase tracking-widest transition-colors"
+            >
+              Remove
+            </button>
           </div>
         </div>
       ))}
@@ -280,11 +355,17 @@ export function ScheduleBuilder({
         </Button>
       )}
 
+      {hasInvalidSlots && (
+        <div className="border border-yellow-500/30 bg-yellow-500/10 p-3 text-yellow-300 font-mono text-xs uppercase tracking-wider">
+          Each slot must have a valid start and end time, and end must be after start.
+        </div>
+      )}
+
       <div className="pt-6 border-t border-zinc-800 flex justify-between items-center gap-4">
         <span className="text-blue-400 font-mono text-sm max-w-[60%]">{status}</span>
         <Button
           onClick={pushSchedule}
-          disabled={isSaving || !devEui}
+          disabled={isSaving || !devEui || hasInvalidSlots}
           className="bg-blue-600 hover:bg-blue-500 text-white font-mono uppercase tracking-widest rounded-none disabled:opacity-50"
         >
           {isSaving
