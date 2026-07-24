@@ -18,50 +18,33 @@ export async function fetchChirpStack(path: string, init: RequestInit = {}) {
 
   const url = `${baseUrl}${path}`;
 
+  const res = await fetch(url, {
+    ...init,
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+      ...(init.headers || {}),
+    },
+    cache: "no-store",
+  });
+
+  const text = await res.text();
+  let data: any = null;
+
   try {
-    const res = await fetch(url, {
-      ...init,
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "Grpc-Metadata-Authorization": `Bearer ${token}`,
-        ...(init.headers || {}),
-      },
-      cache: "no-store",
-    });
+    data = text ? JSON.parse(text) : null;
+  } catch {
+    data = text;
+  }
 
-    const text = await res.text();
-    let data: any = null;
-
-    try {
-      data = text ? JSON.parse(text) : null;
-    } catch {
-      data = text;
-    }
-
-    if (!res.ok) {
-      throw new Error(
-        `ChirpStack API error: ${res.status} ${res.statusText} - ${
-          typeof data === "string" ? data : JSON.stringify(data)
-        }`
-      );
-    }
-
-    return data;
-  } catch (error: any) {
-    console.error("CHIRPSTACK FETCH FAILED", {
-      url,
-      message: error?.message,
-      causeCode: error?.cause?.code,
-      causeMessage: error?.cause?.message,
-      causeErrno: error?.cause?.errno,
-      causeSyscall: error?.cause?.syscall,
-      causeAddress: error?.cause?.address,
-      causePort: error?.cause?.port,
-    });
-
+  if (!res.ok) {
     throw new Error(
-      `Fetch to ChirpStack failed: ${error?.cause?.code || error?.message || "unknown error"}`
+      `ChirpStack API error: ${res.status} ${res.statusText} - ${
+        typeof data === "string" ? data : JSON.stringify(data)
+      }`
     );
   }
+
+  return data;
 }

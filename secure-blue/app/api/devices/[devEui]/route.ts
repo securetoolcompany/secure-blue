@@ -57,6 +57,7 @@ export async function PATCH(
           queueItem: {
             confirmed: false,
             fPort: 25,
+            flushQueue: false,
             data: base64Data,
           },
         };
