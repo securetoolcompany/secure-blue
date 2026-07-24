@@ -62,6 +62,8 @@ export default async function DeviceDetailPage({
           valveState={device.valveState || "unknown"}
           lastTimeSyncAt={device.lastTimeSyncAt}
           syncedSchedule={device.syncedIrrigationSchedule}
+          irrigationSchedule={device.irrigationSchedule}
+          pendingSchedule={device.pendingSchedule}
           serverTime={serverTime}
         />
       </div>

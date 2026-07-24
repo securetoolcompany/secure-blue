@@ -1,11 +1,21 @@
 "use client";
 
-import { useState } from 'react';
-import useSWR from 'swr';
-import { Droplets, XCircle, Trash2, Battery, Zap, CalendarClock, Settings2, MapPin, Clock3 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { QueueItem } from '@/lib/types';
-import { ScheduleBuilder } from './ScheduleBuilder';
+import { useState } from "react";
+import useSWR from "swr";
+import {
+  Droplets,
+  XCircle,
+  Trash2,
+  Battery,
+  Zap,
+  CalendarClock,
+  Settings2,
+  MapPin,
+  Clock3,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { QueueItem } from "@/lib/types";
+import { ScheduleBuilder } from "./ScheduleBuilder";
 
 interface Zone {
   _id: string;
@@ -15,12 +25,16 @@ interface Zone {
 
 interface ValveControlProps {
   devEui: string;
-  currentMode: 'A' | 'C';
-  valveState: 'open' | 'closed' | 'unknown';
+  currentMode: "A" | "C";
+  valveState: "open" | "closed" | "unknown";
   lastTimeSyncAt?: string | null;
   syncedSchedule?: any[];
+  irrigationSchedule?: any[];
+  pendingSchedule?: string | null;
   serverTime: string;
 }
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export function ValveControl({
   devEui,
@@ -28,86 +42,111 @@ export function ValveControl({
   valveState,
   lastTimeSyncAt,
   syncedSchedule,
-  serverTime
+  irrigationSchedule,
+  pendingSchedule,
+  serverTime,
 }: ValveControlProps) {
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'manual' | 'power' | 'schedule'>('manual');
-  const [zoneInput, setZoneInput] = useState('');
-  const [pendingMode, setPendingMode] = useState<'A' | 'C' | null>(null);
+  const [activeTab, setActiveTab] = useState<"manual" | "power" | "schedule">(
+    "manual"
+  );
+  const [zoneInput, setZoneInput] = useState("");
+  const [pendingMode, setPendingMode] = useState<"A" | "C" | null>(null);
 
   const { data: qData, mutate: mutateQueue } = useSWR(
     `/api/chirpstack/devices/${devEui}/queue`,
-    (url: string) => fetch(url).then(res => res.json()),
+    fetcher,
     { refreshInterval: 10000 }
   );
 
   const { data: zonesData, mutate: mutateZones } = useSWR(
-    '/api/zones',
-    (url: string) => fetch(url).then(res => res.json())
+    "/api/zones",
+    fetcher
   );
 
-  const activeZones = zonesData?.zones?.filter((z: Zone) => z.devices.includes(devEui)) || [];
+  const activeZones =
+    zonesData?.zones?.filter((z: Zone) => z.devices.includes(devEui)) || [];
 
   const enqueue = async (fPort: number, hexData: string) => {
     setLoading(true);
-    await fetch(`/api/chirpstack/devices/${devEui}/queue`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ fPort, hexData })
-    });
-    await mutateQueue();
-    setLoading(false);
+    try {
+      await fetch(`/api/chirpstack/devices/${devEui}/queue`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fPort, hexData }),
+      });
+      await mutateQueue();
+    } finally {
+      setLoading(false);
+    }
   };
 
   const flushQueue = async () => {
     setLoading(true);
-    await fetch(`/api/chirpstack/devices/${devEui}/queue`, { method: 'DELETE' });
-    await mutateQueue();
-    setLoading(false);
+    try {
+      await fetch(`/api/chirpstack/devices/${devEui}/queue`, {
+        method: "DELETE",
+      });
+      await mutateQueue();
+    } finally {
+      setLoading(false);
+    }
   };
 
   const assignZone = async () => {
     if (!zoneInput) return;
+
     setLoading(true);
-    await fetch('/api/zones', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: zoneInput, devEui, action: 'add' })
-    });
-    setZoneInput('');
-    await mutateZones();
-    setLoading(false);
+    try {
+      await fetch("/api/zones", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: zoneInput, devEui, action: "add" }),
+      });
+      setZoneInput("");
+      await mutateZones();
+    } finally {
+      setLoading(false);
+    }
   };
 
   const removeZone = async (zoneName: string) => {
     setLoading(true);
-    await fetch('/api/zones', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: zoneName, devEui, action: 'remove' })
-    });
-    await mutateZones();
-    setLoading(false);
+    try {
+      await fetch("/api/zones", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: zoneName, devEui, action: "remove" }),
+      });
+      await mutateZones();
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleModeChange = async (mode: 'A' | 'C') => {
+  const handleModeChange = async (mode: "A" | "C") => {
     setPendingMode(mode);
-    const fPort = 9;
-    const hexData = mode === 'C' ? '31' : '30';
 
-    await fetch(`/api/chirpstack/devices/${devEui}/queue`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ fPort, hexData })
-    });
+    try {
+      const fPort = 9;
+      const hexData = mode === "C" ? "31" : "30";
 
-    await fetch(`/api/devices/${devEui}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ deviceClass: mode })
-    });
+      await fetch(`/api/chirpstack/devices/${devEui}/queue`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fPort, hexData }),
+      });
 
-    setTimeout(() => setPendingMode(null), 1000);
+      await fetch(`/api/devices/${devEui}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ deviceClass: mode }),
+      });
+
+      await mutateQueue();
+    } finally {
+      setTimeout(() => setPendingMode(null), 1000);
+    }
   };
 
   return (
@@ -136,7 +175,9 @@ export function ValveControl({
 
             <div className="flex flex-wrap gap-2">
               {activeZones.length === 0 ? (
-                <span className="text-zinc-600 font-mono text-sm">Unassigned</span>
+                <span className="text-zinc-600 font-mono text-sm">
+                  Unassigned
+                </span>
               ) : (
                 activeZones.map((z: Zone) => (
                   <span
@@ -184,31 +225,33 @@ export function ValveControl({
 
       <div className="flex space-x-2 border-b border-zinc-800 pb-4">
         <button
-          onClick={() => setActiveTab('manual')}
+          onClick={() => setActiveTab("manual")}
           className={`flex items-center gap-2 px-4 py-2 font-mono text-sm transition-colors ${
-            activeTab === 'manual'
-              ? 'text-blue-400 border-b-2 border-blue-400'
-              : 'text-zinc-500 hover:text-zinc-300'
+            activeTab === "manual"
+              ? "text-blue-400 border-b-2 border-blue-400"
+              : "text-zinc-500 hover:text-zinc-300"
           }`}
         >
           <Settings2 className="h-4 w-4" /> MANUAL
         </button>
+
         <button
-          onClick={() => setActiveTab('schedule')}
+          onClick={() => setActiveTab("schedule")}
           className={`flex items-center gap-2 px-4 py-2 font-mono text-sm transition-colors ${
-            activeTab === 'schedule'
-              ? 'text-emerald-400 border-b-2 border-emerald-400'
-              : 'text-zinc-500 hover:text-zinc-300'
+            activeTab === "schedule"
+              ? "text-emerald-400 border-b-2 border-emerald-400"
+              : "text-zinc-500 hover:text-zinc-300"
           }`}
         >
           <CalendarClock className="h-4 w-4" /> SCHEDULE
         </button>
+
         <button
-          onClick={() => setActiveTab('power')}
+          onClick={() => setActiveTab("power")}
           className={`flex items-center gap-2 px-4 py-2 font-mono text-sm transition-colors ${
-            activeTab === 'power'
-              ? 'text-yellow-400 border-b-2 border-yellow-400'
-              : 'text-zinc-500 hover:text-zinc-300'
+            activeTab === "power"
+              ? "text-yellow-400 border-b-2 border-yellow-400"
+              : "text-zinc-500 hover:text-zinc-300"
           }`}
         >
           <Zap className="h-4 w-4" /> POWER MODE
@@ -216,10 +259,10 @@ export function ValveControl({
       </div>
 
       <div className="min-h-[200px]">
-        {activeTab === 'manual' && (
+        {activeTab === "manual" && (
           <div className="grid grid-cols-2 gap-4 animate-in fade-in duration-300">
             <Button
-              onClick={() => enqueue(1, '31')}
+              onClick={() => enqueue(1, "31")}
               disabled={loading}
               className="h-24 bg-blue-900/40 hover:bg-blue-800/60 border border-blue-500/50 text-blue-400 font-mono text-lg flex flex-col gap-2 rounded-none"
             >
@@ -228,7 +271,7 @@ export function ValveControl({
             </Button>
 
             <Button
-              onClick={() => enqueue(1, '30')}
+              onClick={() => enqueue(1, "30")}
               disabled={loading}
               className="h-24 bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 font-mono text-lg flex flex-col gap-2 rounded-none"
             >
@@ -238,50 +281,66 @@ export function ValveControl({
           </div>
         )}
 
-        {activeTab === 'power' && (
+        {activeTab === "power" && (
           <div className="grid grid-cols-2 gap-4 animate-in fade-in duration-300">
             <div className="col-span-2 text-zinc-400 font-mono text-sm mb-2 bg-yellow-500/10 border border-yellow-500/20 p-4">
               <p className="flex items-start gap-2">
                 <Zap className="h-5 w-5 text-yellow-500 shrink-0" />
                 <span>
-                  <strong>Hardware Warning:</strong> STREGA valves must have continuous external power to support Class C operation. The internal battery is only intended as a backup for Class C mode. Activating Class C on a battery-only device will rapidly drain the unit.
+                  <strong>Hardware Warning:</strong> STREGA valves must have
+                  continuous external power to support Class C operation. The
+                  internal battery is only intended as a backup for Class C
+                  mode. Activating Class C on a battery-only device will rapidly
+                  drain the unit.
                 </span>
               </p>
             </div>
 
             <Button
-              onClick={() => handleModeChange('A')}
+              onClick={() => handleModeChange("A")}
               disabled={loading || pendingMode !== null}
               className={`h-24 font-mono flex flex-col gap-2 rounded-none transition-colors border ${
-                pendingMode === 'A' || (!pendingMode && currentMode === 'A')
-                  ? 'bg-zinc-700 border-zinc-500 text-white'
-                  : 'bg-zinc-900/80 hover:bg-zinc-800 border-zinc-700 text-zinc-500'
+                pendingMode === "A" || (!pendingMode && currentMode === "A")
+                  ? "bg-zinc-700 border-zinc-500 text-white"
+                  : "bg-zinc-900/80 hover:bg-zinc-800 border-zinc-700 text-zinc-500"
               }`}
             >
               <Battery className="h-6 w-6" />
-              <span>CLASS A <span className="text-xs block mt-1 opacity-70">Battery Saving</span></span>
+              <span>
+                CLASS A
+                <span className="text-xs block mt-1 opacity-70">
+                  Battery Saving
+                </span>
+              </span>
             </Button>
 
             <Button
-              onClick={() => handleModeChange('C')}
+              onClick={() => handleModeChange("C")}
               disabled={loading || pendingMode !== null}
               className={`h-24 font-mono flex flex-col gap-2 rounded-none transition-colors border ${
-                pendingMode === 'C' || (!pendingMode && currentMode === 'C')
-                  ? 'bg-yellow-600 hover:bg-yellow-500 border-yellow-400 text-white'
-                  : 'bg-yellow-900/20 hover:bg-yellow-800/40 border-yellow-500/50 text-yellow-600'
+                pendingMode === "C" || (!pendingMode && currentMode === "C")
+                  ? "bg-yellow-600 hover:bg-yellow-500 border-yellow-400 text-white"
+                  : "bg-yellow-900/20 hover:bg-yellow-800/40 border-yellow-500/50 text-yellow-600"
               }`}
             >
               <Zap className="h-6 w-6" />
-              <span>CLASS C <span className="text-xs block mt-1 opacity-70">Always Listening</span></span>
+              <span>
+                CLASS C
+                <span className="text-xs block mt-1 opacity-70">
+                  Always Listening
+                </span>
+              </span>
             </Button>
           </div>
         )}
 
-        {activeTab === 'schedule' && (
+        {activeTab === "schedule" && (
           <div className="animate-in fade-in duration-300">
             <ScheduleBuilder
               devEui={devEui}
+              irrigationSchedule={irrigationSchedule}
               syncedSchedule={syncedSchedule}
+              pendingSchedule={pendingSchedule}
               lastTimeSyncAt={lastTimeSyncAt}
             />
           </div>
@@ -316,10 +375,14 @@ export function ValveControl({
                 className="flex justify-between items-center bg-zinc-950 p-3 border border-zinc-800 font-mono text-sm"
               >
                 <div>
-                  <span className="text-emerald-400 mr-4">FPort {item.fPort}</span>
+                  <span className="text-emerald-400 mr-4">
+                    FPort {item.fPort}
+                  </span>
                   <span className="text-zinc-400">Payload: 0x{item.data}</span>
                 </div>
-                <span className="text-yellow-500/80 text-xs">Pending Uplink...</span>
+                <span className="text-yellow-500/80 text-xs">
+                  Pending Uplink...
+                </span>
               </div>
             ))}
           </div>
