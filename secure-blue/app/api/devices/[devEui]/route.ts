@@ -47,22 +47,33 @@ export async function PATCH(
 
     if (pendingScheduleHex) {
       try {
-        const base64Data = Buffer.from(pendingScheduleHex, 'hex').toString('base64');
+        if (!/^[0-9a-fA-F]+$/.test(pendingScheduleHex) || pendingScheduleHex.length % 2 !== 0) {
+          throw new Error("Encoded scheduler payload is not valid hex");
+        }
+
+        const base64Data = Buffer.from(pendingScheduleHex, "hex").toString("base64");
+
+        const chirpstackPayload = {
+          queueItem: {
+            confirmed: false,
+            fPort: 25,
+            data: base64Data,
+          },
+        };
 
         const chirpstackRes = await fetchChirpStack(`/api/devices/${devEui}/queue`, {
-          method: 'POST',
-          body: JSON.stringify({
-            queueItem: {
-              confirmed: false,
-              f_Port: 25,
-              data: base64Data,
-            },
-          }),
+          method: "POST",
+          body: JSON.stringify(chirpstackPayload),
         });
 
         queueResult = {
           queued: true,
-          response: chirpstackRes,
+          response: {
+            pendingScheduleHex,
+            base64Data,
+            chirpstackPayload,
+            chirpstackRes,
+          },
         };
       } catch (queueError) {
         queueResult = {
@@ -70,7 +81,7 @@ export async function PATCH(
           error:
             queueError instanceof Error
               ? queueError.message
-              : 'Failed to enqueue schedule downlink',
+              : "Failed to enqueue schedule downlink",
         };
       }
     }

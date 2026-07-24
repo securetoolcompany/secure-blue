@@ -53,45 +53,46 @@ export async function POST(
     }
 
     const port = Number(fPort);
-    if (!Number.isInteger(port) || port <= 0) {
-      return NextResponse.json(
-        { error: "fPort must be a positive integer" },
-        { status: 400 }
-      );
-    }
 
-    if (typeof hexData !== "string" || !/^[0-9a-fA-F]+$/.test(hexData) || hexData.length % 2 !== 0) {
-      return NextResponse.json(
-        { error: "hexData must be a valid even-length hex string" },
-        { status: 400 }
-      );
-    }
+      if (!Number.isInteger(port) || port < 1 || port > 255) {
+        return NextResponse.json(
+          { error: "fPort must be an integer between 1 and 255" },
+          { status: 400 }
+        );
+      }
 
-    const base64Data = Buffer.from(hexData, "hex").toString("base64");
+      if (typeof hexData !== "string" || !/^[0-9a-fA-F]+$/.test(hexData) || hexData.length % 2 !== 0) {
+        return NextResponse.json(
+          { error: "hexData must be a valid even-length hex string" },
+          { status: 400 }
+        );
+      }
 
-    const chirpstackPayload = {
-      queueItem: {
-        confirmed: false,
-        f_port: port,
-        data: base64Data,
-      },
-    };
+      const base64Data = Buffer.from(hexData, "hex").toString("base64");
 
-    const chirpstackRes = await fetchChirpStack(`/api/devices/${devEui}/queue`, {
-      method: "POST",
-      body: JSON.stringify(chirpstackPayload),
-    });
+      const chirpstackPayload = {
+        queueItem: {
+          confirmed: false,
+          f_Port: port,
+          data: base64Data,
+        },
+      };
 
-    return NextResponse.json({
-      success: true,
-      queued: true,
-      devEui,
-      fPort: port,
-      hexData,
-      base64Data,
-      chirpstackPayload,
-      chirpstackRes,
-    });
+      const chirpstackRes = await fetchChirpStack(`/api/devices/${devEui}/queue`, {
+        method: "POST",
+        body: JSON.stringify(chirpstackPayload),
+      });
+
+      return NextResponse.json({
+        success: true,
+        queued: true,
+        devEui,
+        fPort: port,
+        hexData,
+        base64Data,
+        chirpstackPayload,
+        chirpstackRes,
+      });
   } catch (error) {
     return NextResponse.json(
       {

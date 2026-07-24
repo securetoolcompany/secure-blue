@@ -178,14 +178,18 @@ export function ScheduleBuilder({
         body: JSON.stringify({ fPort: 13, hexData: "01" }),
       });
 
-      if (!res.ok) {
-        throw new Error("Failed to queue time sync.");
+      const data = await res.json().catch(() => null);
+
+      if (!res.ok || !data?.success) {
+        throw new Error(data?.error || "Failed to queue time sync.");
       }
 
       setTimeStatus("Clock sync queued.");
       router.refresh();
     } catch (error) {
-      setTimeStatus("Clock sync failed.");
+      setTimeStatus(
+        error instanceof Error ? error.message : "Clock sync failed."
+      );
     } finally {
       setIsSyncingTime(false);
       setTimeout(() => setTimeStatus(""), 3000);
