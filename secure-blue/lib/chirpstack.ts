@@ -2,12 +2,29 @@ const API_URL = process.env.CHIRPSTACK_API_URL;
 const API_KEY = process.env.CHIRPSTACK_API_KEY;
 
 export async function fetchChirpStack(path: string, init: RequestInit = {}) {
-  const res = await fetch(`${process.env.CHIRPSTACK_URL}${path}`, {
+  const baseUrl = process.env.CHIRPSTACK_URL;
+  const token = process.env.CHIRPSTACK_API_TOKEN;
+
+  console.log("CHIRPSTACK DEBUG", {
+    baseUrl,
+    hasToken: Boolean(token),
+    path,
+  });
+
+  if (!baseUrl) {
+    throw new Error("CHIRPSTACK_URL is not set");
+  }
+
+  if (!token) {
+    throw new Error("CHIRPSTACK_API_TOKEN is not set");
+  }
+
+  const res = await fetch(`${baseUrl}${path}`, {
     ...init,
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
-      "Grpc-Metadata-Authorization": `Bearer ${process.env.CHIRPSTACK_API_TOKEN}`,
+      "Grpc-Metadata-Authorization": `Bearer ${token}`,
       ...(init.headers || {}),
     },
     cache: "no-store",
