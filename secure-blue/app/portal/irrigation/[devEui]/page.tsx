@@ -18,6 +18,8 @@ export default async function DeviceDetailPage({
     return <div className="text-white p-24">Device not found: {devEui}</div>;
   }
 
+  const serverTime = new Date().toISOString();
+
   const device = {
     ...rawDevice,
     _id: rawDevice._id?.toString?.(),
@@ -55,13 +57,12 @@ export default async function DeviceDetailPage({
         </div>
 
         <ValveControl
-          devEui={String(device.devEui)}
-          currentMode={(device.deviceClass as "A" | "C") || "A"}
-          valveState={
-            (device.valveState as "open" | "closed" | "unknown") || "unknown"
-          }
+          devEui={device.devEui}
+          currentMode={device.deviceClass || "A"}
+          valveState={device.valveState || "unknown"}
           lastTimeSyncAt={device.lastTimeSyncAt}
           syncedSchedule={device.syncedIrrigationSchedule}
+          serverTime={serverTime}
         />
       </div>
     </div>

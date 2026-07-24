@@ -2,12 +2,11 @@
 
 import { useState } from 'react';
 import useSWR from 'swr';
-import { Droplets, XCircle, Trash2, Battery, Zap, CalendarClock, Settings2, MapPin } from 'lucide-react';
+import { Droplets, XCircle, Trash2, Battery, Zap, CalendarClock, Settings2, MapPin, Clock3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { QueueItem } from '@/lib/types';
 import { ScheduleBuilder } from './ScheduleBuilder';
 
-// 1. Strictly define the Zone interface to satisfy TypeScript
 interface Zone {
   _id: string;
   name: string;
@@ -20,27 +19,33 @@ interface ValveControlProps {
   valveState: 'open' | 'closed' | 'unknown';
   lastTimeSyncAt?: string | null;
   syncedSchedule?: any[];
+  serverTime: string;
 }
 
-export function ValveControl({ devEui, currentMode, valveState, lastTimeSyncAt, syncedSchedule }: ValveControlProps) {
+export function ValveControl({
+  devEui,
+  currentMode,
+  valveState,
+  lastTimeSyncAt,
+  syncedSchedule,
+  serverTime
+}: ValveControlProps) {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'manual' | 'power' | 'schedule'>('manual');
-
-  // State for the zone input text
   const [zoneInput, setZoneInput] = useState('');
-  
-  // Fetch Queue Data
-  const { data: qData, mutate: mutateQueue } = useSWR(`/api/chirpstack/devices/${devEui}/queue`, 
+  const [pendingMode, setPendingMode] = useState<'A' | 'C' | null>(null);
+
+  const { data: qData, mutate: mutateQueue } = useSWR(
+    `/api/chirpstack/devices/${devEui}/queue`,
     (url: string) => fetch(url).then(res => res.json()),
     { refreshInterval: 10000 }
   );
 
-  // Fetch Zone Data
-  const { data: zonesData, mutate: mutateZones } = useSWR('/api/zones', 
+  const { data: zonesData, mutate: mutateZones } = useSWR(
+    '/api/zones',
     (url: string) => fetch(url).then(res => res.json())
   );
 
-  // Find ALL zones this valve currently belongs to
   const activeZones = zonesData?.zones?.filter((z: Zone) => z.devices.includes(devEui)) || [];
 
   const enqueue = async (fPort: number, hexData: string) => {
@@ -70,7 +75,7 @@ export function ValveControl({ devEui, currentMode, valveState, lastTimeSyncAt, 
       body: JSON.stringify({ name: zoneInput, devEui, action: 'add' })
     });
     setZoneInput('');
-    await mutateZones(); 
+    await mutateZones();
     setLoading(false);
   };
 
@@ -81,72 +86,78 @@ export function ValveControl({ devEui, currentMode, valveState, lastTimeSyncAt, 
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name: zoneName, devEui, action: 'remove' })
     });
-    await mutateZones(); 
+    await mutateZones();
     setLoading(false);
   };
 
-  const [pendingMode, setPendingMode] = useState<'A' | 'C' | null>(null);
-
   const handleModeChange = async (mode: 'A' | 'C') => {
-    setPendingMode(mode); // Immediate visual feedback
+    setPendingMode(mode);
     const fPort = 9;
     const hexData = mode === 'C' ? '31' : '30';
-    
-    // 1. Send the physical command to ChirpStack
+
     await fetch(`/api/chirpstack/devices/${devEui}/queue`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ fPort, hexData })
     });
 
-    // 2. NEW: Save the state to MongoDB so the UI remembers it!
     await fetch(`/api/devices/${devEui}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ deviceClass: mode })
     });
-    
-    // Reset the loading state
+
     setTimeout(() => setPendingMode(null), 1000);
   };
 
   return (
     <div className="space-y-6">
-      
-      {/* MULTI-ZONE ASSIGNMENT BANNER */}
+      <div className="bg-zinc-900 border border-zinc-800 p-4">
+        <div className="flex items-start gap-3">
+          <Clock3 className="h-5 w-5 text-emerald-400 mt-0.5 shrink-0" />
+          <div>
+            <p className="text-zinc-500 font-mono text-xs uppercase tracking-widest mb-1">
+              Server Time
+            </p>
+            <p className="text-white font-mono text-lg">
+              {new Date(serverTime).toLocaleString()}
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div className="bg-zinc-900 border border-zinc-800 p-4 flex flex-col md:flex-row md:items-start justify-between gap-4">
         <div className="flex items-start gap-3 flex-1">
-           <MapPin className="h-5 w-5 text-zinc-500 mt-1 shrink-0" />
-           <div className="w-full">
-             <p className="text-zinc-500 font-mono text-xs uppercase tracking-widest mb-2">Operational Zones</p>
-             
-             {/* Render multiple tags as badges */}
-             <div className="flex flex-wrap gap-2">
-               {activeZones.length === 0 ? (
-                 <span className="text-zinc-600 font-mono text-sm">Unassigned</span>
-               ) : (
-                 activeZones.map((z: Zone) => (
-                   <span key={z._id} className="inline-flex items-center gap-2 bg-blue-900/30 text-blue-400 border border-blue-500/30 px-3 py-1 rounded-full font-mono text-xs uppercase">
-                     {z.name}
-                     <Button 
-                        onClick={() => handleModeChange('A')} 
-                        className={pendingMode === 'A' || (!pendingMode && currentMode === 'A') ? "bg-zinc-700" : "bg-zinc-900"}
-                      >
-                        CLASS A
-                      </Button>
-                      <Button 
-                        onClick={() => handleModeChange('C')} 
-                        className={pendingMode === 'C' || (!pendingMode && currentMode === 'C') ? "bg-yellow-600" : "bg-yellow-900/20"}
-                      >
-                        CLASS C
-                      </Button>
-                   </span>
-                 ))
-               )}
-             </div>
-           </div>
+          <MapPin className="h-5 w-5 text-zinc-500 mt-1 shrink-0" />
+          <div className="w-full">
+            <p className="text-zinc-500 font-mono text-xs uppercase tracking-widest mb-2">
+              Operational Zones
+            </p>
+
+            <div className="flex flex-wrap gap-2">
+              {activeZones.length === 0 ? (
+                <span className="text-zinc-600 font-mono text-sm">Unassigned</span>
+              ) : (
+                activeZones.map((z: Zone) => (
+                  <span
+                    key={z._id}
+                    className="inline-flex items-center gap-2 bg-blue-900/30 text-blue-400 border border-blue-500/30 px-3 py-1 rounded-full font-mono text-xs uppercase"
+                  >
+                    {z.name}
+                    <button
+                      onClick={() => removeZone(z.name)}
+                      className="text-blue-300 hover:text-red-400 transition-colors"
+                      title={`Remove ${z.name}`}
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </button>
+                  </span>
+                ))
+              )}
+            </div>
+          </div>
         </div>
-        
+
         <div className="flex gap-2 shrink-0 mt-2 md:mt-0">
           <input
             type="text"
@@ -157,7 +168,9 @@ export function ValveControl({ devEui, currentMode, valveState, lastTimeSyncAt, 
             className="w-full md:w-48 bg-zinc-950 border border-zinc-800 text-white px-3 py-2 font-mono text-sm focus:border-blue-500 outline-none transition-colors"
           />
           <datalist id="existing-zones">
-            {zonesData?.zones?.map((z: Zone) => <option key={z._id} value={z.name} />)}
+            {zonesData?.zones?.map((z: Zone) => (
+              <option key={z._id} value={z.name} />
+            ))}
           </datalist>
           <Button
             onClick={assignZone}
@@ -169,46 +182,53 @@ export function ValveControl({ devEui, currentMode, valveState, lastTimeSyncAt, 
         </div>
       </div>
 
-      {/* NAVIGATION TABS */}
       <div className="flex space-x-2 border-b border-zinc-800 pb-4">
-        <button 
+        <button
           onClick={() => setActiveTab('manual')}
-          className={`flex items-center gap-2 px-4 py-2 font-mono text-sm transition-colors ${activeTab === 'manual' ? 'text-blue-400 border-b-2 border-blue-400' : 'text-zinc-500 hover:text-zinc-300'}`}
+          className={`flex items-center gap-2 px-4 py-2 font-mono text-sm transition-colors ${
+            activeTab === 'manual'
+              ? 'text-blue-400 border-b-2 border-blue-400'
+              : 'text-zinc-500 hover:text-zinc-300'
+          }`}
         >
           <Settings2 className="h-4 w-4" /> MANUAL
         </button>
-        <button 
+        <button
           onClick={() => setActiveTab('schedule')}
-          className={`flex items-center gap-2 px-4 py-2 font-mono text-sm transition-colors ${activeTab === 'schedule' ? 'text-emerald-400 border-b-2 border-emerald-400' : 'text-zinc-500 hover:text-zinc-300'}`}
+          className={`flex items-center gap-2 px-4 py-2 font-mono text-sm transition-colors ${
+            activeTab === 'schedule'
+              ? 'text-emerald-400 border-b-2 border-emerald-400'
+              : 'text-zinc-500 hover:text-zinc-300'
+          }`}
         >
           <CalendarClock className="h-4 w-4" /> SCHEDULE
         </button>
-        <button 
+        <button
           onClick={() => setActiveTab('power')}
-          className={`flex items-center gap-2 px-4 py-2 font-mono text-sm transition-colors ${activeTab === 'power' ? 'text-yellow-400 border-b-2 border-yellow-400' : 'text-zinc-500 hover:text-zinc-300'}`}
+          className={`flex items-center gap-2 px-4 py-2 font-mono text-sm transition-colors ${
+            activeTab === 'power'
+              ? 'text-yellow-400 border-b-2 border-yellow-400'
+              : 'text-zinc-500 hover:text-zinc-300'
+          }`}
         >
           <Zap className="h-4 w-4" /> POWER MODE
         </button>
       </div>
 
-      {/* DYNAMIC TAB CONTENT */}
       <div className="min-h-[200px]">
-        
-        {/* 1. MANUAL OVERRIDE */}
         {activeTab === 'manual' && (
           <div className="grid grid-cols-2 gap-4 animate-in fade-in duration-300">
-            {/* FPort 1 - Hex 31 for Open */}
-            <Button 
-              onClick={() => enqueue(1, '31')} 
+            <Button
+              onClick={() => enqueue(1, '31')}
               disabled={loading}
               className="h-24 bg-blue-900/40 hover:bg-blue-800/60 border border-blue-500/50 text-blue-400 font-mono text-lg flex flex-col gap-2 rounded-none"
             >
               <Droplets className="h-6 w-6" />
               OPEN VALVE
             </Button>
-            {/* FPort 1 - Hex 30 for Close */}
-            <Button 
-              onClick={() => enqueue(1, '30')} 
+
+            <Button
+              onClick={() => enqueue(1, '30')}
               disabled={loading}
               className="h-24 bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 font-mono text-lg flex flex-col gap-2 rounded-none"
             >
@@ -218,7 +238,6 @@ export function ValveControl({ devEui, currentMode, valveState, lastTimeSyncAt, 
           </div>
         )}
 
-        {/* 2. POWER MODE CONFIGURATION */}
         {activeTab === 'power' && (
           <div className="grid grid-cols-2 gap-4 animate-in fade-in duration-300">
             <div className="col-span-2 text-zinc-400 font-mono text-sm mb-2 bg-yellow-500/10 border border-yellow-500/20 p-4">
@@ -229,29 +248,27 @@ export function ValveControl({ devEui, currentMode, valveState, lastTimeSyncAt, 
                 </span>
               </p>
             </div>
-            
-            {/* CLASS A BUTTON */}
-            <Button 
-              onClick={() => handleModeChange('A')} 
+
+            <Button
+              onClick={() => handleModeChange('A')}
               disabled={loading || pendingMode !== null}
               className={`h-24 font-mono flex flex-col gap-2 rounded-none transition-colors border ${
                 pendingMode === 'A' || (!pendingMode && currentMode === 'A')
-                  ? 'bg-zinc-700 border-zinc-500 text-white' // ACTIVE HIGHLIGHT
-                  : 'bg-zinc-900/80 hover:bg-zinc-800 border-zinc-700 text-zinc-500' // INACTIVE
+                  ? 'bg-zinc-700 border-zinc-500 text-white'
+                  : 'bg-zinc-900/80 hover:bg-zinc-800 border-zinc-700 text-zinc-500'
               }`}
             >
               <Battery className="h-6 w-6" />
               <span>CLASS A <span className="text-xs block mt-1 opacity-70">Battery Saving</span></span>
             </Button>
-            
-            {/* CLASS C BUTTON */}
-            <Button 
-              onClick={() => handleModeChange('C')} 
+
+            <Button
+              onClick={() => handleModeChange('C')}
               disabled={loading || pendingMode !== null}
               className={`h-24 font-mono flex flex-col gap-2 rounded-none transition-colors border ${
                 pendingMode === 'C' || (!pendingMode && currentMode === 'C')
-                  ? 'bg-yellow-600 hover:bg-yellow-500 border-yellow-400 text-white' // ACTIVE HIGHLIGHT
-                  : 'bg-yellow-900/20 hover:bg-yellow-800/40 border-yellow-500/50 text-yellow-600' // INACTIVE
+                  ? 'bg-yellow-600 hover:bg-yellow-500 border-yellow-400 text-white'
+                  : 'bg-yellow-900/20 hover:bg-yellow-800/40 border-yellow-500/50 text-yellow-600'
               }`}
             >
               <Zap className="h-6 w-6" />
@@ -260,33 +277,44 @@ export function ValveControl({ devEui, currentMode, valveState, lastTimeSyncAt, 
           </div>
         )}
 
-        {/* 3. SCHEDULER */}
         {activeTab === 'schedule' && (
           <div className="animate-in fade-in duration-300">
-            <ScheduleBuilder 
-              devEui={devEui} 
-              syncedSchedule={syncedSchedule} 
-              lastTimeSyncAt={lastTimeSyncAt} 
+            <ScheduleBuilder
+              devEui={devEui}
+              syncedSchedule={syncedSchedule}
+              lastTimeSyncAt={lastTimeSyncAt}
             />
           </div>
         )}
       </div>
 
-      {/* DOWNLINK QUEUE */}
       <div className="bg-zinc-900 border border-zinc-800 p-4 mt-8">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-zinc-300 font-mono text-sm uppercase tracking-wider">Downlink Queue</h3>
-          <Button variant="outline" size="sm" onClick={flushQueue} disabled={loading || !qData?.queue?.length} className="h-8 border-red-500/30 text-red-400 hover:bg-red-500/10 rounded-none">
+          <h3 className="text-zinc-300 font-mono text-sm uppercase tracking-wider">
+            Downlink Queue
+          </h3>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={flushQueue}
+            disabled={loading || !qData?.queue?.length}
+            className="h-8 border-red-500/30 text-red-400 hover:bg-red-500/10 rounded-none"
+          >
             <Trash2 className="h-4 w-4 mr-2" /> Flush
           </Button>
         </div>
-        
+
         {qData?.queue?.length === 0 ? (
-          <p className="text-zinc-600 font-mono text-sm">Queue is empty. Device is synced.</p>
+          <p className="text-zinc-600 font-mono text-sm">
+            Queue is empty. Device is synced.
+          </p>
         ) : (
           <div className="space-y-2">
             {qData?.queue?.map((item: QueueItem, i: number) => (
-              <div key={item.fCntDown || i} className="flex justify-between items-center bg-zinc-950 p-3 border border-zinc-800 font-mono text-sm">
+              <div
+                key={item.fCntDown || i}
+                className="flex justify-between items-center bg-zinc-950 p-3 border border-zinc-800 font-mono text-sm"
+              >
                 <div>
                   <span className="text-emerald-400 mr-4">FPort {item.fPort}</span>
                   <span className="text-zinc-400">Payload: 0x{item.data}</span>
