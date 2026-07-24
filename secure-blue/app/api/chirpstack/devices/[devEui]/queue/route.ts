@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/auth'; 
-import { fetchChirpStack } from '@/lib/chirpstack';
+import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/auth";
+import { fetchChirpStack } from "@/lib/chirpstack";
 
 // --- 1. GET THE QUEUE (For your SWR polling) ---
 export async function GET(
@@ -9,70 +9,129 @@ export async function GET(
 ) {
   try {
     const session = await auth();
-    if (!session?.user?.tenantId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!session?.user?.tenantId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
     const { devEui } = await params;
-    
-    // Fetch queue from ChirpStack v4
+
     const res = await fetchChirpStack(`/api/devices/${devEui}/queue`);
-    
-    return NextResponse.json({ queue: res.queueItems || [] });
+
+    return NextResponse.json({
+      success: true,
+      queue: res?.queueItems || [],
+      raw: res,
+    });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch queue' }, { status: 500 });
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error ? error.message : "Failed to fetch queue",
+      },
+      { status: 500 }
+    );
   }
 }
 
-// --- 2. ADD TO QUEUE (For your Open/Close buttons) ---
+// --- 2. ADD TO QUEUE ---
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ devEui: string }> }
 ) {
   try {
     const session = await auth();
-    if (!session?.user?.tenantId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!session?.user?.tenantId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
     const { devEui } = await params;
     const body = await req.json();
     const { fPort, hexData } = body;
 
-    if (!fPort || !hexData) return NextResponse.json({ error: 'Missing data' }, { status: 400 });
+    if (!devEui || fPort === undefined || !hexData) {
+      return NextResponse.json({ error: "Missing data" }, { status: 400 });
+    }
 
-    const base64Data = Buffer.from(hexData, 'hex').toString('base64');
+    const port = Number(fPort);
+    if (!Number.isInteger(port) || port <= 0) {
+      return NextResponse.json(
+        { error: "fPort must be a positive integer" },
+        { status: 400 }
+      );
+    }
 
-    await fetchChirpStack(`/api/devices/${devEui}/queue`, {
-      method: 'POST',
-      body: JSON.stringify({
-        queueItem: {
-          confirmed: false, 
-          fPort: fPort,
-          data: base64Data
-        }
-      })
+    if (typeof hexData !== "string" || !/^[0-9a-fA-F]+$/.test(hexData) || hexData.length % 2 !== 0) {
+      return NextResponse.json(
+        { error: "hexData must be a valid even-length hex string" },
+        { status: 400 }
+      );
+    }
+
+    const base64Data = Buffer.from(hexData, "hex").toString("base64");
+
+    const chirpstackPayload = {
+      queueItem: {
+        confirmed: false,
+        f_port: port,
+        data: base64Data,
+      },
+    };
+
+    const chirpstackRes = await fetchChirpStack(`/api/devices/${devEui}/queue`, {
+      method: "POST",
+      body: JSON.stringify(chirpstackPayload),
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({
+      success: true,
+      queued: true,
+      devEui,
+      fPort: port,
+      hexData,
+      base64Data,
+      chirpstackPayload,
+      chirpstackRes,
+    });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to enqueue' }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: error instanceof Error ? error.message : "Failed to enqueue",
+      },
+      { status: 500 }
+    );
   }
 }
 
-// --- 3. FLUSH THE QUEUE (For your Trash icon button) ---
+// --- 3. FLUSH THE QUEUE ---
 export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ devEui: string }> }
 ) {
   try {
     const session = await auth();
-    if (!session?.user?.tenantId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!session?.user?.tenantId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
     const { devEui } = await params;
 
-    await fetchChirpStack(`/api/devices/${devEui}/queue`, {
-      method: 'DELETE'
+    const chirpstackRes = await fetchChirpStack(`/api/devices/${devEui}/queue`, {
+      method: "DELETE",
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({
+      success: true,
+      flushed: true,
+      devEui,
+      chirpstackRes,
+    });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to flush queue' }, { status: 500 });
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error ? error.message : "Failed to flush queue",
+      },
+      { status: 500 }
+    );
   }
 }

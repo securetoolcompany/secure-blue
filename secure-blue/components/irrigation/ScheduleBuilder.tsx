@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -45,10 +45,9 @@ function slotToTime(slot: ScheduleSlot): TimeSlotForm {
     start: `${String(slot.startHour).padStart(2, "0")}:${String(
       slot.startMin
     ).padStart(2, "0")}`,
-    end: `${String(slot.endHour).padStart(2, "0")}:${String(slot.endMin).padStart(
-      2,
-      "0"
-    )}`,
+    end: `${String(slot.endHour).padStart(2, "0")}:${String(
+      slot.endMin
+    ).padStart(2, "0")}`,
   };
 }
 
@@ -69,6 +68,19 @@ function toMinutes(value: string) {
   return hours * 60 + minutes;
 }
 
+function buildInitialSlots(
+  irrigationSchedule?: ScheduleSlot[],
+  syncedSchedule?: ScheduleSlot[]
+): TimeSlotForm[] {
+  if (irrigationSchedule && irrigationSchedule.length > 0) {
+    return irrigationSchedule.map(slotToTime);
+  }
+  if (syncedSchedule && syncedSchedule.length > 0) {
+    return syncedSchedule.map(slotToTime);
+  }
+  return [{ start: "06:00", end: "08:00" }];
+}
+
 export function ScheduleBuilder({
   devEui,
   zoneId,
@@ -79,28 +91,40 @@ export function ScheduleBuilder({
 }: ScheduleBuilderProps) {
   const router = useRouter();
 
-  const initialSlots = useMemo<TimeSlotForm[]>(() => {
-    if (irrigationSchedule && irrigationSchedule.length > 0) {
-      return irrigationSchedule.map(slotToTime);
-    }
-    if (syncedSchedule && syncedSchedule.length > 0) {
-      return syncedSchedule.map(slotToTime);
-    }
-    return [{ start: "06:00", end: "08:00" }];
-  }, [irrigationSchedule, syncedSchedule]);
+  const initialSlots = useMemo(
+    () => buildInitialSlots(irrigationSchedule, syncedSchedule),
+    [irrigationSchedule, syncedSchedule]
+  );
 
   const [slots, setSlots] = useState<TimeSlotForm[]>(initialSlots);
   const [status, setStatus] = useState("");
   const [timeStatus, setTimeStatus] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [isSyncingTime, setIsSyncingTime] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
+
+  const lastDevEuiRef = useRef<string | undefined>(devEui);
 
   useEffect(() => {
-    setSlots(initialSlots);
-  }, [initialSlots]);
+    const deviceChanged = lastDevEuiRef.current !== devEui;
+
+    if (deviceChanged) {
+      setSlots(initialSlots);
+      setIsDirty(false);
+      lastDevEuiRef.current = devEui;
+      return;
+    }
+
+    if (!isDirty) {
+      setSlots(initialSlots);
+    }
+  }, [devEui, initialSlots, isDirty]);
 
   const isSyncing = Boolean(pendingSchedule);
-  const isSynced = !pendingSchedule && Array.isArray(syncedSchedule) && syncedSchedule.length > 0;
+  const isSynced =
+    !pendingSchedule &&
+    Array.isArray(syncedSchedule) &&
+    syncedSchedule.length > 0;
 
   useEffect(() => {
     if (!isSyncing) return;
@@ -115,16 +139,19 @@ export function ScheduleBuilder({
   }, [isSyncing, router]);
 
   const updateSlot = (idx: number, field: keyof TimeSlotForm, value: string) => {
+    setIsDirty(true);
     setSlots((prev) =>
       prev.map((slot, i) => (i === idx ? { ...slot, [field]: value } : slot))
     );
   };
 
   const addSlot = () => {
+    setIsDirty(true);
     setSlots((prev) => [...prev, { start: "06:00", end: "07:00" }]);
   };
 
   const removeSlot = (idx: number) => {
+    setIsDirty(true);
     setSlots((prev) => prev.filter((_, i) => i !== idx));
   };
 
@@ -193,6 +220,8 @@ export function ScheduleBuilder({
       if (!res.ok || !data?.success) {
         throw new Error(data?.error || "Failed to save schedule.");
       }
+
+      setIsDirty(false);
 
       if (data?.queue?.queued) {
         setStatus("Schedule saved and queued to device (FPort 25).");
@@ -302,10 +331,7 @@ export function ScheduleBuilder({
       </p>
 
       {slots.map((slot, idx) => (
-        <div
-          key={idx}
-          className="bg-zinc-900 border border-zinc-800 p-4 md:p-5"
-        >
+        <div key={idx} className="bg-zinc-900 border border-zinc-800 p-4 md:p-5">
           <div className="grid grid-cols-1 md:grid-cols-[auto_1fr_auto_1fr_auto] gap-4 items-end">
             <div className="text-zinc-500 font-mono text-sm uppercase tracking-widest">
               Slot {idx + 1}
