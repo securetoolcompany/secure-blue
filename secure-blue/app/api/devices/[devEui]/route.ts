@@ -36,7 +36,12 @@ export async function PATCH(
       return NextResponse.json({ error: 'Device not found' }, { status: 404 });
     }
 
-    let queueResult: { queued: boolean; status?: number; error?: string } = {
+    let queueResult: {
+      queued: boolean;
+      status?: number;
+      error?: string;
+      response?: unknown;
+    } = {
       queued: false,
     };
 
@@ -53,22 +58,30 @@ export async function PATCH(
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              fPort: 25,            // STREGA scheduler configuration port
+              fPort: 25,
               hexData: pendingScheduleHex,
             }),
             cache: 'no-store',
           }
         );
 
+        const queueJson = await queueRes.json().catch(() => null);
+
         if (!queueRes.ok) {
-          const queueError = await queueRes.text().catch(() => '');
           queueResult = {
             queued: false,
             status: queueRes.status,
-            error: queueError || 'Failed to enqueue schedule downlink',
+            error:
+              (queueJson as { error?: string } | null)?.error ||
+              'Failed to enqueue schedule downlink',
+            response: queueJson,
           };
         } else {
-          queueResult = { queued: true };
+          queueResult = {
+            queued: true,
+            status: queueRes.status,
+            response: queueJson,
+          };
         }
       } catch (queueError) {
         queueResult = {
