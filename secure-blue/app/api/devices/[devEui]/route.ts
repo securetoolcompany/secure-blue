@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
 import Device from '@/lib/models/DevicePayload';
 import { encodeSchedulerPayload } from '@/lib/strega-codec';
+import { fetchChirpStack } from '@/lib/chirpstack';
 
 export async function PATCH(
   req: Request,
@@ -38,7 +39,6 @@ export async function PATCH(
 
     let queueResult: {
       queued: boolean;
-      status?: number;
       error?: string;
       response?: unknown;
     } = {
@@ -47,42 +47,23 @@ export async function PATCH(
 
     if (pendingScheduleHex) {
       try {
-        const origin =
-          process.env.NEXT_PUBLIC_APP_URL ||
-          process.env.APP_URL ||
-          new URL(req.url).origin;
+        const base64Data = Buffer.from(pendingScheduleHex, 'hex').toString('base64');
 
-        const queueRes = await fetch(
-          `${origin}/api/chirpstack/devices/${devEui}/queue`,
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
+        const chirpstackRes = await fetchChirpStack(`/api/devices/${devEui}/queue`, {
+          method: 'POST',
+          body: JSON.stringify({
+            queueItem: {
+              confirmed: false,
               fPort: 25,
-              hexData: pendingScheduleHex,
-            }),
-            cache: 'no-store',
-          }
-        );
+              data: base64Data,
+            },
+          }),
+        });
 
-        const queueJson = await queueRes.json().catch(() => null);
-
-        if (!queueRes.ok) {
-          queueResult = {
-            queued: false,
-            status: queueRes.status,
-            error:
-              (queueJson as { error?: string } | null)?.error ||
-              'Failed to enqueue schedule downlink',
-            response: queueJson,
-          };
-        } else {
-          queueResult = {
-            queued: true,
-            status: queueRes.status,
-            response: queueJson,
-          };
-        }
+        queueResult = {
+          queued: true,
+          response: chirpstackRes,
+        };
       } catch (queueError) {
         queueResult = {
           queued: false,

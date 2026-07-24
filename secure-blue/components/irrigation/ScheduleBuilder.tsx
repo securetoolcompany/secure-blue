@@ -191,18 +191,18 @@ export function ScheduleBuilder({
       const data = await res.json().catch(() => null);
 
       if (!res.ok || !data?.success) {
-  throw new Error(data?.error || "Failed to save schedule.");
-}
+        throw new Error(data?.error || "Failed to save schedule.");
+      }
 
-if (data?.queue?.queued) {
-  setStatus("Schedule saved and queued to device (FPort 25).");
-} else if (data?.queue?.error) {
-  setStatus(`Schedule saved. Queue failed: ${data.queue.error}`);
-} else {
-  setStatus("Schedule saved. Downlink not queued – check ChirpStack queue API.");
-}
+      if (data?.queue?.queued) {
+        setStatus("Schedule saved and queued to device (FPort 25).");
+      } else if (data?.queue?.error) {
+        setStatus(`Schedule saved. Queue failed: ${data.queue.error}`);
+      } else {
+        setStatus("Schedule saved. Downlink not queued – check ChirpStack queue API.");
+      }
 
-router.refresh();
+      router.refresh();
     } catch (error) {
       setStatus(
         error instanceof Error ? error.message : "Failed to save schedule."
