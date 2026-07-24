@@ -194,10 +194,21 @@ export function ScheduleBuilder({
         throw new Error(data?.error || "Failed to save schedule.");
       }
 
-      setStatus("Schedule saved. Waiting for next device check-in...");
+      if (data?.queue?.queued) {
+        setStatus("Schedule saved and queued to device (FPort 25).");
+      } else if (data?.pendingSchedule) {
+        setStatus(
+          "Schedule saved. Downlink not queued – check ChirpStack queue API."
+        );
+      } else {
+        setStatus("Schedule saved.");
+      }
+
       router.refresh();
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Failed to save schedule.");
+      setStatus(
+        error instanceof Error ? error.message : "Failed to save schedule."
+      );
     } finally {
       setIsSaving(false);
     }
