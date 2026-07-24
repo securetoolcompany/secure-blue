@@ -40,9 +40,12 @@ function getBatteryUI(mV: number | null) {
   let percent = Math.round(((mV - MIN_MV) / (MAX_MV - MIN_MV)) * 100);
   percent = Math.max(0, Math.min(100, percent));
 
-  if (percent >= 75) return { text: `${percent}%`, color: "text-emerald-500", Icon: BatteryFull };
-  if (percent >= 35) return { text: `${percent}%`, color: "text-yellow-500", Icon: BatteryMedium };
-  if (percent >= 15) return { text: `${percent}%`, color: "text-orange-500", Icon: BatteryLow };
+  if (percent >= 75)
+    return { text: `${percent}%`, color: "text-emerald-500", Icon: BatteryFull };
+  if (percent >= 35)
+    return { text: `${percent}%`, color: "text-yellow-500", Icon: BatteryMedium };
+  if (percent >= 15)
+    return { text: `${percent}%`, color: "text-orange-500", Icon: BatteryLow };
   return { text: `${percent}%`, color: "text-red-500", Icon: BatteryWarning };
 }
 
@@ -60,16 +63,25 @@ function schedulesMatch(a: any[] = [], b: any[] = []) {
   });
 }
 
-function getScheduleSyncUI(device: any) {
-  if (device?.pendingSchedule) {
+function getClockSyncUI(device: any) {
+  if (!device?.lastTimeSyncAt) {
     return {
-      label: "Syncing...",
-      className: "bg-amber-500/15 text-amber-400 border border-amber-500/30",
-      Icon: LoaderCircle,
-      iconClassName: "animate-spin",
+      label: "Clock not synced",
+      className: "bg-zinc-800 text-zinc-400 border border-zinc-700",
+      Icon: RefreshCw,
+      iconClassName: "",
     };
   }
 
+  return {
+    label: "Clock synced",
+    className: "bg-blue-500/15 text-blue-400 border border-blue-500/30",
+    Icon: CheckCircle2,
+    iconClassName: "",
+  };
+}
+
+function getScheduleSyncUI(device: any) {
   const desired = Array.isArray(device?.irrigationSchedule)
     ? device.irrigationSchedule
     : [];
@@ -78,11 +90,29 @@ function getScheduleSyncUI(device: any) {
     ? device.syncedIrrigationSchedule
     : [];
 
-  const isSynced = desired.length > 0 && schedulesMatch(desired, synced);
+  if (device?.pendingSchedule) {
+    return {
+      label: "Schedule queued",
+      className: "bg-amber-500/15 text-amber-400 border border-amber-500/30",
+      Icon: LoaderCircle,
+      iconClassName: "animate-spin",
+    };
+  }
+
+  if (desired.length === 0) {
+    return {
+      label: "No schedule",
+      className: "bg-zinc-800 text-zinc-400 border border-zinc-700",
+      Icon: CalendarClock,
+      iconClassName: "",
+    };
+  }
+
+  const isSynced = schedulesMatch(desired, synced);
 
   if (isSynced) {
     return {
-      label: "Synced",
+      label: "Schedule synced",
       className: "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30",
       Icon: CheckCircle2,
       iconClassName: "",
@@ -90,7 +120,7 @@ function getScheduleSyncUI(device: any) {
   }
 
   return {
-    label: "Not synced",
+    label: "Schedule not synced",
     className: "bg-zinc-800 text-zinc-400 border border-zinc-700",
     Icon: CalendarClock,
     iconClassName: "",
@@ -105,11 +135,15 @@ export default function FleetOverview() {
   const [bulkZoneInput, setBulkZoneInput] = useState("");
   const [isBulkLoading, setIsBulkLoading] = useState(false);
 
-  const { data, mutate: mutateDevices } = useSWR("/api/chirpstack/devices", fetcher, {
-    refreshInterval: 10000,
-    revalidateOnFocus: true,
-    dedupingInterval: 0,
-  });
+  const { data, mutate: mutateDevices } = useSWR(
+    "/api/chirpstack/devices",
+    fetcher,
+    {
+      refreshInterval: 10000,
+      revalidateOnFocus: true,
+      dedupingInterval: 0,
+    }
+  );
 
   const { data: zonesData, mutate: mutateZones } = useSWR("/api/zones", fetcher);
 
@@ -123,7 +157,9 @@ export default function FleetOverview() {
 
       const matchesZone =
         zoneFilter === "ALL" ||
-        zonesData?.zones?.find((z: Zone) => z.name === zoneFilter)?.devices.includes(d.devEui);
+        zonesData?.zones
+          ?.find((z: Zone) => z.name === zoneFilter)
+          ?.devices.includes(d.devEui);
 
       return matchesSearch && matchesZone;
     });
@@ -193,111 +229,137 @@ export default function FleetOverview() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredDevices.map((device: Device & {
-            pendingSchedule?: string | null;
-            syncedIrrigationSchedule?: unknown[];
-            irrigationSchedule?: unknown[];
-          }) => {
-            const batteryUI = getBatteryUI(device.batteryMv);
-            const BatteryIcon = batteryUI.Icon;
-            const isSelected = selectedEuis.includes(device.devEui);
-            const deviceZones =
-              zonesData?.zones?.filter((z: Zone) => z.devices.includes(device.devEui)) || [];
-            const scheduleSyncUI = getScheduleSyncUI(device);
-            const ScheduleSyncIcon = scheduleSyncUI.Icon;
+          {filteredDevices.map(
+            (device: Device & {
+              pendingSchedule?: string | null;
+              syncedIrrigationSchedule?: unknown[];
+              irrigationSchedule?: unknown[];
+              lastTimeSyncAt?: string | null;
+            }) => {
+              const batteryUI = getBatteryUI(device.batteryMv);
+              const BatteryIcon = batteryUI.Icon;
+              const isSelected = selectedEuis.includes(device.devEui);
+              const deviceZones =
+                zonesData?.zones?.filter((z: Zone) =>
+                  z.devices.includes(device.devEui)
+                ) || [];
 
-            return (
-              <div
-                key={device.devEui}
-                className={`bg-zinc-900 border ${
-                  isSelected
-                    ? "border-blue-500 bg-blue-900/10"
-                    : "border-zinc-800 hover:border-blue-500/50"
-                } p-6 transition-colors cursor-pointer relative overflow-hidden group`}
-                onClick={() => router.push(`/portal/irrigation/${device.devEui}`)}
-              >
-                <div
-                  className={`absolute top-0 left-0 w-1 h-full ${
-                    device.onlineState === "online" ? "bg-emerald-500" : "bg-red-500"
-                  }`}
-                />
+              const clockSyncUI = getClockSyncUI(device);
+              const ClockSyncIcon = clockSyncUI.Icon;
 
+              const scheduleSyncUI = getScheduleSyncUI(device);
+              const ScheduleSyncIcon = scheduleSyncUI.Icon;
+
+              return (
                 <div
-                  className="absolute top-4 right-4 z-10 p-2"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleSelection(device.devEui);
-                  }}
+                  key={device.devEui}
+                  className={`bg-zinc-900 border ${
+                    isSelected
+                      ? "border-blue-500 bg-blue-900/10"
+                      : "border-zinc-800 hover:border-blue-500/50"
+                  } p-6 transition-colors cursor-pointer relative overflow-hidden group`}
+                  onClick={() => router.push(`/portal/irrigation/${device.devEui}`)}
                 >
-                  {isSelected ? (
-                    <CheckCircle2 className="h-6 w-6 text-blue-500" />
-                  ) : (
-                    <Circle className="h-6 w-6 text-zinc-600 group-hover:text-zinc-400" />
-                  )}
-                </div>
-
-                <div className="flex justify-between items-start mb-4 pr-8 gap-3">
-                  <div>
-                    <h3 className="text-white font-mono text-lg font-bold">{device.name}</h3>
-                    <div className="text-zinc-500 font-mono text-[10px] mt-1">{device.devEui}</div>
-                  </div>
+                  <div
+                    className={`absolute top-0 left-0 w-1 h-full ${
+                      device.onlineState === "online" ? "bg-emerald-500" : "bg-red-500"
+                    }`}
+                  />
 
                   <div
-                    className={`px-2 py-0.5 text-[10px] font-mono font-bold uppercase rounded-sm ${
-                      device.valveState === "open"
-                        ? "bg-blue-500/20 text-blue-400 border border-blue-500/30"
-                        : "bg-zinc-800 text-zinc-400 border border-zinc-700"
-                    }`}
+                    className="absolute top-4 right-4 z-10 p-2"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleSelection(device.devEui);
+                    }}
                   >
-                    {device.valveState}
+                    {isSelected ? (
+                      <CheckCircle2 className="h-6 w-6 text-blue-500" />
+                    ) : (
+                      <Circle className="h-6 w-6 text-zinc-600 group-hover:text-zinc-400" />
+                    )}
                   </div>
-                </div>
 
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {deviceZones.map((z: Zone) => (
-                    <span
-                      key={z._id}
-                      className="inline-flex items-center gap-1 bg-blue-900/30 text-blue-400 border border-blue-500/30 px-2 py-0.5 rounded-sm font-mono text-[10px] uppercase"
+                  <div className="flex justify-between items-start mb-4 pr-8 gap-3">
+                    <div>
+                      <h3 className="text-white font-mono text-lg font-bold">
+                        {device.name}
+                      </h3>
+                      <div className="text-zinc-500 font-mono text-[10px] mt-1">
+                        {device.devEui}
+                      </div>
+                    </div>
+
+                    <div
+                      className={`px-2 py-0.5 text-[10px] font-mono font-bold uppercase rounded-sm ${
+                        device.valveState === "open"
+                          ? "bg-blue-500/20 text-blue-400 border border-blue-500/30"
+                          : "bg-zinc-800 text-zinc-400 border border-zinc-700"
+                      }`}
                     >
-                      <MapPin className="h-3 w-3" /> {z.name}
-                    </span>
-                  ))}
-                </div>
+                      {device.valveState}
+                    </div>
+                  </div>
 
-                <div className="mb-4">
-                  <span
-                    className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-sm font-mono text-[10px] uppercase ${scheduleSyncUI.className}`}
-                  >
-                    <ScheduleSyncIcon className={`h-3 w-3 ${scheduleSyncUI.iconClassName}`} />
-                    {scheduleSyncUI.label}
-                  </span>
-                </div>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {deviceZones.map((z: Zone) => (
+                      <span
+                        key={z._id}
+                        className="inline-flex items-center gap-1 bg-blue-900/30 text-blue-400 border border-blue-500/30 px-2 py-0.5 rounded-sm font-mono text-[10px] uppercase"
+                      >
+                        <MapPin className="h-3 w-3" /> {z.name}
+                      </span>
+                    ))}
+                  </div>
 
-                <div className="space-y-2 font-mono text-[11px] text-zinc-400 border-t border-zinc-800 pt-3">
-                  <div className="flex justify-between">
-                    <span className={`flex items-center gap-2 ${batteryUI.color}`}>
-                      <BatteryIcon className="h-3 w-3" /> {batteryUI.text}
+                  <div className="mb-4 flex flex-wrap gap-2">
+                    <span
+                      className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-sm font-mono text-[10px] uppercase ${clockSyncUI.className}`}
+                    >
+                      <ClockSyncIcon
+                        className={`h-3 w-3 ${clockSyncUI.iconClassName}`}
+                      />
+                      {clockSyncUI.label}
                     </span>
-                    <span className="flex items-center gap-2">
-                      <Zap className="h-3 w-3" />
-                      {device.deviceClass ? `Class ${device.deviceClass}` : "Class A"}
+
+                    <span
+                      className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-sm font-mono text-[10px] uppercase ${scheduleSyncUI.className}`}
+                    >
+                      <ScheduleSyncIcon
+                        className={`h-3 w-3 ${scheduleSyncUI.iconClassName}`}
+                      />
+                      {scheduleSyncUI.label}
                     </span>
                   </div>
 
-                  <div className="flex justify-between">
-                    <span className="flex items-center gap-2">
-                      <Signal className="h-3 w-3" /> {device.rssi ?? "N/A"} dBm
-                    </span>
-                    <span>
-                      {device.lastSeenAt
-                        ? formatDistanceToNow(new Date(device.lastSeenAt), { addSuffix: true })
-                        : "Never"}
-                    </span>
+                  <div className="space-y-2 font-mono text-[11px] text-zinc-400 border-t border-zinc-800 pt-3">
+                    <div className="flex justify-between">
+                      <span className={`flex items-center gap-2 ${batteryUI.color}`}>
+                        <BatteryIcon className="h-3 w-3" /> {batteryUI.text}
+                      </span>
+                      <span className="flex items-center gap-2">
+                        <Zap className="h-3 w-3" />
+                        {device.deviceClass ? `Class ${device.deviceClass}` : "Class A"}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between">
+                      <span className="flex items-center gap-2">
+                        <Signal className="h-3 w-3" /> {device.rssi ?? "N/A"} dBm
+                      </span>
+                      <span>
+                        {device.lastSeenAt
+                          ? formatDistanceToNow(new Date(device.lastSeenAt), {
+                              addSuffix: true,
+                            })
+                          : "Never"}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            }
+          )}
         </div>
       </div>
 
