@@ -102,6 +102,7 @@ export function ScheduleBuilder({
   const [isSaving, setIsSaving] = useState(false);
   const [isSyncingTime, setIsSyncingTime] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
+  const [selectedDays, setSelectedDays] = useState<number[]>([]);
 
   const lastDevEuiRef = useRef<string | undefined>(devEui);
 
@@ -212,11 +213,15 @@ export function ScheduleBuilder({
       setStatus("Saving schedule...");
 
       const payload = slots.map(timeToSlot);
+      const days = selectedDays; // 0–6 for Sunday–Saturday; [] = "all days"
 
       const res = await fetch(`/api/devices/${devEui}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ irrigationSchedule: payload }),
+        body: JSON.stringify({
+          irrigationSchedule: payload,
+          irrigationDays: days,
+        }),
       });
 
       const data = await res.json().catch(() => null);
@@ -232,7 +237,9 @@ export function ScheduleBuilder({
       } else if (data?.queue?.error) {
         setStatus(`Schedule saved. Queue failed: ${data.queue.error}`);
       } else {
-        setStatus("Schedule saved. Downlink not queued – check ChirpStack queue API.");
+        setStatus(
+          "Schedule saved. Downlink not queued – check ChirpStack queue API."
+        );
       }
 
       router.refresh();
@@ -245,6 +252,15 @@ export function ScheduleBuilder({
     }
   };
 
+  const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  const toggleDay = (d: number) => {
+    setIsDirty(true);
+    setSelectedDays((prev) =>
+      prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d]
+    );
+  };
+
   return (
     <div className="bg-zinc-950 border border-zinc-800 p-6 space-y-6">
       <div className="mb-2 p-4 bg-black/40 border border-zinc-800 flex justify-between items-center gap-4">
@@ -253,7 +269,10 @@ export function ScheduleBuilder({
             <Clock className="h-4 w-4" /> Device Clock Sync
           </h4>
           <div className="text-zinc-300 font-mono text-sm">
-            Last Synced: {lastTimeSyncAt ? new Date(lastTimeSyncAt).toLocaleString() : "Never"}
+            Last Synced:{" "}
+            {lastTimeSyncAt
+              ? new Date(lastTimeSyncAt).toLocaleString()
+              : "Never"}
           </div>
         </div>
 
@@ -264,10 +283,14 @@ export function ScheduleBuilder({
             variant="outline"
             className="border-blue-500/30 text-blue-400 hover:bg-blue-500/10 rounded-none h-8 text-xs disabled:opacity-50"
           >
-            <RefreshCw className={`h-3 w-3 mr-2 ${isSyncingTime ? "animate-spin" : ""}`} />
+            <RefreshCw
+              className={`h-3 w-3 mr-2 ${isSyncingTime ? "animate-spin" : ""}`}
+            />
             Resync Time
           </Button>
-          {timeStatus && <span className="text-blue-400 text-xs mt-1">{timeStatus}</span>}
+          {timeStatus && (
+            <span className="text-blue-400 text-xs mt-1">{timeStatus}</span>
+          )}
         </div>
       </div>
 
@@ -334,8 +357,33 @@ export function ScheduleBuilder({
         Enter all schedule times in 24-hour format.
       </p>
 
+      {/* Day picker */}
+      <div className="flex flex-wrap gap-2 mb-4">
+        {dayLabels.map((label, idx) => {
+          const isActive = selectedDays.includes(idx);
+          return (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => toggleDay(idx)}
+              className={
+                "px-2 py-1 font-mono text-xs border " +
+                (isActive
+                  ? "border-blue-500 bg-blue-600 text-white"
+                  : "border-zinc-700 bg-zinc-900 text-zinc-400")
+              }
+            >
+              {label}
+            </button>
+          );
+        })}
+      </div>
+
       {slots.map((slot, idx) => (
-        <div key={idx} className="bg-zinc-900 border border-zinc-800 p-4 md:p-5">
+        <div
+          key={idx}
+          className="bg-zinc-900 border border-zinc-800 p-4 md:p-5"
+        >
           <div className="grid grid-cols-1 md:grid-cols-[auto_1fr_auto_1fr_auto] gap-4 items-end">
             <div className="text-zinc-500 font-mono text-sm uppercase tracking-widest">
               Slot {idx + 1}
@@ -352,7 +400,9 @@ export function ScheduleBuilder({
                 onChange={(e) => updateSlot(idx, "start", e.target.value)}
                 className="w-full bg-zinc-950 border border-zinc-800 text-white px-3 py-2 font-mono text-sm focus:border-emerald-500 outline-none transition-colors"
               />
-              <p className="text-zinc-600 font-mono text-xs mt-2">24-hour format</p>
+              <p className="text-zinc-600 font-mono text-xs mt-2">
+                24-hour format
+              </p>
             </div>
 
             <div className="hidden md:flex items-center justify-center text-zinc-600 font-mono text-lg pb-6">
@@ -370,7 +420,9 @@ export function ScheduleBuilder({
                 onChange={(e) => updateSlot(idx, "end", e.target.value)}
                 className="w-full bg-zinc-950 border border-zinc-800 text-white px-3 py-2 font-mono text-sm focus:border-emerald-500 outline-none transition-colors"
               />
-              <p className="text-zinc-600 font-mono text-xs mt-2">24-hour format</p>
+              <p className="text-zinc-600 font-mono text-xs mt-2">
+                24-hour format
+              </p>
             </div>
 
             <button
@@ -396,12 +448,15 @@ export function ScheduleBuilder({
 
       {hasInvalidSlots && (
         <div className="border border-yellow-500/30 bg-yellow-500/10 p-3 text-yellow-300 font-mono text-xs uppercase tracking-wider">
-          Each slot must have a valid start and end time, and end must be after start.
+          Each slot must have a valid start and end time, and end must be after
+          start.
         </div>
       )}
 
       <div className="pt-6 border-t border-zinc-800 flex justify-between items-center gap-4">
-        <span className="text-blue-400 font-mono text-sm max-w-[60%]">{status}</span>
+        <span className="text-blue-400 font-mono text-sm max-w-[60%]">
+          {status}
+        </span>
         <Button
           onClick={pushSchedule}
           disabled={isSaving || !devEui || hasInvalidSlots}
@@ -410,8 +465,8 @@ export function ScheduleBuilder({
           {isSaving
             ? "Saving..."
             : zoneId
-              ? "Save Bulk Schedule"
-              : "Save Device Schedule"}
+            ? "Save Bulk Schedule"
+            : "Save Device Schedule"}
         </Button>
       </div>
     </div>
