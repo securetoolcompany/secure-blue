@@ -18,10 +18,16 @@ export async function PATCH(
     let pendingScheduleHex: string | null = null;
 
     if (body.irrigationSchedule) {
+      console.log("[schedule PATCH] devEui:", devEui);
+      console.log("[schedule PATCH] irrigationDays:", body.irrigationDays);
+      console.log("[schedule PATCH] irrigationSchedule:", body.irrigationSchedule);
+
       const hexPayload = encodeSchedulerPayload(
         body.irrigationDays ?? [],
         body.irrigationSchedule
       );
+
+      console.log("[schedule PATCH] encoded hex:", hexPayload);
 
       pendingScheduleHex = hexPayload;
       updatePayload.pendingSchedule = hexPayload;
