@@ -70,11 +70,13 @@ export function ValveControl({
   const enqueue = async (fPort: number, hexData: string) => {
     setLoading(true);
     try {
-      await fetch(`/api/chirpstack/devices/${devEui}/queue`, {
+      const res = await fetch(`/api/chirpstack/devices/${devEui}/queue`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fPort, hexData }),
       });
+      const json = await res.json();
+      console.log("enqueue result", fPort, hexData, json);
       await mutateQueue();
     } finally {
       setLoading(false);

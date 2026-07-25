@@ -73,7 +73,7 @@ export async function POST(
       const chirpstackPayload = {
         queueItem: {
           confirmed: false,
-          f_Port: port,
+          fPort: port,
           data: base64Data,
         },
       };

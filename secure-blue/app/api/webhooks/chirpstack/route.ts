@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
             queueItem: {
               devEui,
               confirmed: true,
-              f_port: 25,
+              fPort: 25,
               data: Buffer.from(deviceDoc.pendingSchedule, 'hex').toString('base64'),
             },
           }),
