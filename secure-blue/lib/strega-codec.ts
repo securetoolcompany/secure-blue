@@ -4,11 +4,10 @@ export function encodeSchedulerPayload(
 ): string {
   // Day mask: bit 7 = "all days", bits 0–6 = Sunday–Saturday.
   let dayByte = 0;
-  if (days.length === 0 || days.length === 7) {
-    dayByte = 0x80;
+    if (days.length === 0) {
+    dayByte = 0x80; // "all days" sentinel per STREGA spec
   } else {
     for (const d of days) {
-      // Expect days as 0–6 for Sunday–Saturday; adjust here if your UI uses a different convention.
       dayByte |= (1 << d);
     }
   }
@@ -19,9 +18,8 @@ export function encodeSchedulerPayload(
   // bytes 5–8  = slot 2
   // bytes 9–12 = slot 3
   // bytes 13–16 = slot 4
-  const bytes = new Array<number>(17).fill(0);
-
-  bytes[0] = dayByte;
+  const bytes = new Array<number>(17).fill(0xFF); // fill with 0xFF = "no event"
+  bytes[0] = dayByte;                              // then overwrite day byte
 
   for (let i = 0; i < 4; i++) {
     const slot = slots[i];
@@ -29,13 +27,17 @@ export function encodeSchedulerPayload(
 
     const base = 1 + i * 4;
 
-    // Start hour: set MSB flag (0x80) as per STREGA spec,
-    // keep only lower 5 bits for hour value as a safety guard.
-    bytes[base + 0] = (slot.startHour & 0x1f) | 0x80;
+    // Start hour: OR with 0x80 MSB flag as per STREGA spec (PORT 25).
+    // No masking needed — valid hours (0–23) fit cleanly.
+    bytes[base + 0] = slot.startHour | 0x80;
 
-    // Minutes and end hour/minute are stored as plain 0–59 / 0–23 ints.
+    // Start minute: plain 0–59
     bytes[base + 1] = slot.startMin;
+
+    // End hour: plain 0–23 (no MSB flag on close time)
     bytes[base + 2] = slot.endHour;
+
+    // End minute: plain 0–59
     bytes[base + 3] = slot.endMin;
   }
 
