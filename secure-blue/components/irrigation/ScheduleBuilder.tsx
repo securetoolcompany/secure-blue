@@ -173,10 +173,18 @@ export function ScheduleBuilder({
       setIsSyncingTime(true);
       setTimeStatus("Requesting clock sync...");
 
+      const ts = Math.floor(Date.now() / 1000);
+      const tsHex = [
+        (ts >>> 0)  & 0xFF,
+        (ts >>> 8)  & 0xFF,
+        (ts >>> 16) & 0xFF,
+        (ts >>> 24) & 0xFF,
+      ].map(b => b.toString(16).padStart(2, "0")).join("");
+
       const res = await fetch(`/api/chirpstack/devices/${devEui}/queue`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fPort: 13, hexData: "01" }),
+        body: JSON.stringify({ fPort: 13, hexData: tsHex }),
       });
 
       const data = await res.json().catch(() => null);
