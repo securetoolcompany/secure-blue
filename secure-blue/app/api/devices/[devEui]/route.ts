@@ -4,6 +4,7 @@ import Device from '@/lib/models/DevicePayload';
 import { encodeSchedulerPayload } from '@/lib/strega-codec';
 import { fetchChirpStack } from '@/lib/chirpstack';
 
+
 export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ devEui: string }> }
@@ -73,15 +74,37 @@ export async function PATCH(
           body: JSON.stringify(chirpstackPayload),
         });
 
+        // If ChirpStack accepted the queue, treat hardware as synced
+        if (!chirpstackRes.ok) {
+          const errText = await chirpstackRes.text().catch(() => "Unknown queue error");
+          throw new Error(errText);
+        }
+
+        // Mark queued result for the UI
         queueResult = {
           queued: true,
           response: {
             pendingScheduleHex,
             base64Data,
             chirpstackPayload,
-            chirpstackRes,
           },
         };
+
+        // NEW: Copy desired schedule into syncedIrrigationSchedule and clear pendingSchedule
+        if (Array.isArray(body.irrigationSchedule)) {
+          await Device.findOneAndUpdate(
+            { devEui },
+            {
+              $set: {
+                syncedIrrigationSchedule: body.irrigationSchedule,
+              },
+              $unset: {
+                pendingSchedule: "",
+              },
+            },
+            { new: true }
+          );
+        }
       } catch (queueError) {
         queueResult = {
           queued: false,
@@ -90,12 +113,16 @@ export async function PATCH(
               ? queueError.message
               : "Failed to enqueue schedule downlink",
         };
+        // NOTE: in error case, we leave pendingSchedule in place
+        // so the UI can keep showing "Schedule queued / syncing" if desired.
       }
     }
 
     return NextResponse.json({
       success: true,
       device: updatedDevice,
+      // pendingScheduleHex will now be null in the DB after a successful queue,
+      // but we still return it here for debugging if you want.
       pendingSchedule: pendingScheduleHex,
       queue: queueResult,
     });

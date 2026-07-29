@@ -62,42 +62,6 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Sync-on-Uplink: on every uplink, check for a pending schedule and
-    // push it into the device's downlink queue while it's awake (Class A window).
-    const deviceDoc = await DevicePayload.findOne({ devEui });
-    if (deviceDoc?.pendingSchedule) {
-      try {
-        await fetchChirpStack(`/api/devices/${devEui}/queue`, {
-          method: 'POST',
-          body: JSON.stringify({
-            queueItem: {
-              devEui,
-              confirmed: true,
-              fPort: 25,
-              data: Buffer.from(deviceDoc.pendingSchedule, 'hex').toString('base64'),
-            },
-          }),
-        });
-
-        // Move pending -> synced now that the queue push succeeded
-        updateData.syncedIrrigationSchedule = deviceDoc.irrigationSchedule;
-        await DevicePayload.findOneAndUpdate(
-          { devEui },
-          { $unset: { pendingSchedule: '' } }
-        );
-      } catch (pushErr: any) {
-  console.error(`ChirpStack queue push failed for ${devEui}:`, pushErr);
-  return NextResponse.json(
-    {
-      success: false,
-      stage: 'chirpstack-queue',
-      error: pushErr?.message || String(pushErr),
-    },
-    { status: 500 }
-  );
-}
-    }
-
     await DevicePayload.findOneAndUpdate(
       { devEui },
       {
