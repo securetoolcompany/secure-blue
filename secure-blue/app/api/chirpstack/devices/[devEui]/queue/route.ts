@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { fetchChirpStack } from "@/lib/chirpstack";
+import { connectToDatabase } from "@/lib/mongodb";
+import DevicePayload from "@/lib/models/DevicePayload";
 
 // --- 1. GET THE QUEUE (For your SWR polling) ---
 export async function GET(
@@ -82,6 +84,25 @@ export async function POST(
         method: "POST",
         body: JSON.stringify(chirpstackPayload),
       });
+
+      // If this is a time sync (FPort 13), mark pendingTimeSync on the device
+      if (port === 13) {
+        try {
+          await connectToDatabase();
+          await DevicePayload.findOneAndUpdate(
+            { devEui },
+            {
+              $set: {
+                pendingTimeSync: true,
+              },
+              $setOnInsert: { devEui },
+            },
+            { upsert: true }
+          );
+        } catch (e) {
+          console.error("Failed to set pendingTimeSync for devEui", devEui, e);
+        }
+      }
 
       return NextResponse.json({
         success: true,

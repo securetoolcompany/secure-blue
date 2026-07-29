@@ -62,6 +62,20 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Check if a time sync was pending; if so, stamp lastTimeSyncAt with this uplink time
+    const existingDoc = await DevicePayload.findOne({ devEui });
+
+    if (existingDoc?.pendingTimeSync) {
+      // Use this uplink's lastSeenAt (already set in updateData) as the sync time
+      updateData.lastTimeSyncAt = updateData.lastSeenAt;
+
+      // Clear the pending flag so we don't mark every uplink as a new sync
+      await DevicePayload.updateOne(
+        { devEui },
+        { $unset: { pendingTimeSync: "" } }
+      );
+    }
+
     await DevicePayload.findOneAndUpdate(
       { devEui },
       {
