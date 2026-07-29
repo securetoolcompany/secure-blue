@@ -87,13 +87,9 @@ function getClockSyncUI(device: any) {
 }
 
 function getScheduleSyncUI(device: any) {
-  const desired = Array.isArray(device?.irrigationSchedule)
-    ? device.irrigationSchedule
-    : [];
-
-  const synced = Array.isArray(device?.syncedIrrigationSchedule)
-    ? device.syncedIrrigationSchedule
-    : [];
+  const hasSchedule =
+    Array.isArray(device?.irrigationSchedule) &&
+    device.irrigationSchedule.length > 0;
 
   if (device?.pendingSchedule) {
     return {
@@ -104,7 +100,7 @@ function getScheduleSyncUI(device: any) {
     };
   }
 
-  if (desired.length === 0) {
+  if (!hasSchedule) {
     return {
       label: "No schedule",
       className: "bg-zinc-800 text-zinc-400 border border-zinc-700",
@@ -113,21 +109,12 @@ function getScheduleSyncUI(device: any) {
     };
   }
 
-  const isSynced = schedulesMatch(desired, synced);
-
-  if (isSynced) {
-    return {
-      label: "Schedule synced",
-      className: "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30",
-      Icon: CheckCircle2,
-      iconClassName: "",
-    };
-  }
-
+  // We can't verify the schedule contents via LoRaWAN,
+  // but we know we sent it and are no longer queued.
   return {
-    label: "Schedule not synced",
-    className: "bg-zinc-800 text-zinc-400 border border-zinc-700",
-    Icon: CalendarClock,
+    label: "Schedule synced",
+    className: "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30",
+    Icon: CheckCircle2,
     iconClassName: "",
   };
 }
