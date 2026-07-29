@@ -32,6 +32,11 @@ interface Zone {
   devices: string[];
 }
 
+function extractNumber(name: string): number {
+  const match = name.match(/(\d+)/);
+  return match ? parseInt(match[1], 10) : Infinity;
+}
+
 function getBatteryUI(mV: number | null) {
   if (!mV) return { text: "Unknown", color: "text-zinc-600", Icon: Battery };
 
@@ -150,19 +155,24 @@ export default function FleetOverview() {
   const filteredDevices = useMemo(() => {
     if (!data?.devices) return [];
 
-    return data.devices.filter((d: Device) => {
-      const matchesSearch =
-        d.name.toLowerCase().includes(search.toLowerCase()) ||
-        d.devEui.toLowerCase().includes(search.toLowerCase());
+    return data.devices
+      .filter((d: Device) => {
+        const matchesSearch =
+          d.name.toLowerCase().includes(search.toLowerCase()) ||
+          d.devEui.toLowerCase().includes(search.toLowerCase());
 
-      const matchesZone =
-        zoneFilter === "ALL" ||
-        zonesData?.zones
-          ?.find((z: Zone) => z.name === zoneFilter)
-          ?.devices.includes(d.devEui);
+        const matchesZone =
+          zoneFilter === "ALL" ||
+          zonesData?.zones
+            ?.find((z: Zone) => z.name === zoneFilter)
+            ?.devices.includes(d.devEui);
 
-      return matchesSearch && matchesZone;
-    });
+        return matchesSearch && matchesZone;
+      })
+      .sort(
+        (a: Device, b: Device) =>
+          extractNumber(a.name) - extractNumber(b.name)
+      );
   }, [data, search, zoneFilter, zonesData]);
 
   const toggleSelection = (eui: string) => {
