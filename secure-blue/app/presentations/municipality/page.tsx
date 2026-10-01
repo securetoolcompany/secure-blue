@@ -35,6 +35,9 @@ type SlideVisual =
   | "telemetry"
   | "conserve"
   | "generate"
+  | "onsite"
+  | "recovery"
+  | "multifamily"
   | "os"
   | "pilot"
   | "cta";
@@ -123,6 +126,45 @@ export default function MunicipalityPresentation() {
     },
     {
       id: 6,
+      title: "Onsite Water Resilience",
+      subtitle: "Capture. Treat. Store. Deploy.",
+      visual: "onsite",
+      color: "text-cyan-400",
+      content:
+        "Turn a municipal facility, campus, recreation complex, or critical public asset into a managed water node. Capture available local sources, apply treatment matched to the approved end use, store water onsite, and deploy it where it creates the most operational value.",
+      metric: "FACILITY_SCALE_WATER_RESILIENCE",
+      time: "6:00–6:45",
+      speakerNotes:
+        "The value of local supply is not a single device. It is an onsite resilience system designed around the facility itself.\n\nFirst, identify the water sources available at that site: rainwater, stormwater, HVAC condensate, approved reuse streams, or—in the right temperature, humidity, and energy conditions—atmospheric water generation.\n\nSecond, match treatment to the intended use. Some sources may support non-potable uses such as irrigation, toilet flushing, cooling-tower make-up, washdown, or other approved facility demands. In specific applications, onsite atmospheric generation may support targeted drinking-water resilience.\n\nThird, store and manage water locally. SECURE Blue connects generation, recovery, storage, treatment status, water quality, and downstream demand into the same operational layer.\n\nThe objective is not to replace a city’s central supply. It is to reduce avoidable demand, create targeted redundancy, and keep priority facilities operating through disruption. The next two slides show what that looks like in cooling-intensive facilities and multifamily buildings.",
+    },
+    {
+      id: 7,
+      title: "Cooling-Tower Water Recovery",
+      subtitle: "Recover the plume. Reuse the blowdown. Capture the site.",
+      visual: "recovery",
+      color: "text-cyan-400",
+      content:
+        "Cooling-intensive facilities concentrate multiple water-recovery opportunities. SECURE Blue can evaluate plume recovery, treatment and reuse of blowdown, rainwater capture across roofs and hardscape, and onsite storage—directing each source to the highest-value approved use.",
+      metric: "FACILITY_SCALE_WATER_RECOVERY",
+      time: "6:45–7:30",
+      speakerNotes:
+        "A cooling-intensive municipal facility, campus, data center, recreation complex, or central plant is not just a water customer. It can become a managed water-recovery node.\n\nFirst, the cooling-tower plume. In arid environments, ambient-air atmospheric generation may not make sense on its own. But a cooling-tower exhaust plume is warm and highly humid, which can create a materially better feed condition for atmospheric recovery—subject to site engineering, energy economics, and operating profile.\n\nSecond, cooling-tower blowdown. Blowdown is not simply a disposal problem. With the right treatment train and an approved end use, it can be evaluated as a recoverable non-potable stream for irrigation, washdown, toilet flushing, or other permitted facility demands.\n\nThird, site rainwater. Roof and hardscape runoff can be routed to storage and treatment instead of simply leaving the site.\n\nThe operating principle is capture the source, match treatment to the required end use, store water locally, and use controls to direct it where it creates the most value.",
+    },
+    {
+      id: 8,
+      title: "Multifamily Water Resilience",
+      subtitle: "Protect Every Unit. Recover Every Available Source.",
+      visual: "multifamily",
+      color: "text-indigo-400",
+      content:
+        "A multifamily property can become a complete water-resilience node: detect and isolate leaks, capture roof runoff, recover greywater from showers and laundry, store treated water onsite, and reuse it for approved non-potable demand—all through one monitored operating layer.",
+      metric: "BUILDING_SCALE_WATER_RESILIENCE",
+      time: "7:30–8:30",
+      speakerNotes:
+        "Multifamily housing is a powerful example of the full SECURE Blue model working at one property.\n\nFirst, prevent loss. Connected flow monitoring and LeakStop valves can identify unusual demand and isolate a unit, riser, or approved zone before a small failure becomes extensive property damage, resident disruption, and an insurance claim.\n\nSecond, capture what the site already receives. Roof and hardscape runoff can be directed to storage and treatment rather than simply leaving the property. HVAC condensate can also be evaluated as a local source.\n\nThird, recover what the building already uses. Greywater from showers, lavatory sinks, and laundry can be treated, stored, and returned for approved non-potable uses such as toilet flushing, irrigation, cooling-tower make-up, or washdown.\n\nThis is not a claim that every building should operate off-grid. It is a practical building-scale resilience model: prevent unnecessary loss, reduce potable demand, reduce wastewater discharge, and create controlled onsite reserve capacity. SECURE Blue provides the monitoring, controls, alerts, and operational record that make the system manageable.",
+    },
+    {
+      id: 9,
       title: "Unified Command: SECURE Blue OS",
       subtitle: "One connected platform, not disconnected projects.",
       visual: "os",
@@ -135,7 +177,7 @@ export default function MunicipalityPresentation() {
         "The real power of SECURE Blue isn't just an individual valve or sensor—it’s the unified operating layer.\n\nCities don't need five more software logins or disconnected point solutions. SECURE Blue OS integrates telemetry from loss prevention, conservation sensors, and local generation into a single, cohesive interface.\n\nPublic works directors get real-time visibility across all municipal water assets, city managers get compliance and usage reporting, and mayors get a verifiable record of water stewardship.",
     },
     {
-      id: 7,
+      id: 10,
       title: "The 90-Day Municipal Pilot",
       subtitle: "Low-Risk Deployment. Local Proof.",
       visual: "pilot",
@@ -148,7 +190,7 @@ export default function MunicipalityPresentation() {
         "We know that cities cannot—and should not—commit to massive technology overhauls without proof. That’s why we advocate starting with a 90-day pilot.\n\nWe select one high-value municipal site—such as a public park with high utility bills or a municipal facility with aging plumbing. We establish your baseline, deploy the hardware, and track performance for 90 days.\n\nAt the end of the pilot, you receive a clear, data-driven report showing exact gallons saved, cost reduction, and risk mitigated. You only scale what the data proves is cost-effective.",
     },
     {
-      id: 8,
+      id: 11,
       title: "Build Operational Control",
       subtitle: "Water Stewardship That Can Be Measured.",
       visual: "cta",
@@ -222,51 +264,6 @@ export default function MunicipalityPresentation() {
                 <div className="text-xl font-bold text-white mb-3">Measure every drop. Protect every asset. Build local water security.</div>
                 <div className="h-1 w-full bg-zinc-800 rounded-full overflow-hidden">
                   <div className="h-full bg-blue-500 w-[92%] animate-pulse" />
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case "visibility":
-        return (
-          <div className="relative w-full aspect-square md:aspect-[4/3] max-w-[500px] rounded-[2rem] overflow-hidden shadow-[0_0_50px_rgba(245,158,11,0.15)] border border-amber-500/20 bg-zinc-900 group">
-            <img
-              src="https://images.unsplash.com/photo-1584984242637-25e2275f6d71?auto=format&fit=crop&w=800&q=80"
-              alt="Industrial Water Valves and Leak Prevention"
-              className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-luminosity"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-900/80 to-transparent" />
-
-            <div className="absolute inset-0 p-8 flex flex-col justify-between">
-              <div className="flex justify-between items-center">
-                <div className="font-mono text-[9px] uppercase tracking-widest text-amber-400 bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-full">
-                  SECURE LeakStop Protocol
-                </div>
-                <ShieldAlert className="h-6 w-6 text-amber-400 animate-pulse" />
-              </div>
-
-              <div className="space-y-3 relative z-10">
-                <div className="flex items-center gap-4 rounded-xl border border-zinc-700/50 bg-zinc-950/80 backdrop-blur-md p-3">
-                  <Radio className="h-5 w-5 text-cyan-400" />
-                  <div className="flex-1">
-                    <div className="font-mono text-[10px] text-cyan-400 uppercase">01 // Detect</div>
-                    <div className="text-xs text-zinc-200">Continuous flow & pressure monitoring</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4 rounded-xl border border-amber-500/30 bg-amber-950/60 backdrop-blur-md p-3 ml-4">
-                  <Activity className="h-5 w-5 text-amber-400" />
-                  <div className="flex-1">
-                    <div className="font-mono text-[10px] text-amber-400 uppercase">02 // Isolate</div>
-                    <div className="text-xs text-zinc-200">Instant anomaly alert triggered</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4 rounded-xl border border-emerald-500/30 bg-emerald-950/60 backdrop-blur-md p-3 ml-8">
-                  <CircleStop className="h-5 w-5 text-emerald-400" />
-                  <div className="flex-1">
-                    <div className="font-mono text-[10px] text-emerald-400 uppercase">03 // Protect</div>
-                    <div className="text-xs text-zinc-200">Autonomous motorized valve shutoff</div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -597,7 +594,386 @@ export default function MunicipalityPresentation() {
           </div>
         );
 
-      case "os":
+      case "onsite":
+        return (
+          <div className="relative w-full aspect-square md:aspect-[4/3] max-w-[500px] rounded-[2rem] overflow-hidden shadow-[0_0_50px_rgba(34,211,238,0.15)] border border-cyan-500/20 bg-zinc-900 group">
+            <img
+              src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80"
+              alt="Municipal facility with onsite water resilience systems"
+              className="absolute inset-0 w-full h-full object-cover opacity-25 grayscale mix-blend-luminosity"
+            />
+
+            <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/85 to-cyan-950/30" />
+
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(34,211,238,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(34,211,238,0.04)_1px,transparent_1px)] bg-[size:20px_20px]" />
+
+            <div className="absolute inset-0 p-6 flex flex-col justify-between">
+              <div className="flex justify-between items-center">
+                <div className="font-mono text-[9px] uppercase tracking-widest text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 px-3 py-1 rounded-full">
+                  Facility-Scale Water Node
+                </div>
+
+                <Building2 className="h-5 w-5 text-cyan-400 animate-pulse" />
+              </div>
+
+              <div className="relative z-10">
+                <div className="bg-zinc-950/90 border border-cyan-500/20 rounded-xl p-4 backdrop-blur-md">
+                  <div className="flex items-center justify-between border-b border-zinc-800 pb-3 mb-3">
+                    <div className="flex items-center gap-2">
+                      <Network className="h-4 w-4 text-cyan-400" />
+
+                      <span className="font-mono text-[10px] uppercase text-zinc-200">
+                        Onsite Water Resilience
+                      </span>
+                    </div>
+
+                    <span className="font-mono text-[8px] uppercase text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded px-2 py-1">
+                      Managed
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="border border-zinc-800 rounded-lg bg-zinc-900/70 p-3">
+                      <CloudRain className="h-4 w-4 text-cyan-400 mb-2" />
+
+                      <div className="font-mono text-[8px] text-zinc-500 uppercase">
+                        Capture
+                      </div>
+
+                      <div className="mt-1 text-xs font-semibold text-white">
+                        Rain · condensate · reuse streams
+                      </div>
+                    </div>
+
+                    <div className="border border-zinc-800 rounded-lg bg-zinc-900/70 p-3">
+                      <Activity className="h-4 w-4 text-amber-400 mb-2" />
+
+                      <div className="font-mono text-[8px] text-zinc-500 uppercase">
+                        Treat
+                      </div>
+
+                      <div className="mt-1 text-xs font-semibold text-white">
+                        End-use matched quality
+                      </div>
+                    </div>
+
+                    <div className="border border-zinc-800 rounded-lg bg-zinc-900/70 p-3">
+                      <Droplets className="h-4 w-4 text-blue-400 mb-2" />
+
+                      <div className="font-mono text-[8px] text-zinc-500 uppercase">
+                        Store
+                      </div>
+
+                      <div className="mt-1 text-xs font-semibold text-white">
+                        Local reserve capacity
+                      </div>
+                    </div>
+
+                    <div className="border border-zinc-800 rounded-lg bg-zinc-900/70 p-3">
+                      <Wind className="h-4 w-4 text-indigo-400 mb-2" />
+
+                      <div className="font-mono text-[8px] text-zinc-500 uppercase">
+                        Generate
+                      </div>
+
+                      <div className="mt-1 text-xs font-semibold text-white">
+                        AWG where conditions fit
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-3 border border-emerald-500/25 rounded-lg bg-emerald-950/25 p-3 flex items-center justify-between gap-3">
+                    <div>
+                      <div className="font-mono text-[8px] text-emerald-400 uppercase">
+                        Approved End Uses
+                      </div>
+
+                      <div className="mt-1 text-[11px] font-semibold text-zinc-100">
+                        Irrigation · flushing · cooling · washdown · targeted drinking water
+                      </div>
+                    </div>
+
+                    <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-400" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-zinc-950/95 border border-zinc-800 rounded-xl px-3 py-2.5 backdrop-blur-md flex items-start gap-2">
+                <ShieldAlert className="h-3.5 w-3.5 shrink-0 mt-0.5 text-amber-400" />
+
+                <span className="font-mono text-[8px] leading-relaxed text-zinc-500 uppercase">
+                  Source selection, treatment, storage, end use, and controls are
+                  engineered to local site conditions and applicable regulatory requirements.
+                </span>
+              </div>
+            </div>
+          </div>
+        );
+
+        case "recovery":
+          return (
+            <div className="relative w-full aspect-square md:aspect-[4/3] max-w-[500px] rounded-[2rem] overflow-hidden shadow-[0_0_50px_rgba(34,211,238,0.15)] border border-cyan-500/20 bg-zinc-900 group">
+              <img
+                src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80"
+                alt="Cooling-intensive facility and onsite water recovery system"
+                className="absolute inset-0 w-full h-full object-cover opacity-25 grayscale mix-blend-luminosity"
+              />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/85 to-cyan-950/30" />
+
+              <div className="absolute inset-0 bg-[linear-gradient(rgba(34,211,238,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(34,211,238,0.04)_1px,transparent_1px)] bg-[size:20px_20px]" />
+
+              <div className="absolute inset-0 p-6 flex flex-col justify-between">
+                <div className="flex justify-between items-center">
+                  <div className="font-mono text-[9px] uppercase tracking-widest text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 px-3 py-1 rounded-full">
+                    Facility-Scale Recovery
+                  </div>
+
+                  <Building2 className="h-5 w-5 text-cyan-400 animate-pulse" />
+                </div>
+
+                <div className="relative z-10 grid grid-cols-2 gap-2">
+                  <div className="bg-zinc-950/90 border border-cyan-500/20 rounded-xl p-3 backdrop-blur-md">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="font-mono text-[8px] text-cyan-400 uppercase">
+                        Plume Recovery
+                      </div>
+
+                      <Wind className="h-4 w-4 text-cyan-400" />
+                    </div>
+
+                    <div className="mt-2 text-sm font-bold text-white">
+                      Cooling-Tower Exhaust
+                    </div>
+
+                    <div className="mt-1 text-[10px] text-zinc-400">
+                      Evaluate warm, humid air as an AWG feed source
+                    </div>
+                  </div>
+
+                  <div className="bg-zinc-950/90 border border-amber-500/20 rounded-xl p-3 backdrop-blur-md">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="font-mono text-[8px] text-amber-400 uppercase">
+                        Blowdown Reuse
+                      </div>
+
+                      <Waves className="h-4 w-4 text-amber-400" />
+                    </div>
+
+                    <div className="mt-2 text-sm font-bold text-white">
+                      Treat + Reuse
+                    </div>
+
+                    <div className="mt-1 text-[10px] text-zinc-400">
+                      Approved non-potable end uses after treatment
+                    </div>
+                  </div>
+
+                  <div className="bg-zinc-950/90 border border-blue-500/20 rounded-xl p-3 backdrop-blur-md">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="font-mono text-[8px] text-blue-400 uppercase">
+                        Site Rainwater
+                      </div>
+
+                      <CloudRain className="h-4 w-4 text-blue-400" />
+                    </div>
+
+                    <div className="mt-2 text-sm font-bold text-white">
+                      Roof + Hardscape Capture
+                    </div>
+
+                    <div className="mt-1 text-[10px] text-zinc-400">
+                      Route eligible runoff to storage and treatment
+                    </div>
+                  </div>
+
+                  <div className="bg-zinc-950/90 border border-emerald-500/20 rounded-xl p-3 backdrop-blur-md">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="font-mono text-[8px] text-emerald-400 uppercase">
+                        Local Storage
+                      </div>
+
+                      <Droplets className="h-4 w-4 text-emerald-400" />
+                    </div>
+
+                    <div className="mt-2 text-sm font-bold text-white">
+                      Managed Reserve
+                    </div>
+
+                    <div className="mt-1 text-[10px] text-zinc-400">
+                      Store and deploy water when facility demand occurs
+                    </div>
+                  </div>
+
+                  <div className="col-span-2 bg-cyan-950/25 border border-cyan-500/25 rounded-xl p-3 backdrop-blur-md flex items-center justify-between gap-4">
+                    <div>
+                      <div className="font-mono text-[8px] text-cyan-400 uppercase">
+                        Controlled Water Routing
+                      </div>
+
+                      <div className="mt-1 text-xs font-semibold text-zinc-100">
+                        Capture → Treat → Store → Deploy to approved end use
+                      </div>
+                    </div>
+
+                    <Network className="h-6 w-6 shrink-0 text-cyan-400" />
+                  </div>
+                </div>
+
+                <div className="bg-zinc-950/95 border border-zinc-800 rounded-xl px-3 py-2.5 backdrop-blur-md flex items-start gap-2">
+                  <ShieldAlert className="h-3.5 w-3.5 shrink-0 mt-0.5 text-amber-400" />
+
+                  <span className="font-mono text-[8px] leading-relaxed text-zinc-500 uppercase">
+                    Recovery, treatment, storage, and end use are engineered to site
+                    chemistry, demand, energy profile, regulatory requirements, and
+                    approved water-quality standards.
+                  </span>
+                </div>
+              </div>
+            </div>
+          );
+
+        case "multifamily":
+          return (
+            <div className="relative w-full aspect-[5/4] max-w-[540px] rounded-[2rem] overflow-hidden shadow-[0_0_50px_rgba(99,102,241,0.15)] border border-indigo-500/20 bg-zinc-900 group">
+              <img
+                src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80"
+                alt="Multifamily residential building with integrated onsite water resilience"
+                className="absolute inset-0 w-full h-full object-cover opacity-20 grayscale mix-blend-luminosity"
+              />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/90 to-indigo-950/30" />
+
+              <div className="absolute inset-0 bg-[linear-gradient(rgba(99,102,241,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.04)_1px,transparent_1px)] bg-[size:20px_20px]" />
+
+              <div className="absolute inset-0 p-5 flex flex-col">
+                <div className="flex-none flex justify-between items-center">
+                  <div className="font-mono text-[9px] uppercase tracking-widest text-indigo-400 bg-indigo-500/10 border border-indigo-500/30 px-3 py-1 rounded-full">
+                    Building-Scale Resilience
+                  </div>
+
+                  <Building2 className="h-5 w-5 text-indigo-400 animate-pulse" />
+                </div>
+
+                <div className="relative z-10 flex-1 flex items-center py-3">
+                  <div className="w-full bg-zinc-950/90 border border-indigo-500/20 rounded-xl p-3.5 backdrop-blur-md">
+                    <div className="flex items-center justify-between border-b border-zinc-800 pb-2.5 mb-2.5">
+                      <div className="flex items-center gap-2">
+                        <Network className="h-4 w-4 text-indigo-400" />
+
+                        <span className="font-mono text-[10px] uppercase text-zinc-200">
+                          Multifamily Resilience Loop
+                        </span>
+                      </div>
+
+                      <span className="font-mono text-[8px] uppercase text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded px-2 py-1">
+                        Managed
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="border border-amber-500/25 rounded-lg bg-amber-950/20 p-3">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="font-mono text-[8px] text-amber-400 uppercase">
+                            01 // Prevent
+                          </div>
+
+                          <ShieldAlert className="h-4 w-4 text-amber-400" />
+                        </div>
+
+                        <div className="mt-1.5 text-xs font-semibold text-white">
+                          LeakStop Monitoring
+                        </div>
+
+                        <div className="mt-1 text-[10px] leading-snug text-zinc-400">
+                          Detect abnormal flow and isolate approved zones remotely.
+                        </div>
+                      </div>
+
+                      <div className="border border-blue-500/25 rounded-lg bg-blue-950/20 p-3">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="font-mono text-[8px] text-blue-400 uppercase">
+                            02 // Capture
+                          </div>
+
+                          <CloudRain className="h-4 w-4 text-blue-400" />
+                        </div>
+
+                        <div className="mt-1.5 text-xs font-semibold text-white">
+                          Roof + Site Runoff
+                        </div>
+
+                        <div className="mt-1 text-[10px] leading-snug text-zinc-400">
+                          Route eligible rainwater to storage and treatment.
+                        </div>
+                      </div>
+
+                      <div className="border border-indigo-500/25 rounded-lg bg-indigo-950/20 p-3">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="font-mono text-[8px] text-indigo-400 uppercase">
+                            03 // Recover
+                          </div>
+
+                          <Waves className="h-4 w-4 text-indigo-400" />
+                        </div>
+
+                        <div className="mt-1.5 text-xs font-semibold text-white">
+                          Greywater Reuse
+                        </div>
+
+                        <div className="mt-1 text-[10px] leading-snug text-zinc-400">
+                          Recover showers, lavatories, and laundry water.
+                        </div>
+                      </div>
+
+                      <div className="border border-emerald-500/25 rounded-lg bg-emerald-950/20 p-3">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="font-mono text-[8px] text-emerald-400 uppercase">
+                            04 // Deploy
+                          </div>
+
+                          <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                        </div>
+
+                        <div className="mt-1.5 text-xs font-semibold text-white">
+                          Managed Reuse
+                        </div>
+
+                        <div className="mt-1 text-[10px] leading-snug text-zinc-400">
+                          Flush fixtures, irrigate, wash down, or cool.
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-2.5 border border-cyan-500/25 rounded-lg bg-cyan-950/20 px-3 py-2.5 flex items-center justify-between gap-3">
+                      <div>
+                        <div className="font-mono text-[8px] text-cyan-400 uppercase">
+                          SECURE Blue Operating Layer
+                        </div>
+
+                        <div className="mt-1 text-[10px] font-semibold text-zinc-100">
+                          Monitor → alert → isolate → treat → store → deploy
+                        </div>
+                      </div>
+
+                      <Activity className="h-5 w-5 shrink-0 text-cyan-400" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex-none bg-zinc-950/95 border border-zinc-800 rounded-xl px-3 py-2 backdrop-blur-md flex items-start gap-2">
+                  <ShieldAlert className="h-3.5 w-3.5 shrink-0 mt-0.5 text-amber-400" />
+
+                  <span className="font-mono text-[8px] leading-relaxed text-zinc-500 uppercase">
+                    Design includes source separation, treatment, storage,
+                    cross-connection protection, monitoring, and applicable local approvals.
+                  </span>
+                </div>
+              </div>
+            </div>
+          );
+      
+        case "os":
         return (
           <div className="relative w-full aspect-square md:aspect-[4/3] max-w-[500px] rounded-[2rem] overflow-hidden shadow-[0_0_50px_rgba(34,211,238,0.15)] border border-cyan-500/20 bg-zinc-900">
             <img
@@ -712,11 +1088,11 @@ export default function MunicipalityPresentation() {
   };
 
   return (
-    <div className="w-full h-[calc(100dvh-80px)] min-h-[600px] flex flex-col bg-zinc-950 text-zinc-50 font-sans overflow-hidden">
+    <div className="w-full min-h-[calc(100dvh-80px)] flex flex-col bg-zinc-950 text-zinc-50 font-sans overflow-x-hidden md:h-[calc(100dvh-80px)] md:min-h-[600px] md:overflow-hidden">
       
       {/* Header stays rigidly at the top */}
-      <header className="flex-none p-6 md:px-12 md:py-8 flex justify-between items-center z-10 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-900">
-        <div className="font-bold tracking-tighter text-xl flex items-center gap-2">
+      <header className="flex-none px-4 pb-4 pt-[max(1rem,env(safe-area-inset-top))] md:p-8 md:px-12 md:py-8 flex justify-between items-center z-10 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-900">
+        <div className="font-bold tracking-tighter text-base md:text-xl flex items-center gap-2">
           <div className="h-5 w-5 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-sm shadow-[0_0_10px_rgba(37,99,235,0.5)]" />
           SECURE BLUE
         </div>
@@ -729,12 +1105,12 @@ export default function MunicipalityPresentation() {
               type="button"
               onClick={() => setCurrentSlide(index)}
               aria-label={`Go to slide ${index + 1}: ${slide.title}`}
-              className={`h-1.5 rounded-full transition-all duration-500 ${
+              className={`h-1.5 w-4 rounded-full transition-colors duration-300 ${
                 index === currentSlide
-                  ? "w-10 bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]"
+                  ? "bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]"
                   : index < currentSlide
-                    ? "w-4 bg-zinc-600 hover:bg-zinc-500"
-                    : "w-4 bg-zinc-800 hover:bg-zinc-700"
+                    ? "bg-zinc-600 hover:bg-zinc-500"
+                    : "bg-zinc-800 hover:bg-zinc-700"
               }`}
             />
           ))}
@@ -750,7 +1126,7 @@ export default function MunicipalityPresentation() {
         
         {/* Slide Content takes 100% width, keeping the presentation perfectly centered */}
         <div className="flex-1 w-full flex flex-col overflow-y-auto relative">
-          <div className="min-h-full flex items-center justify-center p-6 md:p-12">
+          <div className="min-h-full flex items-start justify-center px-4 py-6 md:items-center md:p-12">
             <div
               key={current.id}
               className="w-full max-w-6xl grid lg:grid-cols-2 gap-12 lg:gap-20 items-center animate-in fade-in slide-in-from-bottom-8 duration-700"
@@ -788,7 +1164,7 @@ export default function MunicipalityPresentation() {
                   </div>
                 )}
 
-                {current.id === 8 && (
+                {current.id === 11 && (
                   <div className="pt-4 flex flex-col gap-1 font-mono text-[11px] uppercase tracking-widest text-zinc-500">
                     <div>Presenter: Scott Holbrook, CTO</div>
                     <div className="text-blue-400">scott.holbrook@metawork.tools</div>
