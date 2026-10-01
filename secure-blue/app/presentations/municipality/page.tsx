@@ -254,10 +254,19 @@ export default function MunicipalityPresentation() {
   }, [nextSlide, prevSlide, slides.length]);
 
   useEffect(() => {
-    slideContentRef.current?.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    const scrollToTop = () => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+
+      slideContentRef.current?.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    };
+
+    requestAnimationFrame(scrollToTop);
   }, [currentSlide]);
 
   const current = slides[currentSlide];
@@ -1122,7 +1131,14 @@ export default function MunicipalityPresentation() {
             <button
               key={slide.id}
               type="button"
-              onClick={() => setCurrentSlide(index)}
+              onClick={() => {
+                setCurrentSlide(index);
+
+                window.scrollTo({
+                  top: 0,
+                  behavior: "smooth",
+                });
+              }}
               aria-label={`Go to slide ${index + 1}: ${slide.title}`}
               className={`h-1.5 w-4 rounded-full transition-colors duration-300 ${
                 index === currentSlide
