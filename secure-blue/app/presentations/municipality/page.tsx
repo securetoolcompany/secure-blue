@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   ArrowRight,
   ArrowLeft,
@@ -57,6 +57,7 @@ type Slide = {
 export default function MunicipalityPresentation() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [notesOpen, setNotesOpen] = useState(false);
+  const slideContentRef = useRef<HTMLDivElement>(null);
 
   const slides: Slide[] = [
     {
@@ -204,15 +205,26 @@ export default function MunicipalityPresentation() {
     },
   ];
 
+  const scrollSlideToTop = useCallback(() => {
+    slideContentRef.current?.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, []);
+
   const nextSlide = useCallback(() => {
     setCurrentSlide((previous) =>
       previous === slides.length - 1 ? previous : previous + 1
     );
-  }, [slides.length]);
+
+    scrollSlideToTop();
+  }, [scrollSlideToTop, slides.length]);
 
   const prevSlide = useCallback(() => {
     setCurrentSlide((previous) => (previous === 0 ? 0 : previous - 1));
-  }, []);
+
+    scrollSlideToTop();
+  }, [scrollSlideToTop]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -240,6 +252,13 @@ export default function MunicipalityPresentation() {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [nextSlide, prevSlide, slides.length]);
+
+  useEffect(() => {
+    slideContentRef.current?.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [currentSlide]);
 
   const current = slides[currentSlide];
 
@@ -1125,7 +1144,10 @@ export default function MunicipalityPresentation() {
       <main className="flex-1 relative min-h-0 overflow-hidden flex">
         
         {/* Slide Content takes 100% width, keeping the presentation perfectly centered */}
-        <div className="flex-1 w-full flex flex-col overflow-y-auto relative">
+        <div
+          ref={slideContentRef}
+          className="flex-1 w-full flex flex-col overflow-y-auto relative"
+        >
           <div className="min-h-full flex items-start justify-center px-4 py-6 md:items-center md:p-12">
             <div
               key={current.id}
