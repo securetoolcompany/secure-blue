@@ -1071,7 +1071,7 @@ export default function MunicipalityPresentation() {
                   Municipal Site Assessment
                 </div>
                 <a
-                  href="mailto:scott.holbrook@metawork.tools"
+                  href="mailto:scott.holbrook@secureblue.earth"
                   className="flex items-center justify-center gap-2 w-full bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 text-blue-300 transition-colors py-2.5 rounded-lg font-mono text-[10px] uppercase tracking-widest"
                 >
                   Contact Scott
@@ -1167,8 +1167,8 @@ export default function MunicipalityPresentation() {
                 {current.id === 11 && (
                   <div className="pt-4 flex flex-col gap-1 font-mono text-[11px] uppercase tracking-widest text-zinc-500">
                     <div>Presenter: Scott Holbrook, CTO</div>
-                    <div className="text-blue-400">scott.holbrook@metawork.tools</div>
-                    <div className="text-zinc-600">secureblue.earth</div>
+                    <div className="text-blue-400">scott.holbrook@secureblue.earth</div>
+                    <div className="text-zinc-600">https://secureblue.earth</div>
                   </div>
                 )}
               </div>
