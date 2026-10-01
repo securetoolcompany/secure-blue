@@ -166,16 +166,16 @@ export default function MunicipalityPresentation() {
     },
     {
       id: 9,
-      title: "Unified Command: SECURE Blue OS",
-      subtitle: "One connected platform, not disconnected projects.",
+      title: "Integrate. Don't Rip and Replace.",
+      subtitle: "Bring Water Intelligence Into the Systems You Already Trust.",
       visual: "os",
       color: "text-cyan-400",
       content:
-        "Cities do not need more siloed dashboards. SECURE Blue OS acts as the operational layer—integrating leak detection, smart irrigation, and local supply generation into a single interface for public works and mayoral oversight.",
-      metric: "UNIFIED_CIVIC_COMMAND",
-      time: "6:15–7:30",
+        "SECURE Blue is designed as an operational integration layer—not a mandate to replace existing SCADA, building automation, GIS, work-order, or city data systems. We connect field intelligence to the dashboards, alerts, reports, and workflows your teams already use.",
+      metric: "OPEN_MUNICIPAL_INTEGRATION_LAYER",
+      time: "8:15–8:55",
       speakerNotes:
-        "The real power of SECURE Blue isn't just an individual valve or sensor—it’s the unified operating layer.\n\nCities don't need five more software logins or disconnected point solutions. SECURE Blue OS integrates telemetry from loss prevention, conservation sensors, and local generation into a single, cohesive interface.\n\nPublic works directors get real-time visibility across all municipal water assets, city managers get compliance and usage reporting, and mayors get a verifiable record of water stewardship.",
+        "This is an important point: cities do not need another forced rip-and-replace project.\n\nMost municipal organizations already have substantial investments in SCADA, building automation systems, facility controls, GIS, work-order platforms, billing systems, and existing dashboards. Those systems are often mission-critical, and replacing them can create cost, downtime, training burden, procurement delays, and operational risk.\n\nSECURE Blue is designed to work as an operational integration layer. We collect field intelligence from flow meters, valves, environmental sensors, recovery systems, and local storage, then deliver that data into the systems and workflows your teams already trust.\n\nThat may mean SCADA for utility operations, BACnet for building automation, Modbus or other industrial protocols for field equipment, APIs for city platforms, GIS for asset context, or work-order tools for maintenance response.\n\nThe goal is simple: do not force staff to abandon the tools they know. Get the right water data, alerts, and approved control options to the right people through a secure, documented integration strategy.",
     },
     {
       id: 10,
@@ -197,7 +197,7 @@ export default function MunicipalityPresentation() {
       visual: "cta",
       color: "text-blue-400",
       content:
-        "Prevent loss today. Conserve existing supply tomorrow. Generate targeted local redundancy for the future. Schedule a 30-minute zero-commitment site assessment to identify your city's highest-value pilot location.",
+        "Prevent loss today. Conserve existing supply tomorrow. Generate targeted local redundancy for the future. Schedule a 30-minute zero-commitment discovery call to identify your city's highest-value pilot location.",
       metric: "NEXT_ACTION_SITE_ASSESSMENT",
       time: "9:00–10:00",
       speakerNotes:
@@ -623,7 +623,7 @@ export default function MunicipalityPresentation() {
 
       case "onsite":
         return (
-          <div className="relative w-full aspect-square md:aspect-[4/3] max-w-[500px] rounded-[2rem] overflow-hidden shadow-[0_0_50px_rgba(34,211,238,0.15)] border border-cyan-500/20 bg-zinc-900 group">
+          <div className="relative w-full max-w-[540px] rounded-[2rem] overflow-hidden shadow-[0_0_50px_rgba(34,211,238,0.15)] border border-cyan-500/20 bg-zinc-900 group">
             <img
               src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80"
               alt="Municipal facility with onsite water resilience systems"
@@ -634,7 +634,7 @@ export default function MunicipalityPresentation() {
 
             <div className="absolute inset-0 bg-[linear-gradient(rgba(34,211,238,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(34,211,238,0.04)_1px,transparent_1px)] bg-[size:20px_20px]" />
 
-            <div className="absolute inset-0 p-6 flex flex-col justify-between">
+            <div className="relative z-10 min-h-[430px] p-5 flex flex-col justify-between">
               <div className="flex justify-between items-center">
                 <div className="font-mono text-[9px] uppercase tracking-widest text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 px-3 py-1 rounded-full">
                   Facility-Scale Water Node
@@ -725,7 +725,7 @@ export default function MunicipalityPresentation() {
                 </div>
               </div>
 
-              <div className="bg-zinc-950/95 border border-zinc-800 rounded-xl px-3 py-2.5 backdrop-blur-md flex items-start gap-2">
+              <div className="mt-4 bg-zinc-950/95 border border-zinc-800 rounded-xl px-3 py-2.5 backdrop-blur-md flex items-start gap-2">
                 <ShieldAlert className="h-3.5 w-3.5 shrink-0 mt-0.5 text-amber-400" />
 
                 <span className="font-mono text-[8px] leading-relaxed text-zinc-500 uppercase">
@@ -739,7 +739,7 @@ export default function MunicipalityPresentation() {
 
         case "recovery":
           return (
-            <div className="relative w-full aspect-square md:aspect-[4/3] max-w-[500px] rounded-[2rem] overflow-hidden shadow-[0_0_50px_rgba(34,211,238,0.15)] border border-cyan-500/20 bg-zinc-900 group">
+            <div className="relative w-full max-w-[540px] rounded-[2rem] overflow-hidden shadow-[0_0_50px_rgba(34,211,238,0.15)] border border-cyan-500/20 bg-zinc-900 group">
               <img
                 src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80"
                 alt="Cooling-intensive facility and onsite water recovery system"
@@ -750,7 +750,7 @@ export default function MunicipalityPresentation() {
 
               <div className="absolute inset-0 bg-[linear-gradient(rgba(34,211,238,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(34,211,238,0.04)_1px,transparent_1px)] bg-[size:20px_20px]" />
 
-              <div className="absolute inset-0 p-6 flex flex-col justify-between">
+              <div className="relative z-10 min-h-[430px] p-5 flex flex-col justify-between">
                 <div className="flex justify-between items-center">
                   <div className="font-mono text-[9px] uppercase tracking-widest text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 px-3 py-1 rounded-full">
                     Facility-Scale Recovery
@@ -847,7 +847,7 @@ export default function MunicipalityPresentation() {
                   </div>
                 </div>
 
-                <div className="bg-zinc-950/95 border border-zinc-800 rounded-xl px-3 py-2.5 backdrop-blur-md flex items-start gap-2">
+                <div className="mt-4 bg-zinc-950/95 border border-zinc-800 rounded-xl px-3 py-2.5 backdrop-blur-md flex items-start gap-2">
                   <ShieldAlert className="h-3.5 w-3.5 shrink-0 mt-0.5 text-amber-400" />
 
                   <span className="font-mono text-[8px] leading-relaxed text-zinc-500 uppercase">
@@ -862,7 +862,7 @@ export default function MunicipalityPresentation() {
 
         case "multifamily":
           return (
-            <div className="relative w-full aspect-[5/4] max-w-[540px] rounded-[2rem] overflow-hidden shadow-[0_0_50px_rgba(99,102,241,0.15)] border border-indigo-500/20 bg-zinc-900 group">
+            <div className="relative w-full max-w-[540px] rounded-[2rem] overflow-hidden shadow-[0_0_50px_rgba(99,102,241,0.15)] border border-indigo-500/20 bg-zinc-900 group">
               <img
                 src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80"
                 alt="Multifamily residential building with integrated onsite water resilience"
@@ -873,7 +873,7 @@ export default function MunicipalityPresentation() {
 
               <div className="absolute inset-0 bg-[linear-gradient(rgba(99,102,241,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.04)_1px,transparent_1px)] bg-[size:20px_20px]" />
 
-              <div className="absolute inset-0 p-5 flex flex-col">
+              <div className="relative z-10 min-h-[455px] p-5 flex flex-col">
                 <div className="flex-none flex justify-between items-center">
                   <div className="font-mono text-[9px] uppercase tracking-widest text-indigo-400 bg-indigo-500/10 border border-indigo-500/30 px-3 py-1 rounded-full">
                     Building-Scale Resilience
@@ -988,7 +988,7 @@ export default function MunicipalityPresentation() {
                   </div>
                 </div>
 
-                <div className="flex-none bg-zinc-950/95 border border-zinc-800 rounded-xl px-3 py-2 backdrop-blur-md flex items-start gap-2">
+                <div className="flex-none mt-3 bg-zinc-950/95 border border-zinc-800 rounded-xl px-3 py-2.5 backdrop-blur-md flex items-start gap-2">
                   <ShieldAlert className="h-3.5 w-3.5 shrink-0 mt-0.5 text-amber-400" />
 
                   <span className="font-mono text-[8px] leading-relaxed text-zinc-500 uppercase">
@@ -1015,29 +1015,82 @@ export default function MunicipalityPresentation() {
                 <div className="flex items-center justify-between border-b border-zinc-800 pb-3 mb-3">
                   <div className="flex items-center gap-2">
                     <Network className="h-4 w-4 text-cyan-400" />
-                    <span className="font-mono text-[10px] uppercase text-zinc-300">SECURE Blue OS</span>
+                    <span className="font-mono text-[10px] uppercase text-zinc-300">
+                      SECURE Blue Integration Layer
+                    </span>
                   </div>
-                  <div className="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded font-mono text-[8px] text-emerald-400 uppercase">System Active</div>
+                  <div className="px-2 py-0.5 bg-cyan-500/10 border border-cyan-500/20 rounded font-mono text-[8px] text-cyan-400 uppercase">
+                    Existing Systems Connected
+                  </div>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-zinc-900/60 border border-zinc-800/50 rounded-lg p-3">
-                    <LineChart className="h-4 w-4 text-amber-400 mb-2" />
-                    <div className="text-lg font-bold text-white">12.4k<span className="text-[10px] text-zinc-500 ml-1">GAL</span></div>
-                    <div className="font-mono text-[8px] text-zinc-500 uppercase mt-1">Loss Prevented</div>
-                  </div>
-                  <div className="bg-zinc-900/60 border border-zinc-800/50 rounded-lg p-3">
-                    <Sprout className="h-4 w-4 text-emerald-400 mb-2" />
-                    <div className="text-lg font-bold text-white">4.1k<span className="text-[10px] text-zinc-500 ml-1">GAL</span></div>
-                    <div className="font-mono text-[8px] text-zinc-500 uppercase mt-1">Conserved Today</div>
-                  </div>
-                  <div className="col-span-2 bg-blue-950/20 border border-blue-500/20 rounded-lg p-3 flex justify-between items-center">
-                    <div>
-                      <div className="font-mono text-[8px] text-blue-400 uppercase">Local Supply (AWG + Reuse)</div>
-                      <div className="text-sm font-bold text-white mt-0.5">850 GAL Generated</div>
+                  <div className="bg-zinc-900/60 border border-cyan-500/20 rounded-lg p-3">
+                    <Network className="h-4 w-4 text-cyan-400 mb-2" />
+
+                    <div className="text-sm font-bold text-white">
+                      SCADA + PLC
                     </div>
-                    <Activity className="h-4 w-4 text-blue-400" />
+
+                    <div className="font-mono text-[8px] text-zinc-500 uppercase mt-1">
+                      Utility telemetry and approved control paths
+                    </div>
                   </div>
+
+                  <div className="bg-zinc-900/60 border border-indigo-500/20 rounded-lg p-3">
+                    <Building2 className="h-4 w-4 text-indigo-400 mb-2" />
+
+                    <div className="text-sm font-bold text-white">
+                      BACnet + BAS
+                    </div>
+
+                    <div className="font-mono text-[8px] text-zinc-500 uppercase mt-1">
+                      Facility systems and building operations
+                    </div>
+                  </div>
+
+                  <div className="col-span-2 bg-blue-950/20 border border-blue-500/20 rounded-lg p-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <div className="font-mono text-[8px] text-blue-400 uppercase">
+                          City Operations Layer
+                        </div>
+
+                        <div className="text-sm font-bold text-white mt-0.5">
+                          GIS · Work Orders · APIs · Executive Reporting
+                        </div>
+                      </div>
+
+                      <Map className="h-4 w-4 shrink-0 text-blue-400" />
+                    </div>
+
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      <span className="rounded border border-zinc-700 bg-zinc-950/60 px-2 py-1 font-mono text-[8px] text-zinc-400">
+                        MODBUS
+                      </span>
+
+                      <span className="rounded border border-zinc-700 bg-zinc-950/60 px-2 py-1 font-mono text-[8px] text-zinc-400">
+                        BACNET
+                      </span>
+
+                      <span className="rounded border border-zinc-700 bg-zinc-950/60 px-2 py-1 font-mono text-[8px] text-zinc-400">
+                        REST API
+                      </span>
+
+                      <span className="rounded border border-zinc-700 bg-zinc-950/60 px-2 py-1 font-mono text-[8px] text-zinc-400">
+                        READ-ONLY OPTION
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-3 pt-3 border-t border-zinc-800 flex items-center justify-between gap-3">
+                  <span className="font-mono text-[8px] text-zinc-500 uppercase">
+                    Preserve existing operations
+                  </span>
+
+                  <span className="font-mono text-[8px] text-cyan-400 uppercase">
+                    Secure data delivery + approved control paths
+                  </span>
                 </div>
               </div>
             </div>
