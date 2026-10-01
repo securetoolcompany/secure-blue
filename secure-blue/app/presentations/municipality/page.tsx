@@ -255,18 +255,17 @@ export default function MunicipalityPresentation() {
 
   useEffect(() => {
     const scrollToTop = () => {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-
-      slideContentRef.current?.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
+      window.scrollTo(0, 0);
+      slideContentRef.current?.scrollTo(0, 0);
     };
 
-    requestAnimationFrame(scrollToTop);
+    const frame = requestAnimationFrame(scrollToTop);
+    const timeout = window.setTimeout(scrollToTop, 120);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      window.clearTimeout(timeout);
+    };
   }, [currentSlide]);
 
   const current = slides[currentSlide];
