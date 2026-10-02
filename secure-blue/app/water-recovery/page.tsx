@@ -113,6 +113,29 @@ const processSteps = [
   },
 ] as const;
 
+const waterAssessmentEmailHref =
+  `mailto:scott.holbrook@secureblue.earth?subject=${encodeURIComponent(
+    "Water Assessment Request"
+  )}&body=${encodeURIComponent(
+    `Hello SECURE Blue,
+
+I would like to request a Water Assessment.
+
+Water recovery solution of interest:
+Project Name:
+Company / Organization:
+Name:
+Email:
+Phone:
+Project Location:
+Facility Type:
+Available Water Source(s):
+Intended Reuse Goal(s):
+Project Notes:
+
+Thank you.`
+  )}`;
+
 function AccentLine({ accent }: { accent: "cyan" | "blue" | "lime" }) {
   const accentClass = {
     cyan: "bg-cyan-400",
@@ -170,13 +193,13 @@ export default function WaterRecoveryPage() {
                   <ArrowRight className="h-4 w-4" />
                 </a>
 
-                <Link
-                  href="/contact?interest=water-recovery"
+                <a
+  								href={waterAssessmentEmailHref}
                   className="inline-flex items-center justify-center gap-3 border border-white/30 bg-white/[0.02] px-6 py-4 text-xs font-black uppercase tracking-[0.14em] text-white transition hover:border-lime-300 hover:bg-lime-300/10"
                 >
                   Start Water Assessment
                   <ArrowRight className="h-4 w-4" />
-                </Link>
+                </a>
               </div>
             </div>
 
@@ -419,13 +442,13 @@ export default function WaterRecoveryPage() {
               technology partner.
             </p>
 
-            <Link
-              href="/contact?interest=water-recovery"
-              className="mt-9 inline-flex items-center gap-3 border border-lime-300 bg-lime-300 px-6 py-4 text-xs font-black uppercase tracking-[0.14em] text-slate-950 transition hover:bg-white"
-            >
-              Start a Water Assessment
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+            <a
+							href={waterAssessmentEmailHref}
+							className="mt-9 inline-flex items-center gap-3 border border-lime-300 bg-lime-300 px-6 py-4 text-xs font-black uppercase tracking-[0.14em] text-slate-950 transition hover:bg-white"
+						>
+							Start a Water Assessment
+							<ArrowRight className="h-4 w-4" />
+						</a>
           </div>
         </div>
       </section>
