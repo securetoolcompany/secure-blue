@@ -214,81 +214,51 @@ export default async function WaterRecoverySolutionPage({
                 </div>
               </div>
 
-              <div
-                className={`relative border ${accent.border} bg-[#071424]/90 p-6 shadow-[0_0_50px_rgba(34,211,238,0.10)] [clip-path:polygon(0_0,100%_0,100%_92%,92%_100%,0_100%)]`}
-              >
-                <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                  <p
-                    className={`text-xs font-bold tracking-[0.18em] ${accent.text}`}
-                  >
-                    SYSTEM PROFILE
-                  </p>
+              <div className="relative">
+                <div
+                  className={`relative aspect-[4/5] overflow-hidden border ${accent.border} bg-[#071424] [clip-path:polygon(0_0,100%_0,100%_92%,92%_100%,0_100%)]`}
+                >
+                  <img
+                    src={solution.heroImage}
+                    alt={solution.heroImageAlt}
+                    className="h-full w-full object-cover"
+                  />
 
-                  <span
-                    className={`flex items-center gap-2 text-xs font-bold tracking-[0.14em] ${accent.text}`}
-                  >
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-[#030712]/25 to-transparent" />
+
+                  <div className="absolute right-0 top-0 border-b border-l border-white/20 bg-[#030712]/85 px-4 py-3">
                     <span
-                      className={`h-2 w-2 ${accent.solid} shadow-[0_0_12px_rgba(34,211,238,0.9)]`}
-                    />
-                    ACTIVE
-                  </span>
-                </div>
+                      className={`flex items-center gap-2 text-[10px] font-bold tracking-[0.14em] ${accent.text}`}
+                    >
+                      <span className={`h-2 w-2 ${accent.solid}`} />
+                      WAHASO SYSTEM
+                    </span>
+                  </div>
 
-                <div className="mt-7 space-y-5">
-                  <div className={`border-l-2 ${accent.border} pl-4`}>
-                    <p className="text-xs tracking-[0.16em] text-slate-500">
-                      SYSTEM
-                    </p>
-                    <p className="mt-1 font-semibold text-white">
+                  <div className="absolute inset-x-0 bottom-0 p-6">
+                    <p className={`text-xs font-bold tracking-[0.18em] ${accent.text}`}>
                       {solution.system}
                     </p>
-                  </div>
 
-                  <div className={`border-l-2 ${accent.border} pl-4`}>
-                    <p className="text-xs tracking-[0.16em] text-slate-500">
-                      PRIMARY SOURCE
-                    </p>
-                    <p className="mt-1 text-sm font-semibold leading-6 text-white">
-                      {solution.sourceLabel}
-                    </p>
-                  </div>
-
-                  <div className={`border-l-2 ${accent.border} pl-4`}>
-                    <p className="text-xs tracking-[0.16em] text-slate-500">
-                      DELIVERY
-                    </p>
-                    <p className="mt-1 text-sm font-semibold leading-6 text-white">
-                      SECURE Blue Assessment → Wahaso Scoping
+                    <p className="mt-3 text-lg font-black uppercase leading-tight text-white">
+                      Engineered Commercial Water Recovery
                     </p>
                   </div>
                 </div>
 
-                <div className="mt-8 grid grid-cols-3 gap-px border border-white/10 bg-white/10">
-                  <div className="bg-[#071424] p-4">
-                    <p className={`text-2xl font-black ${accent.text}`}>
-                      {String(solution.sourceWater.length).padStart(2, "0")}
-                    </p>
-                    <p className="mt-1 text-[10px] font-bold tracking-[0.14em] text-slate-400">
-                      SOURCES
-                    </p>
-                  </div>
+                <div className="relative -mt-8 ml-6 border border-white/10 bg-[#071424]/95 p-5 shadow-[0_0_40px_rgba(34,211,238,0.08)]">
+                  <p className="text-[10px] font-bold tracking-[0.16em] text-slate-500">
+                    PRIMARY SOURCE
+                  </p>
 
-                  <div className="bg-[#071424] p-4">
-                    <p className={`text-2xl font-black ${accent.text}`}>
-                      {String(solution.reuseApplications.length).padStart(
-                        2,
-                        "0"
-                      )}
-                    </p>
-                    <p className="mt-1 text-[10px] font-bold tracking-[0.14em] text-slate-400">
-                      END USES
-                    </p>
-                  </div>
+                  <p className="mt-2 text-sm font-semibold leading-6 text-white">
+                    {solution.sourceLabel}
+                  </p>
 
-                  <div className="bg-[#071424] p-4">
-                    <p className={`text-2xl font-black ${accent.text}`}>04</p>
-                    <p className="mt-1 text-[10px] font-bold tracking-[0.14em] text-slate-400">
-                      PHASES
+                  <div className="mt-4 flex items-center gap-3 border-t border-white/10 pt-4">
+                    <span className={`h-1 w-8 ${accent.line}`} />
+                    <p className={`text-[10px] font-bold tracking-[0.14em] ${accent.text}`}>
+                      SECURE BLUE + WAHASO
                     </p>
                   </div>
                 </div>

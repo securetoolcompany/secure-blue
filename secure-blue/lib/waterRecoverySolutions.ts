@@ -12,6 +12,8 @@ export type WaterRecoverySolution = {
   sourceLabel: string;
   heroEyebrow: string;
   heroTitle: string;
+  heroImage: string;
+  heroImageAlt: string;
   heroAccent: "cyan" | "blue" | "lime";
   heroDescription: string;
   overview: string;
@@ -42,7 +44,11 @@ export const waterRecoverySolutions: WaterRecoverySolution[] = [
     heroAccent: "cyan",
     heroDescription:
       "Greywater recovery captures water from showers, lavatories, baths, and laundry, then treats it for planned non-potable reuse throughout the facility.",
-    overview:
+    heroImage:
+      "https://wahaso.com/wp-content/uploads/wahaso-commercial-greywater-harvesting-systems-1-980x1306.jpg",
+    heroImageAlt:
+      "Wahaso GreyFlo commercial greywater harvesting and recovery system",
+      overview:
       "SECURE Blue and Wahaso help commercial, institutional, multifamily, hospitality, campus, and mixed-use projects capture greywater and put it back to work. GreyFlo systems are selected around source volume, required treatment level, intended reuse, facility controls, and applicable project requirements.",
     sourceWater: [
       "Showers and bathing fixtures",
@@ -124,7 +130,11 @@ export const waterRecoverySolutions: WaterRecoverySolution[] = [
     heroAccent: "blue",
     heroDescription:
       "Commercial cooling equipment produces condensate as it removes moisture from the air. CondensaFlo systems capture that water at its source and return it to high-value facility reuse.",
-    overview:
+    heroImage:
+      "https://wahaso.com/wp-content/uploads/wahaso-commercial-best-condensate-systems-2-980x1306.jpg",
+    heroImageAlt:
+      "Wahaso CondensaFlo commercial HVAC condensate recovery system",
+      overview:
       "HVAC condensate can be a dependable on-site water source, especially in cooling-dominant facilities and hot climates. SECURE Blue and Wahaso evaluate condensate volume, mechanical-system configuration, storage, reuse demand, and control requirements to develop the right recovery approach.",
     sourceWater: [
       "Air handling units",
@@ -205,7 +215,11 @@ export const waterRecoverySolutions: WaterRecoverySolution[] = [
     heroAccent: "lime",
     heroDescription:
       "CT Recover captures cooling tower blowdown before discharge, uses advanced treatment to manage water quality, and returns recovered water to tower operation.",
-    overview:
+    heroImage:
+      "https://wahaso.com/wp-content/uploads/Wahaso-Commercial-Cooling-Tower-Blowdown-Water-Savings-Reuse-Systems-1-980x551.jpg",
+    heroImageAlt:
+      "Wahaso CT Recover commercial cooling tower blowdown recovery system",
+      overview:
       "Cooling towers are often among a facility's largest water and chemical cost centers. SECURE Blue and Wahaso help commercial and industrial facility teams evaluate tower operation, recover blowdown, improve water efficiency, and reduce resource demand.",
     sourceWater: [
       "Cooling tower blowdown",
@@ -286,7 +300,11 @@ export const waterRecoverySolutions: WaterRecoverySolution[] = [
     heroAccent: "cyan",
     heroDescription:
       "Stormwater harvesting captures ground-level runoff from hardscape, parking, landscape, and site-drainage areas for engineered treatment and non-potable reuse.",
-    overview:
+    heroImage:
+      "https://wahaso.com/wp-content/uploads/wahaso-commercial-stormwater-harvesting-systems-1-980x1306.jpg",
+    heroImageAlt:
+      "Wahaso StormFlo commercial stormwater harvesting system",
+      overview:
       "Stormwater is different from rooftop rainwater. It can carry sediment, debris, hydrocarbons, and other contaminants from the site. SECURE Blue and Wahaso evaluate collection areas, water quality, storage, treatment, detention requirements, and reuse demand to configure a suitable recovery system.",
     sourceWater: [
       "Parking areas",
@@ -368,7 +386,11 @@ export const waterRecoverySolutions: WaterRecoverySolution[] = [
     heroAccent: "blue",
     heroDescription:
       "StormFlo-Rain systems capture rooftop rainwater, treat it for its intended use, and distribute it as reliable non-potable supply for commercial projects.",
-    overview:
+    heroImage:
+      "https://wahaso.com/wp-content/uploads/wahaso-commercial-rainwater-harvesting-systems-1-980x861.jpg",
+    heroImageAlt:
+      "Wahaso StormFlo-Rain commercial rainwater harvesting system",
+      overview:
       "Rooftop rainwater is a focused collection source that can support multiple non-potable applications. SECURE Blue and Wahaso evaluate roof area, rainfall, cistern location, storage capacity, demand profile, treatment needs, and controls to build the appropriate system strategy.",
     sourceWater: [
       "Commercial rooftops",
@@ -450,7 +472,11 @@ export const waterRecoverySolutions: WaterRecoverySolution[] = [
     heroAccent: "lime",
     heroDescription:
       "Multi-source systems combine available water streams into a coordinated supply strategy designed around a facility's non-potable demand.",
-    overview:
+    heroImage:
+      "https://wahaso.com/wp-content/uploads/wahaso-multi-source-water-harvesting-systems-980x697.png",
+    heroImageAlt:
+      "Wahaso multi-source commercial water harvesting and reuse system",
+      overview:
       "The strongest water-recovery opportunity is often a combination of sources rather than a single stream. SECURE Blue and Wahaso evaluate the supply profile, source quality, storage requirements, treatment threshold, controls, and reuse demand to create one integrated water strategy.",
     sourceWater: [
       "Rainwater",
