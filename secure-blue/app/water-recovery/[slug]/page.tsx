@@ -19,6 +19,11 @@ import {
   type WaterRecoverySolution,
 } from "@/lib/waterRecoverySolutions";
 
+import {
+  getWaterRecoveryProject,
+  type WaterRecoveryProject,
+} from "@/lib/waterRecoveryProjects";
+
 type PageProps = {
   params: Promise<{
     slug: string;
@@ -117,7 +122,13 @@ export default async function WaterRecoverySolutionPage({
   }
 
   const accent = accentClasses[solution.heroAccent as AccentName];
-
+  
+  const projects: WaterRecoveryProject[] = solution.projectSlugs
+  .map((projectSlug: string) => getWaterRecoveryProject(projectSlug))
+  .filter(
+    (project): project is WaterRecoveryProject => project !== undefined
+  );
+  
   const assessmentEmailHref =
     `mailto:scott.holbrook@secureblue.earth?subject=${encodeURIComponent(
       "Water Assessment Request"
@@ -246,8 +257,7 @@ export default async function WaterRecoverySolutionPage({
                   </div>
                 </div>
 
-                <div className="relative -mt-8 ml-6 border border-white/10 bg-[#071424]/95 p-5 shadow-[0_0_40px_rgba(34,211,238,0.08)]">
-                  <p className="text-[10px] font-bold tracking-[0.16em] text-slate-500">
+                <div className="relative mt-4 border border-white/10 bg-[#071424]/95 p-5 shadow-[0_0_40px_rgba(34,211,238,0.08)]">                  <p className="text-[10px] font-bold tracking-[0.16em] text-slate-500">
                     PRIMARY SOURCE
                   </p>
 
@@ -482,6 +492,105 @@ export default async function WaterRecoverySolutionPage({
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="relative mx-auto max-w-7xl px-6 py-20 sm:px-8 lg:px-10 lg:py-28">
+        <div className="absolute left-0 top-20 h-px w-full bg-cyan-400/10" />
+
+        <div className="relative flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
+          <div className="max-w-3xl">
+            <div className="flex items-center gap-4">
+              <p className={`text-xs font-bold tracking-[0.24em] ${accent.text}`}>
+                WAHASO PROJECT EXPERIENCE
+              </p>
+
+              <span className="h-px flex-1 bg-white/10" />
+            </div>
+
+            <h2 className="mt-5 text-4xl font-black uppercase leading-none tracking-[-0.04em] text-white sm:text-5xl">
+              Proven systems
+              <span className="block text-slate-500">in the field.</span>
+            </h2>
+          </div>
+
+          <div className="max-w-xl">
+            <img
+              src="https://wahaso.com/wp-content/uploads/wahaso-commercial-water-harvesting-solutions-wht-logo-r.webp"
+              alt="Wahaso Water Harvesting Solutions"
+              className="h-auto w-28 object-contain opacity-90"
+            />
+
+            <p className="mt-4 text-sm leading-7 text-slate-400">
+              Selected Wahaso project experience relevant to{" "}
+              <span className="text-slate-200">{solution.shortTitle}</span>. These
+              projects were delivered by Wahaso Water Harvesting Solutions and are
+              presented by SECURE Blue as examples of the commercial water-recovery
+              capabilities available through our partnership.
+            </p>
+          </div>
+        </div>
+
+        <div className="relative mt-14 grid gap-px border border-white/10 bg-white/10 lg:grid-cols-3">
+          {projects.map((project: WaterRecoveryProject, index: number) => (
+            <Link
+              key={project.slug}
+              href={`/water-recovery/projects/${project.slug}`}
+              className={`group relative overflow-hidden border border-transparent bg-[#07101d] transition duration-300 hover:z-10 hover:bg-[#0a1727] ${accent.border}`}
+            >
+              <div className="relative aspect-[16/10] overflow-hidden border-b border-white/10 bg-[#030712]">
+                <img
+                  src={project.image}
+                  alt={project.imageAlt}
+                  className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-[#030712]/90 via-[#030712]/10 to-transparent" />
+
+                <div className="absolute left-0 top-0 border-b border-r border-white/20 bg-[#030712]/85 px-4 py-3">
+                  <p className={`text-xs font-black ${accent.text}`}>
+                    {String(index + 1).padStart(2, "0")}
+                  </p>
+                </div>
+
+                <div className="absolute bottom-0 left-0 p-5">
+                  <p className="text-[10px] font-bold tracking-[0.18em] text-white/80">
+                    WAHASO PROJECT EXPERIENCE
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-7">
+                <h3 className="text-2xl font-black uppercase leading-tight tracking-[-0.03em] text-white">
+                  {project.name}
+                </h3>
+
+                <p className={`mt-3 text-sm font-bold tracking-[0.08em] ${accent.text}`}>
+                  {project.location}
+                </p>
+
+                <p className="mt-5 text-sm leading-7 text-slate-400">
+                  {project.summary}
+                </p>
+
+                <div className="mt-7 flex flex-wrap gap-x-4 gap-y-2 border-t border-white/10 pt-5">
+                  {project.categories.slice(0, 4).map((category: string) => (
+                    <span
+                      key={category}
+                      className={`text-[10px] font-bold tracking-[0.12em] ${accent.text}`}
+                    >
+                      // {category.toUpperCase()}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="mt-7 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.14em] text-white">
+                  View Project
+                  <ArrowRight className={`h-4 w-4 ${accent.text}`} />
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
       </section>
 

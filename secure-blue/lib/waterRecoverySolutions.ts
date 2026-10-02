@@ -29,6 +29,7 @@ export type WaterRecoverySolution = {
     description: string;
   }>;
   systemNotes: string[];
+  projectSlugs: string[];
   primaryCtaLabel: string;
 };
 
@@ -117,6 +118,11 @@ export const waterRecoverySolutions: WaterRecoverySolution[] = [
       "GreyFlo-Max: high-capacity treatment with advanced monitoring for demanding applications.",
       "Available configurations are selected around actual site conditions, reuse demand, and project requirements.",
     ],
+    projectSlugs: [
+      "williams-village-university-of-colorado",
+      "ucla-engineering-building-vi",
+      "sfsu-mashouf-wellness-center",
+    ],
     primaryCtaLabel: "Discuss a Greywater Recovery Project",
   },
   {
@@ -202,6 +208,11 @@ export const waterRecoverySolutions: WaterRecoverySolution[] = [
       "Factory-built systems are pre-wired and pre-plumbed for streamlined project delivery.",
       "CondensaFlo can be integrated into larger water-recovery strategies.",
     ],
+        projectSlugs: [
+      "philadelphia-museum-of-art",
+      "metcalfe-federal-building",
+      "mgm-national-harbor-resort",
+    ],
     primaryCtaLabel: "Explore Condensate Recovery",
   },
   {
@@ -286,6 +297,11 @@ export const waterRecoverySolutions: WaterRecoverySolution[] = [
       "Compatible with building automation system integration.",
       "Supports water, chemical, sustainability, and operating-cost reduction objectives.",
       "Wahaso provides feasibility, ROI, and payback analysis based on project-specific tower data.",
+    ],
+    projectSlugs: [
+      "bank-of-america-plaza",
+      "broward-county-convention-center",
+      "kettering-hospital",
     ],
     primaryCtaLabel: "Request a Cooling Tower Savings Analysis",
   },
@@ -373,6 +389,11 @@ export const waterRecoverySolutions: WaterRecoverySolution[] = [
       "Storage and detention requirements are evaluated as part of early project scoping.",
       "Treatment is engineered around the source-water characteristics and intended reuse.",
     ],
+    projectSlugs: [
+      "expo-rail-maintenance-facility",
+      "pioneer-hi-bred-greenhouse",
+      "missouri-botanical-gardens",
+    ],
     primaryCtaLabel: "Explore Stormwater Harvesting",
   },
   {
@@ -458,6 +479,11 @@ export const waterRecoverySolutions: WaterRecoverySolution[] = [
       "StormFlo-Rain-Pro supports versatile commercial applications up to 100 GPM.",
       "StormFlo-Rain-Max supports high-capacity, monitored projects up to 500 GPM.",
       "Final system configuration depends on source volume, storage, reuse demand, and project requirements.",
+    ],
+    projectSlugs: [
+      "the-nature-conservancy-tucson",
+      "klarman-smith-hall-cornell-university",
+      "patel-center-global-solutions",
     ],
     primaryCtaLabel: "Explore Rainwater Harvesting",
   },
@@ -547,6 +573,11 @@ export const waterRecoverySolutions: WaterRecoverySolution[] = [
       "Supply diversity can improve recovery availability across seasons and facility operating conditions.",
       "System sizing considers source availability, storage, reuse demand, peak requirements, and backup supply.",
       "Controls and monitoring support coordinated operation across multiple source streams.",
+    ],
+    projectSlugs: [
+      "soco-apartments",
+      "zurich-american-insurance",
+      "new-york-city-sanitation-building",
     ],
     primaryCtaLabel: "Start a Multi-Source Water Assessment",
   },
