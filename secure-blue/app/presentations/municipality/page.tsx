@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 
 type SlideVisual =
+  | "agenda"
   | "hero"
   | "visibility"
   | "prevent"
@@ -61,17 +62,30 @@ export default function MunicipalityPresentation() {
 
   const slides: Slide[] = [
     {
+      id: 0,
+      title: "Water Harvesting & Recycling Technology",
+      subtitle: "Protect What You Have. Recover What Is Available. Reuse What You Capture.",
+      visual: "agenda",
+      color: "text-cyan-400",
+      content:
+        "Water harvesting and recycling works best as a complete operating model: protect treated water from avoidable loss, recover usable water already present at the site, and reuse it through storage, treatment, monitoring, and approved controls.",
+      metric: "WATER_HARVESTING_AND_RECYCLING_AGENDA",
+      time: "0:00–0:30",
+      speakerNotes:
+        "Thank you for inviting me to speak today.\n\nThis is a practical discussion about water harvesting and recycling technology. The framework is simple: protect what you already have, recover what is available at the site, and reuse what you capture.\n\nFirst, Protect. Before a city invests in new supply, it should stop preventable loss. That means identifying leaks, abnormal demand, and avoidable use of treated potable water.\n\nSecond, Recover. Municipal facilities already receive or generate usable water streams: rainfall from roofs and hardscape, stormwater, HVAC condensate, cooling-tower opportunities, and reusable internal building-water streams.\n\nThird, Reuse. With treatment matched to the approved end use, onsite storage, monitoring, and controls, those sources can offset selected demands such as irrigation, flushing, cooling make-up, washdown, and other permitted uses.\n\nI will use cooling-intensive facilities and multifamily buildings as two concrete examples, then close with how a city can validate the source, end-use, and economics at one priority site before scaling.",
+    },
+    {
       id: 1,
-      title: "SECURE Blue: A Three-Pathway Strategy",
-      subtitle: "Prevent Loss. Conserve Resources. Generate Local Supply.",
+      title: "Municipal Facilities Can Become Water Resources",
+      subtitle: "Capture Local Sources. Treat to Use. Store Onsite. Deploy Where It Matters.",
       visual: "hero",
       color: "text-blue-400",
       content:
-        "Water resilience begins inside existing city boundaries. SECURE Blue gives municipal teams the operational intelligence to stop loss, optimize use, and build targeted local supply—without forcing a massive upfront capital gamble.",
-      metric: "URBAN_WATER_RESILIENCE",
-      time: "0:00–0:45",
+        "Municipal properties can do more than consume water. They can capture rain, recover condensate, recycle approved internal water streams, store supply onsite, and offset selected non-potable or drinking-water demands—reducing potable use, wastewater discharge, and operating risk.",
+      metric: "FACILITY_SCALE_WATER_HARVESTING",
+      time: "0:30–1:15",
       speakerNotes:
-        "Good morning. I'm Scott Holbrook, CTO of SECURE Blue.\n\nWhen municipal leaders discuss water scarcity, the conversation almost always jumps straight to large-scale capital projects or securing new regional water rights. While those are important, the most immediate, cost-effective opportunity for any city lies right inside its existing boundaries: stopping water loss, optimizing current operations, and generating targeted local supply.\n\nToday, I want to share a practical, three-pathway framework designed to give your operational teams real-time control, lower non-revenue water, and build long-term drought resilience—without requiring a massive, upfront capital risk.",
+        "Most water-resilience conversations begin outside the city boundary: new supply contracts, regional allocations, major conveyance projects, or distant infrastructure.\n\nBut municipal facilities themselves can be water resources. A roof collects rainfall. A site generates stormwater. HVAC systems create condensate. Cooling-intensive facilities create recovery opportunities. High-occupancy buildings generate greywater from showers, lavatories, and laundry.\n\nThe practical opportunity is to identify those local sources, apply treatment appropriate to the intended use, store water onsite, and deploy it where it offsets the most valuable or constrained demand.\n\nThis is not about replacing the municipal water system or taking every building off-grid. It is about using the resources already present at high-value sites to reduce avoidable potable demand, reduce wastewater discharge, and add targeted resilience.",
     },
     {
       id: 2,
@@ -114,16 +128,16 @@ export default function MunicipalityPresentation() {
     },
     {
       id: 5,
-      title: "Pathway 3: Generate Local Supply",
-      subtitle: "Diversify and Source Water Locally.",
+      title: "Capture Every Available Site Source",
+      subtitle: "Rain. Condensate. Reuse Streams. Atmospheric Recovery.",
       visual: "generate",
       color: "text-indigo-400",
       content:
-        "Reduce dependency on centralized sources by creating a localized portfolio: Atmospheric Water Generation (AWG) for off-grid sites, cooling-tower condensate recovery, rainwater harvesting, and approved graywater reuse.",
-      metric: "LOCALIZED_SUPPLY_PORTFOLIO",
-      time: "4:30–6:15",
+        "Every facility has a local water portfolio. SECURE Blue evaluates rain and stormwater, HVAC condensate, approved greywater streams, cooling-tower recovery opportunities, and atmospheric generation where site conditions support the energy and production case.",
+      metric: "LOCAL_SOURCE_PORTFOLIO",
+      time: "4:30–5:30",
       speakerNotes:
-        "The third pathway is Generate. A resilient city cannot depend on a single, centralized water source.\n\nWe help cities construct a localized, diversified water portfolio. Depending on your geography and facilities, this includes capturing cooling-tower condensate, processing graywater for park irrigation, harvesting rainwater, or deploying Atmospheric Water Generation for off-grid municipal facilities.\n\nBy generating and recycling water directly at the point of use, you reduce load on your central grid, lower pumping costs, and insulate critical municipal operations against regional supply disruptions.",
+        "This is the shift from water management to water harvesting and recycling.\n\nEvery facility has a different local water portfolio. The question is not whether every source can serve every use. The question is: what water is already available at this site, what treatment does it need, where can it be stored, and which approved demand can it offset?\n\nThat portfolio can include roof and hardscape runoff, stormwater, HVAC condensate, greywater from showers, lavatories, and laundry, cooling-tower recovery opportunities, and—in the right temperature, humidity, energy, and end-use conditions—atmospheric water generation.\n\nWe do not present this as a universal replacement for municipal supply. We evaluate each site to reduce avoidable potable demand, reduce wastewater discharge, and build targeted resilience where it delivers the most value. The next slides show how these sources become a managed onsite water system.",
     },
     {
       id: 6,
@@ -179,16 +193,16 @@ export default function MunicipalityPresentation() {
     },
     {
       id: 10,
-      title: "The 90-Day Municipal Pilot",
-      subtitle: "Low-Risk Deployment. Local Proof.",
+      title: "The 90-Day Site Water Feasibility Pilot",
+      subtitle: "Measure the Source. Validate the Use. Prove the Economics.",
       visual: "pilot",
       color: "text-emerald-400",
       content:
-        "Do not commit to massive technology overhauls without proof. Select one high-priority facility. Establish a baseline, deploy targeted nodes, measure exact operational savings, and scale only where the ROI is defensible.",
-      metric: "EVIDENCE_BASED_DEPLOYMENT",
-      time: "7:30–9:00",
+        "Start with one priority facility. Audit available source streams, potable demand, wastewater discharge, storage options, approved end uses, treatment requirements, and operating controls. Scale only after local data proves the resilience and ROI case.",
+      metric: "ONSITE_WATER_FEASIBILITY_PILOT",
+      time: "8:55–9:30",
       speakerNotes:
-        "We know that cities cannot—and should not—commit to massive technology overhauls without proof. That’s why we advocate starting with a 90-day pilot.\n\nWe select one high-value municipal site—such as a public park with high utility bills or a municipal facility with aging plumbing. We establish your baseline, deploy the hardware, and track performance for 90 days.\n\nAt the end of the pilot, you receive a clear, data-driven report showing exact gallons saved, cost reduction, and risk mitigated. You only scale what the data proves is cost-effective.",
+        "Cities should not commit to major water-harvesting or reuse infrastructure without local proof. That is why we start with a 90-day site water feasibility pilot.\n\nWe select one high-value facility: a recreation complex, municipal campus, cooling-intensive plant, public building, multifamily property, or other site with measurable water demand and usable local source streams.\n\nFirst, we establish the baseline: potable water use, wastewater discharge, utility cost, maintenance events, operating schedules, roof and hardscape catchment, condensate volume, available reuse streams, and potential storage capacity.\n\nSecond, we validate the operational fit: what source is available, what water quality is required, what treatment is needed, which end use is approved, and how the system will integrate with the facility’s existing controls and maintenance workflows.\n\nAt the end of the pilot, the city receives a site-specific feasibility and ROI report: gallons that may be offset, source reliability, treatment and storage requirements, operational risks, regulatory considerations, and a phased deployment recommendation.\n\nYou scale only where the local data proves the resilience, affordability, and operating case.",
     },
     {
       id: 11,
@@ -272,6 +286,132 @@ export default function MunicipalityPresentation() {
 
   const renderVisual = () => {
     switch (current.visual) {
+      case "agenda":
+        return (
+          <div className="relative w-full max-w-[540px] rounded-[2rem] overflow-hidden shadow-[0_0_50px_rgba(34,211,238,0.15)] border border-cyan-500/20 bg-zinc-900 group">
+            <img
+              src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80"
+              alt="Municipal water harvesting and recycling technology planning"
+              className="absolute inset-0 w-full h-full object-cover opacity-20 grayscale mix-blend-luminosity"
+            />
+
+            <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/90 to-cyan-950/30" />
+
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(34,211,238,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(34,211,238,0.04)_1px,transparent_1px)] bg-[size:20px_20px]" />
+
+            <div className="relative z-10 min-h-[455px] p-5 flex flex-col">
+              <div className="flex-none flex justify-between items-center">
+                <div className="font-mono text-[9px] uppercase tracking-widest text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 px-3 py-1 rounded-full">
+                  Water Harvesting + Recycling
+                </div>
+
+                <Map className="h-5 w-5 text-cyan-400 animate-pulse" />
+              </div>
+
+              <div className="flex-1 flex items-center py-4">
+                <div className="w-full bg-zinc-950/90 border border-cyan-500/20 rounded-xl p-4 backdrop-blur-md">
+                  <div className="flex items-center justify-between border-b border-zinc-800 pb-3 mb-3">
+                    <div className="flex items-center gap-2">
+                      <Droplets className="h-4 w-4 text-cyan-400" />
+
+                      <span className="font-mono text-[10px] uppercase text-zinc-200">
+                        Facility Water Resource Agenda
+                      </span>
+                    </div>
+
+                    <span className="font-mono text-[8px] uppercase text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 rounded px-2 py-1">
+                      10 Minutes
+                    </span>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-3 border border-blue-500/25 rounded-lg bg-blue-950/20 p-3">
+                      <div className="h-8 w-8 shrink-0 flex items-center justify-center rounded-lg border border-blue-500/30 bg-blue-500/10 font-mono text-[10px] font-bold text-blue-400">
+                        01
+                      </div>
+
+                      <div className="flex-1">
+                        <div className="font-mono text-[8px] text-blue-400 uppercase">
+                          Protect Existing Supply
+                        </div>
+
+                        <div className="mt-0.5 text-xs font-semibold text-white">
+                          Stop leaks, abnormal demand, and avoidable potable-water loss.
+                        </div>
+                      </div>
+
+                      <CloudRain className="h-4 w-4 shrink-0 text-blue-400" />
+                    </div>
+
+                    <div className="flex items-center gap-3 border border-amber-500/25 rounded-lg bg-amber-950/20 p-3">
+                      <div className="h-8 w-8 shrink-0 flex items-center justify-center rounded-lg border border-amber-500/30 bg-amber-500/10 font-mono text-[10px] font-bold text-amber-400">
+                        02
+                      </div>
+
+                      <div className="flex-1">
+                        <div className="font-mono text-[8px] text-amber-400 uppercase">
+                          Recover Site Water
+                        </div>
+
+                        <div className="mt-0.5 text-xs font-semibold text-white">
+                          Rain · condensate · greywater · cooling-tower opportunities.
+                        </div>
+                      </div>
+
+                      <Activity className="h-4 w-4 shrink-0 text-amber-400" />
+                    </div>
+
+                    <div className="flex items-center gap-3 border border-indigo-500/25 rounded-lg bg-indigo-950/20 p-3">
+                      <div className="h-8 w-8 shrink-0 flex items-center justify-center rounded-lg border border-indigo-500/30 bg-indigo-500/10 font-mono text-[10px] font-bold text-indigo-400">
+                        03
+                      </div>
+
+                      <div className="flex-1">
+                        <div className="font-mono text-[8px] text-indigo-400 uppercase">
+                          Store + Deploy Locally
+                        </div>
+
+                        <div className="mt-0.5 text-xs font-semibold text-white">
+                          Build reserve capacity and offset facility demand.
+                        </div>
+                      </div>
+
+                      <Droplets className="h-4 w-4 shrink-0 text-indigo-400" />
+                    </div>
+
+                    <div className="flex items-center gap-3 border border-emerald-500/25 rounded-lg bg-emerald-950/20 p-3">
+                      <div className="h-8 w-8 shrink-0 flex items-center justify-center rounded-lg border border-emerald-500/30 bg-emerald-500/10 font-mono text-[10px] font-bold text-emerald-400">
+                        04
+                      </div>
+
+                      <div className="flex-1">
+                        <div className="font-mono text-[8px] text-emerald-400 uppercase">
+                          Validate + Scale
+                        </div>
+
+                        <div className="mt-0.5 text-xs font-semibold text-white">
+                          Prove the site-specific resilience and ROI case.
+                        </div>
+                      </div>
+
+                      <ClipboardCheck className="h-4 w-4 shrink-0 text-emerald-400" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex-none mt-2 bg-zinc-950/95 border border-zinc-800 rounded-xl px-3 py-2.5 backdrop-blur-md flex items-center justify-between gap-3">
+                <span className="font-mono text-[8px] text-zinc-500 uppercase">
+                  Municipal Water Harvesting + Recycling Technology
+                </span>
+
+                <span className="font-mono text-[8px] text-cyan-400 uppercase">
+                  Scott Holbrook · CTO
+                </span>
+              </div>
+            </div>
+          </div>
+        );
       case "hero":
         return (
           <div className="relative w-full aspect-square md:aspect-[4/3] max-w-[500px] rounded-[2rem] overflow-hidden shadow-[0_0_50px_rgba(37,99,235,0.15)] border border-blue-500/20 bg-zinc-900 group">
