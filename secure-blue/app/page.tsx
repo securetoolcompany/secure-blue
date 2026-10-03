@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button';
-import ContactForm from '@/components/ContactForm';
 import ROICalculator from '@/components/ROICalculator';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
@@ -947,24 +946,69 @@ export default function SecureBlueCommandCenter() {
         </div>
       </section>
 
-      {/* CONTACT / QUOTE FORM TERMINAL */}
-      <section id="contact" className="px-8 py-24 bg-zinc-950">
-        <div className="max-w-3xl mx-auto">
-          
-          <div className="mb-10 text-center">
-            <Mail className="h-8 w-8 text-zinc-400 mx-auto mb-4" />
-            <h2 className="text-3xl font-bold tracking-tight mb-2">Initiate System Audit</h2>
-            <p className="text-zinc-400 text-sm">
-              Submit your facility parameters below to request a custom deployment quote. A SECURE Blue engineer will contact you directly from <span className="text-white font-mono">office@securetool.company</span>.
-            </p>
-          </div>
+      {/* CONTACT / WATER ASSESSMENT */}
+      <section id="contact" className="relative overflow-hidden border-y border-zinc-800 bg-zinc-950 px-8 py-24">
+        <div className="pointer-events-none absolute inset-0 opacity-30">
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(34,211,238,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(34,211,238,0.08)_1px,transparent_1px)] bg-[size:42px_42px]" />
+          <div className="absolute -right-20 -top-20 h-72 w-72 bg-cyan-400/20 blur-[100px]" />
+          <div className="absolute bottom-0 left-1/3 h-52 w-52 bg-lime-300/10 blur-[90px]" />
+        </div>
 
-          <div className="border border-zinc-800 bg-zinc-900/50 p-8 shadow-2xl relative overflow-hidden min-h-[400px]">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-20"></div>
-            
-            {/* The interactive form is injected right here with a custom label */}
-            <ContactForm productName="GENERAL INQUIRY: HOMEPAGE" />
-            
+        <div className="relative mx-auto max-w-5xl">
+          <div className="relative overflow-hidden border border-cyan-300/40 bg-[#071b2d] px-7 py-12 sm:px-10 lg:px-14 lg:py-16 [clip-path:polygon(0_0,100%_0,100%_88%,97%_100%,0_100%)]">
+            <div className="pointer-events-none absolute inset-0 opacity-30">
+              <div className="absolute inset-0 bg-[linear-gradient(rgba(34,211,238,0.15)_1px,transparent_1px),linear-gradient(90deg,rgba(34,211,238,0.15)_1px,transparent_1px)] bg-[size:42px_42px]" />
+              <div className="absolute -right-20 -top-20 h-72 w-72 bg-cyan-400/25 blur-[100px]" />
+              <div className="absolute bottom-0 left-1/3 h-52 w-52 bg-lime-300/15 blur-[90px]" />
+            </div>
+
+            <div className="relative max-w-3xl">
+              <div className="flex items-center gap-3">
+                <span className="h-px w-10 bg-lime-300" />
+                <p className="text-xs font-bold tracking-[0.22em] text-lime-300">
+                  PROJECT INTAKE // SECURE BLUE
+                </p>
+              </div>
+
+              <h2 className="mt-6 text-4xl font-black uppercase leading-none tracking-[-0.04em] text-white sm:text-5xl">
+                Start Your
+                <span className="block text-cyan-300">Water Assessment.</span>
+              </h2>
+
+              <p className="mt-7 max-w-2xl text-base leading-8 text-slate-200">
+                Tell us about your facility, available water sources, and intended
+                reuse goals. SECURE Blue will review your opportunity and help
+                determine the right water-recovery pathway with our Wahaso technology
+                partner.
+              </p>
+
+              <a
+                href={`mailto:scott.holbrook@secureblue.earth?subject=${encodeURIComponent(
+                  "Water Assessment Request"
+                )}&body=${encodeURIComponent(
+                  `Hello SECURE Blue,
+
+      I would like to request a Water Assessment.
+
+      Name:
+      Company / Organization:
+      Email:
+      Phone:
+      Project Name:
+      Project Location:
+      Facility Type:
+      Available Water Source(s):
+      Intended Reuse Goal(s):
+      Project Notes:
+
+      Thank you.`
+                )}`}
+                className="mt-9 inline-flex items-center gap-3 border border-lime-300 bg-lime-300 px-6 py-4 text-xs font-black uppercase tracking-[0.14em] text-slate-950 transition hover:bg-white"
+              >
+                Start a Water Assessment
+                <ArrowRight className="h-4 w-4" />
+              </a>
+            </div>
           </div>
         </div>
       </section>

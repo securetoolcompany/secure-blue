@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Terminal, Menu, X, ChevronDown, CornerDownRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import Image from 'next/image';
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { ChevronDown, CornerDownRight, Menu, X } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,92 +23,188 @@ export default function Navbar() {
 
   // Updated Nav Configuration with proper anchor links for unbuilt pages
   const navLinks = [
-    { 
-      name: 'PRODUCTS', 
-      href: '/infrastructure',
+    {
+      name: "PRODUCTS",
+      href: "/infrastructure",
       subGroups: [
         {
-          title: 'PREVENT',
+          title: "PREVENT",
           items: [
-            { name: 'SECURE LeakStop', href: '/infrastructure/leakstop' },
-            { name: 'EmberSense Fire', href: '/infrastructure/early-fire-detection' },
-            { name: 'Liquid Ecology', href: '/infrastructure#water-ecology-nodes' },
-            { name: 'Leaf Wetness', href: '/infrastructure#leaf-wetness-nodes' }
-          ]
+            { name: "SECURE LeakStop", href: "/infrastructure/leakstop" },
+            {
+              name: "EmberSense Fire",
+              href: "/infrastructure/early-fire-detection",
+            },
+            {
+              name: "Liquid Ecology",
+              href: "/infrastructure#water-ecology-nodes",
+            },
+            {
+              name: "Leaf Wetness",
+              href: "/infrastructure#leaf-wetness-nodes",
+            },
+          ],
         },
         {
-          title: 'CONSERVE',
+          title: "CONSERVE",
           items: [
-            { name: 'Smart Irrigation', href: '/infrastructure/smart-irrigation' },
-            { name: 'Graywater Distillation', href: '/infrastructure/a2w-graywater' },
-            { name: 'Irrigation Graywater', href: '/infrastructure/irrigation-graywater' },
-            { name: 'Botanical PAR', href: '/infrastructure#botanical-par-sensors' }
-          ]
+            {
+              name: "Smart Irrigation",
+              href: "/infrastructure/smart-irrigation",
+            },
+            {
+              name: "Graywater Distillation",
+              href: "/infrastructure/a2w-graywater",
+            },
+            {
+              name: "Irrigation Graywater",
+              href: "/infrastructure/irrigation-graywater",
+            },
+            {
+              name: "Botanical PAR",
+              href: "/infrastructure#botanical-par-sensors",
+            },
+          ],
         },
         {
-          title: 'GENERATE',
+          title: "GENERATE",
           items: [
-            { name: 'Air-2-Water Arrays', href: '/infrastructure/a2w-machines' }
-          ]
+            {
+              name: "Air-2-Water Arrays",
+              href: "/infrastructure/a2w-machines",
+            },
+          ],
         },
         {
-          title: 'AUTOMATE & TELEMETRY',
+          title: "AUTOMATE & TELEMETRY",
           items: [
-            { name: 'Ambient IAQ Nodes', href: '/infrastructure#iaq-sensors' },
-            { name: 'Cold-Chain Probes', href: '/infrastructure#cold-chain-sensors' },
-            { name: 'Ag Weather Stations', href: '/infrastructure#ag-weather-stations' },
-            { name: 'AI Occupancy', href: '/infrastructure#ai-occupancy-sensors' },
-            { name: 'Gas & Odor', href: '/infrastructure#gas-odor-detectors' },
-            { name: 'Liquid Level Nodes', href: '/infrastructure#liquid-level-nodes' },
-            { name: 'View Master Catalog →', href: '/infrastructure' }
-          ]
-        }
-      ]
+            {
+              name: "Ambient IAQ Nodes",
+              href: "/infrastructure#iaq-sensors",
+            },
+            {
+              name: "Cold-Chain Probes",
+              href: "/infrastructure#cold-chain-sensors",
+            },
+            {
+              name: "Ag Weather Stations",
+              href: "/infrastructure#ag-weather-stations",
+            },
+            {
+              name: "AI Occupancy",
+              href: "/infrastructure#ai-occupancy-sensors",
+            },
+            {
+              name: "Gas & Odor",
+              href: "/infrastructure#gas-odor-detectors",
+            },
+            {
+              name: "Liquid Level Nodes",
+              href: "/infrastructure#liquid-level-nodes",
+            },
+            {
+              name: "View Master Catalog →",
+              href: "/infrastructure",
+            },
+          ],
+        },
+      ],
     },
-    { 
-      name: 'INDUSTRIES', 
-      href: '#',
+
+    {
+      name: "WATER RECOVERY",
+      href: "/water-recovery",
       subGroups: [
         {
-          title: 'HOA & RESIDENTIAL',
+          title: "RECOVERY SOLUTIONS",
           items: [
-            { name: 'Sector Overview', href: '/industries/hoa' },
-            { name: 'Executive Deck', href: '/presentations/hoa' }
-          ]
+            {
+              name: "Water Recovery Overview",
+              href: "/water-recovery",
+            },
+            {
+              name: "Greywater Recovery",
+              href: "/water-recovery/greywater",
+            },
+            {
+              name: "HVAC Condensate",
+              href: "/water-recovery/condensate",
+            },
+            {
+              name: "Cooling Tower Recovery",
+              href: "/water-recovery/cooling-tower-recovery",
+            },
+          ],
         },
         {
-          title: 'HOSPITALITY',
+          title: "HARVESTING SYSTEMS",
           items: [
-            { name: 'Sector Overview', href: '/industries/hospitality' },
-            { name: 'Executive Deck', href: '/presentations/hospitality' }
-          ]
+            {
+              name: "Stormwater Harvesting",
+              href: "/water-recovery/stormwater",
+            },
+            {
+              name: "Rainwater Harvesting",
+              href: "/water-recovery/rainwater",
+            },
+            {
+              name: "Multi-Source Reuse",
+              href: "/water-recovery/multi-source",
+            },
+            {
+              name: "View Project Experience →",
+              href: "/water-recovery/projects",
+            },
+          ],
         },
-        {
-          title: 'AGRICULTURE',
-          items: [
-            { name: 'Sector Overview', href: '/industries/agriculture' },
-            { name: 'Executive Deck', href: '/presentations/agriculture' }
-          ]
-        },
-        {
-          title: 'COMMERCIAL R.E.',
-          items: [
-            { name: 'Sector Overview', href: '/industries/real-estate' },
-            { name: 'Executive Deck', href: '/presentations/real-estate' }
-          ]
-        },
-        {
-          title: 'MUNICIPALITY',
-          items: [
-            { name: 'Sector Overview', href: '/industries/municipality' },
-            { name: 'Executive Deck', href: '/presentations/municipality' }
-          ]
-        }
-      ]
+      ],
     },
-    { name: 'THE_OS', href: '/os' },
-    { name: 'METHODOLOGY', href: '/methodology' },
-    { name: 'MANAGED_SERVICES', href: '/managed-services' },
+
+    {
+      name: "INDUSTRIES",
+      href: "#",
+      subGroups: [
+        {
+          title: "HOA & RESIDENTIAL",
+          items: [
+            { name: "Sector Overview", href: "/industries/hoa" },
+            { name: "Executive Deck", href: "/presentations/hoa" },
+          ],
+        },
+        {
+          title: "HOSPITALITY",
+          items: [
+            { name: "Sector Overview", href: "/industries/hospitality" },
+            { name: "Executive Deck", href: "/presentations/hospitality" },
+          ],
+        },
+        {
+          title: "AGRICULTURE",
+          items: [
+            { name: "Sector Overview", href: "/industries/agriculture" },
+            { name: "Executive Deck", href: "/presentations/agriculture" },
+          ],
+        },
+        {
+          title: "COMMERCIAL R.E.",
+          items: [
+            { name: "Sector Overview", href: "/industries/real-estate" },
+            { name: "Executive Deck", href: "/presentations/real-estate" },
+          ],
+        },
+        {
+          title: "MUNICIPALITY",
+          items: [
+            { name: "Sector Overview", href: "/industries/municipality" },
+            { name: "Executive Deck", href: "/presentations/municipality" },
+          ],
+        },
+      ],
+    },
+
+    // { name: "THE_OS", href: "/os" },
+    { name: "METHODOLOGY", href: "/methodology" },
+    // { name: "MANAGED_SERVICES", href: "/managed-services" },
   ];
 
   return (
@@ -163,12 +260,12 @@ export default function Navbar() {
                                  className={`flex items-center gap-2 text-xs font-mono tracking-wider transition-colors ${
                                    pathname === item.href || pathname + '#' + item.href.split('#')[1] === item.href
                                    ? 'text-blue-400' 
-                                   : item.name.includes('View Master Catalog') 
+                                   : item.name.includes("→") 
                                       ? 'text-emerald-400 hover:text-emerald-300 mt-2 border-t border-zinc-900 pt-2' 
                                       : 'text-zinc-500 hover:text-white'
                                  }`}
                                >
-                                 {!item.name.includes('View Master') && <CornerDownRight className="h-3 w-3 text-zinc-700" />}
+                                 {!item.name.includes("→") && <CornerDownRight className="h-3 w-3 text-zinc-700" />}
                                  {item.name}
                                </Link>
                              ))}
@@ -240,7 +337,7 @@ export default function Navbar() {
                                 pathname === item.href ? 'text-blue-400' : 'text-zinc-500 hover:text-white'
                               }`}
                             >
-                              {!item.name.includes('View Master') && <CornerDownRight className="h-3 w-3 text-zinc-800" />}
+                              {!item.name.includes("→") && <CornerDownRight className="h-3 w-3 text-zinc-800" />}
                               {item.name}
                             </Link>
                           ))}
