@@ -5,9 +5,10 @@ import {
   Droplets, ShieldCheck, Wind, Activity, ArrowRight, Terminal, 
   Database, Network, Cpu, Globe, BarChart3, Crosshair, Zap, Lock, LineChart,
   Filter, ArrowLeftRight, Radio, Gauge, Battery, Power, Wrench, Flag, Tractor,
-  Building2, Landmark, Mountain, MapPin, Flame, Mail
+  Building2, Landmark, Mountain, MapPin, Flame, Mail, Server, Hotel, GraduationCap
 } from 'lucide-react';
 import Link from 'next/link';
+import WahasoPartnerMark from "@/components/water-recovery/WahasoPartnerMark";
 
 export default function SecureBlueCommandCenter() {
   return (
@@ -292,6 +293,185 @@ export default function SecureBlueCommandCenter() {
               </div>
             </Link>
 
+          </div>
+        </div>
+      </section>
+
+      {/* COMMERCIAL WATER RECOVERY / WAHASO PARTNERSHIP */}
+      <section className="relative overflow-hidden border-y border-zinc-800 bg-[#06111f] px-8 py-24">
+        <div className="pointer-events-none absolute inset-0 opacity-30">
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(34,211,238,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(34,211,238,0.08)_1px,transparent_1px)] bg-[size:42px_42px]" />
+          <div className="absolute -right-20 top-0 h-80 w-80 bg-cyan-400/15 blur-[120px]" />
+          <div className="absolute -left-24 bottom-0 h-72 w-72 bg-lime-300/10 blur-[120px]" />
+        </div>
+
+        <div className="relative mx-auto max-w-7xl">
+          <div className="grid gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+            <div>
+              <div className="flex items-center gap-3">
+                <span className="h-px w-10 bg-lime-300" />
+                <p className="font-mono text-[10px] font-bold tracking-[0.22em] text-lime-300">
+                  SECURE BLUE + WAHASO PARTNERSHIP
+                </p>
+              </div>
+
+              <h2 className="mt-6 text-4xl font-black uppercase leading-none tracking-[-0.04em] text-white sm:text-5xl">
+                Turn Your Facility
+                <span className="block text-cyan-300">Into a Water Asset.</span>
+              </h2>
+
+              <p className="mt-7 max-w-xl text-lg leading-8 text-slate-300">
+                Your building already produces water. HVAC systems generate condensate.
+                Cooling towers discharge recoverable blowdown. Showers, lavatories,
+                laundry, rooftops, and site runoff create usable water streams.
+              </p>
+
+              <p className="mt-5 max-w-xl text-base leading-8 text-slate-400">
+                SECURE Blue and Wahaso turn those overlooked outputs into a managed,
+                on-site non-potable supply for cooling towers, flushing, irrigation,
+                process demand, and long-term facility resilience.
+              </p>
+
+              <div className="mt-8">
+                <WahasoPartnerMark />
+              </div>
+
+              <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+                <Link
+                  href="/water-recovery"
+                  className="inline-flex items-center justify-center gap-3 border border-cyan-300 bg-cyan-300 px-6 py-4 font-mono text-xs font-black uppercase tracking-[0.14em] text-slate-950 transition hover:bg-white"
+                >
+                  Explore Water Recovery
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+
+                <Link
+                  href="/water-recovery/projects"
+                  className="inline-flex items-center justify-center gap-3 border border-zinc-700 bg-zinc-950/50 px-6 py-4 font-mono text-xs font-black uppercase tracking-[0.14em] text-white transition hover:border-lime-300 hover:bg-lime-300/10"
+                >
+                  View Project Experience
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
+
+            <div className="grid gap-px border border-zinc-800 bg-zinc-800 sm:grid-cols-2">
+              <Link
+                href="/water-recovery/cooling-tower-recovery"
+                className="group relative min-h-[270px] overflow-hidden bg-[#07101d] p-7 transition hover:bg-[#0a1727]"
+              >
+                <div className="absolute right-0 top-0 h-16 w-16 border-b border-l border-zinc-800 bg-zinc-950 [clip-path:polygon(100%_0,100%_100%,0_0)]" />
+
+                <Server className="h-8 w-8 text-lime-300 transition duration-300 group-hover:scale-110" />
+
+                <p className="mt-8 font-mono text-[10px] font-bold tracking-[0.16em] text-lime-300">
+                  COOLING SYSTEMS PRODUCE WATER
+                </p>
+
+                <h3 className="mt-3 text-2xl font-black uppercase leading-tight text-white">
+                  Turn Tower Blowdown
+                  <span className="block">Into Operating Supply.</span>
+                </h3>
+
+                <p className="mt-4 text-sm leading-7 text-slate-400">
+                  Data centers, hospitals, commercial towers, and mechanical plants
+                  continuously discharge recoverable water. CT Recover returns that
+                  resource to cooling-tower operation instead of sending it to the drain.
+                </p>
+
+                <span className="mt-6 inline-flex items-center gap-2 font-mono text-[10px] font-bold tracking-[0.14em] text-lime-300">
+                  EXPLORE COOLING TOWER RECOVERY
+                  <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-1" />
+                </span>
+              </Link>
+
+              <Link
+                href="/water-recovery/condensate"
+                className="group relative min-h-[270px] overflow-hidden bg-[#07101d] p-7 transition hover:bg-[#0a1727]"
+              >
+                <div className="absolute right-0 top-0 h-16 w-16 border-b border-l border-zinc-800 bg-zinc-950 [clip-path:polygon(100%_0,100%_100%,0_0)]" />
+
+                <Building2 className="h-8 w-8 text-cyan-300 transition duration-300 group-hover:scale-110" />
+
+                <p className="mt-8 font-mono text-[10px] font-bold tracking-[0.16em] text-cyan-300">
+                  HVAC CREATES A RECOVERABLE WATER STREAM
+                </p>
+
+                <h3 className="mt-3 text-2xl font-black uppercase leading-tight text-white">
+                  Make Your Cooling
+                  <span className="block">System Produce Supply.</span>
+                </h3>
+
+                <p className="mt-4 text-sm leading-7 text-slate-400">
+                  Every air-handling system removes moisture from the air. CondensaFlo
+                  captures that water at the source and directs it to cooling-tower
+                  make-up, irrigation, or another non-potable facility demand.
+                </p>
+
+                <span className="mt-6 inline-flex items-center gap-2 font-mono text-[10px] font-bold tracking-[0.14em] text-cyan-300">
+                  EXPLORE CONDENSATE RECOVERY
+                  <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-1" />
+                </span>
+              </Link>
+
+              <Link
+                href="/water-recovery/greywater"
+                className="group relative min-h-[270px] overflow-hidden bg-[#07101d] p-7 transition hover:bg-[#0a1727]"
+              >
+                <div className="absolute right-0 top-0 h-16 w-16 border-b border-l border-zinc-800 bg-zinc-950 [clip-path:polygon(100%_0,100%_100%,0_0)]" />
+
+                <Hotel className="h-8 w-8 text-blue-400 transition duration-300 group-hover:scale-110" />
+
+                <p className="mt-8 font-mono text-[10px] font-bold tracking-[0.16em] text-blue-400">
+                  DAILY OCCUPANCY PRODUCES REUSABLE WATER
+                </p>
+
+                <h3 className="mt-3 text-2xl font-black uppercase leading-tight text-white">
+                  Turn Occupancy
+                  <span className="block">Into a Water Asset.</span>
+                </h3>
+
+                <p className="mt-4 text-sm leading-7 text-slate-400">
+                  Multifamily, hospitality, campus, and mixed-use facilities produce
+                  recoverable greywater every day. GreyFlo treats it for irrigation,
+                  toilet flushing, cooling-tower make-up, and other planned reuse.
+                </p>
+
+                <span className="mt-6 inline-flex items-center gap-2 font-mono text-[10px] font-bold tracking-[0.14em] text-blue-400">
+                  EXPLORE GREYWATER RECOVERY
+                  <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-1" />
+                </span>
+              </Link>
+
+              <Link
+                href="/water-recovery/multi-source"
+                className="group relative min-h-[270px] overflow-hidden bg-[#07101d] p-7 transition hover:bg-[#0a1727]"
+              >
+                <div className="absolute right-0 top-0 h-16 w-16 border-b border-l border-zinc-800 bg-zinc-950 [clip-path:polygon(100%_0,100%_100%,0_0)]" />
+
+                <GraduationCap className="h-8 w-8 text-emerald-300 transition duration-300 group-hover:scale-110" />
+
+                <p className="mt-8 font-mono text-[10px] font-bold tracking-[0.16em] text-emerald-300">
+                  MULTIPLE SITE SOURCES BECOME ONE ASSET
+                </p>
+
+                <h3 className="mt-3 text-2xl font-black uppercase leading-tight text-white">
+                  Build One Managed
+                  <span className="block">On-Site Water Supply.</span>
+                </h3>
+
+                <p className="mt-4 text-sm leading-7 text-slate-400">
+                  Campuses, districts, hospitals, and large commercial sites can combine
+                  rainwater, stormwater, condensate, greywater, and other streams into one
+                  resilient non-potable water strategy.
+                </p>
+
+                <span className="mt-6 inline-flex items-center gap-2 font-mono text-[10px] font-bold tracking-[0.14em] text-emerald-300">
+                  EXPLORE MULTI-SOURCE STRATEGY
+                  <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-1" />
+                </span>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
