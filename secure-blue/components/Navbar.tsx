@@ -204,6 +204,10 @@ export default function Navbar() {
 
     // { name: "THE_OS", href: "/os" },
     { name: "METHODOLOGY", href: "/methodology" },
+    {
+      name: "SECURE TOOL COMPANY ↗",
+      href: "https://securetool.company",
+    },
     // { name: "MANAGED_SERVICES", href: "/managed-services" },
   ];
 
